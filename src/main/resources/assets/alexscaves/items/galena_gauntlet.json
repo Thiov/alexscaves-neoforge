@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "alexscaves:bewlr",
+    "base": "alexscaves:item/galena_gauntlet_bewlr"
+  },
+  "oversized_in_gui": true
+}

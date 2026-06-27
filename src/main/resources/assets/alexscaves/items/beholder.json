@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "alexscaves:bewlr",
+    "base": "alexscaves:item/beholder_bewlr"
+  },
+  "oversized_in_gui": true
+}

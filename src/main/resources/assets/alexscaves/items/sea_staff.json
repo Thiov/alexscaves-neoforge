@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": [
+          "gui",
+          "ground",
+          "fixed",
+          "head",
+          "none",
+          "on_shelf"
+        ],
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/sea_staff_gui"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "alexscaves:bewlr",
+      "base": "alexscaves:item/sea_staff_bewlr"
+    }
+  }
+}

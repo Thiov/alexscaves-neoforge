@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "alexscaves:item/jelly_bean",
+    "tints": [
+      {
+        "type": "alexscaves:dynamic"
+      }
+    ]
+  }
+}

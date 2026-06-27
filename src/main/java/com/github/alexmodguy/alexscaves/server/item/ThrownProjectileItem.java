@@ -1,0 +1,49 @@
+package com.github.alexmodguy.alexscaves.server.item;
+
+import java.util.function.Function;
+
+import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+
+public class ThrownProjectileItem extends Item {
+
+    private final float throwAngle;
+    private final float throwSpeed;
+    private final float throwRandomness;
+    private final Function<Player, ThrowableItemProjectile> projectileSupplier;
+
+    public ThrownProjectileItem(Item.Properties properties, Function<Player, ThrowableItemProjectile> projectileSupplier, float throwAngle, float throwSpeed, float throwRandomness) {
+        super(properties);
+        this.throwAngle = throwAngle;
+        this.throwSpeed = throwSpeed;
+        this.throwRandomness = throwRandomness;
+        this.projectileSupplier = projectileSupplier;
+    }
+
+    
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        level.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.PLAYERS, 0.5F, (level.getRandom().nextFloat() * 0.7F + 0.25F) * 0.5F);
+        if (!level.isClientSide()) {
+            ThrowableItemProjectile projectile = projectileSupplier.apply(player);
+            projectile.setItem(itemStack);
+            projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), throwAngle, throwSpeed, throwRandomness);
+            level.addFreshEntity(projectile);
+        }
+        player.awardStat(Stats.ITEM_USED.get(this));
+        if (!player.getAbilities().instabuild) {
+            itemStack.shrink(1);
+        }
+        return EntityCompat.sidedSuccess(level);
+    }
+}
