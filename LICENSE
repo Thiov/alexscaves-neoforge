@@ -1,0 +1,24 @@
+Alex's Caves (Fabric port)
+
+This project is a Fabric port of Alex's Caves. The original mod and all of its
+assets, code, and content are the work of Alexthe668 and Noonyeyz and are
+licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0).
+
+This port retains that license. You may copy, distribute, and modify this
+software under the terms of the LGPL-3.0. The full text of the license is
+available at:
+
+    https://www.gnu.org/licenses/lgpl-3.0.txt
+
+Original project:  https://github.com/AlexModGuy/AlexsCaves
+
+This port also bundles source from Citadel, a library mod by Alexthe666, used
+under the GNU Lesser General Public License v3.0 (LGPL-3.0). Its copyright and
+license notices are retained. Citadel project:
+
+    https://github.com/AlexThe666/Citadel
+
+Fabric port maintained by Thiov:  https://github.com/Thiov/alexscaves-fabric
+
+This is an unofficial port and is not affiliated with or endorsed by the
+original authors.

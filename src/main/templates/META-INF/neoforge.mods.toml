@@ -1,0 +1,46 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="${mod_license}"
+issueTrackerURL="https://github.com/Thiov/alexscaves-neoforge/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+enumExtensions="META-INF/enumextensions.json"
+authors="Alexthe668, Noonyeyz; NeoForge 26.1.2 port by Thiov"
+description='''
+Alex's Caves - explore rare cave biomes hidden deep beneath the Overworld surface, each with unique mobs, blocks and items. This NeoForge 26.1.2 build bundles the Citadel library it depends on directly inside the jar (do not install the standalone Citadel mod alongside it). Original mod by Alexthe668 and Noonyeyz; this port is maintained by Thiov and is not affiliated with or endorsed by the original authors.
+'''
+
+[[mixins]]
+config="alexscaves.mixins.json"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="citadel"
+    type="incompatible"
+    reason="Alex's Caves bundles the Citadel library inside its own jar; the standalone Citadel mod would supply duplicate com.github.alexthe666.citadel classes and conflict."
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="*"
+    ordering="AFTER"
+    side="BOTH"

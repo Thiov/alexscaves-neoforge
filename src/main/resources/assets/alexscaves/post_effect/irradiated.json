@@ -1,0 +1,77 @@
+{
+    "targets": {
+        "swap": {},
+        "final": {}
+    },
+    "passes": [
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/box_blur",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main",
+                    "bilinear": true
+                }
+            ],
+            "output": "swap",
+            "uniforms": {
+                "BlurConfig": [
+                    { "name": "BlurDir", "type": "vec2", "value": [ 0.0, 1.0 ] },
+                    { "name": "Radius", "type": "float", "value": 32.0 }
+                ]
+            }
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/box_blur",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "swap",
+                    "bilinear": true
+                }
+            ],
+            "output": "final",
+            "uniforms": {
+                "BlurConfig": [
+                    { "name": "BlurDir", "type": "vec2", "value": [ 1.0, 0.0 ] },
+                    { "name": "Radius", "type": "float", "value": 32.0 }
+                ]
+            }
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "alexscaves:post/bumpy",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "final"
+                }
+            ],
+            "output": "swap",
+            "uniforms": {
+                "BumpyConfig": [
+                    { "name": "Frequency", "type": "vec2", "value": [ 52.0, 48.0 ] },
+                    { "name": "WobbleAmount", "type": "vec2", "value": [ 0.0025, 0.0025 ] }
+                ]
+            }
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "minecraft:post/blit",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "swap"
+                }
+            ],
+            "output": "minecraft:main",
+            "uniforms": {
+                "BlitConfig": [
+                    { "name": "ColorModulate", "type": "vec4", "value": [ 1.0, 1.0, 1.0, 1.0 ] }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "alexscaves:bewlr",
+    "base": "alexscaves:item/resistor_shield_bewlr"
+  },
+  "oversized_in_gui": true
+}

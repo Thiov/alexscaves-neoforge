@@ -1,0 +1,7 @@
+{
+  "model": {
+    "type": "alexscaves:bewlr",
+    "base": "alexscaves:item/siren_light_bewlr"
+  },
+  "oversized_in_gui": true
+}
