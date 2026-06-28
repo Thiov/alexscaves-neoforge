@@ -2,10 +2,6 @@ package com.github.alexmodguy.alexscaves.mixin;
 
 import com.github.alexmodguy.alexscaves.server.entity.util.FallingBlockEntityAccessor;
 import com.github.alexmodguy.alexscaves.server.entity.util.MagnetUtil;
-import com.github.alexthe666.citadel.CitadelConstants;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -24,16 +20,17 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
     @Shadow
     public int time;
     @Shadow private BlockState blockState;
-    private static final EntityDataAccessor<Integer> FALL_BLOCK_TIME = SynchedEntityData.defineId(FallingBlockEntity.class, EntityDataSerializers.INT);
+
+    // NeoForge 26.1.2 forbids a mixin adding SynchedEntityData to a foreign (vanilla) entity
+    // (CommonHooks.verifyEntityDataAccessorRegistration throws "attempt to add synced data to a foreign
+    // entity", crashing whenever any FallingBlockEntity ticks). The fall-blocking timer is only consumed
+    // server-side (MagnetBlockEntity / NuclearFurnaceBlockEntity drive the magnet float physics; the client
+    // simply renders the server-synced entity position), so a plain server-side instance field replaces the
+    // old synced FALL_BLOCK_TIME accessor — no client sync needed.
+    private int ac_fallBlockTime = 0;
 
     public FallingBlockEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
-    }
-
-    @Inject(at = @At("TAIL"), remap = CitadelConstants.REMAPREFS, method = "Lnet/minecraft/world/entity/item/FallingBlockEntity;defineSynchedData(Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V")
-    private void citadel_registerData(SynchedEntityData.Builder builder, CallbackInfo ci) {
-        builder.define(FALL_BLOCK_TIME, 0);
-        // Magnetic data is now handled via NeoForge Attachment API in EntityMixin
     }
 
     @Inject(
@@ -46,9 +43,8 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
             time = 10;
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.04D, 0.0D));
         }
-        int fallBlockTime = entityData.get(FALL_BLOCK_TIME);
-        if (fallBlockTime > 0) {
-            entityData.set(FALL_BLOCK_TIME, fallBlockTime - 1);
+        if (ac_fallBlockTime > 0) {
+            ac_fallBlockTime--;
         }
         if (MagnetUtil.isPulledByMagnets(this)) {
             MagnetUtil.tickMagnetism(this);
@@ -59,11 +55,11 @@ public abstract class FallingBlockEntityMixin extends Entity implements FallingB
     }
 
     public boolean hasFallBlocking() {
-        return entityData.get(FALL_BLOCK_TIME) > 0;
+        return ac_fallBlockTime > 0;
     }
 
     public void setFallBlockingTime() {
-        entityData.set(FALL_BLOCK_TIME, 10);
+        ac_fallBlockTime = 10;
     }
 
     public void setBlockState(BlockState blockStateIn) {
