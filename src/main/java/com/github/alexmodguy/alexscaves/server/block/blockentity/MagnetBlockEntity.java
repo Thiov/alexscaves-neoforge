@@ -29,8 +29,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -252,7 +250,6 @@ public class MagnetBlockEntity extends BlockEntity {
     }
 
 
-    @OnlyIn(Dist.CLIENT)
     public AABB getRenderBoundingBox() {
         return getRangeBB(this.getEffectiveRange() + 2, true);
     }

@@ -14,8 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class TeslaBulbBlockEntity extends BlockEntity {
 
@@ -105,7 +103,6 @@ public class TeslaBulbBlockEntity extends BlockEntity {
         return center.add(5 - this.level.getRandom().nextInt(10), 5 - this.level.getRandom().nextInt(10), 5 - this.level.getRandom().nextInt(10));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public AABB getRenderBoundingBox() {
         BlockPos pos = this.getBlockPos();
         BlockPos min = pos.offset(-1, -1, -1);

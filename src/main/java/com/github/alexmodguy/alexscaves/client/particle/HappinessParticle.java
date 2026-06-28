@@ -4,8 +4,6 @@ import com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class HappinessParticle extends TextureSheetParticle {
 
@@ -49,7 +47,6 @@ public class HappinessParticle extends TextureSheetParticle {
         return 240;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 

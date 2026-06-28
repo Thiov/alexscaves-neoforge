@@ -7,8 +7,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class UnderzealotMagicParticle extends TextureSheetParticle {
     private static final RandomSource RANDOM = RandomSource.create();
@@ -55,7 +53,6 @@ public class UnderzealotMagicParticle extends TextureSheetParticle {
         this.zd += to.z * 0.03F;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprite;
 

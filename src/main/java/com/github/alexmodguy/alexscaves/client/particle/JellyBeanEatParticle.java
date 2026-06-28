@@ -10,8 +10,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.biome.Biome;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class JellyBeanEatParticle extends BreakingItemParticle {
 
@@ -35,7 +33,6 @@ public class JellyBeanEatParticle extends BreakingItemParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<ItemParticleOption> {
         public Particle createParticle(ItemParticleOption itemParticleOption, ClientLevel clientLevel, double x, double y, double z, double xd, double yd, double zd, net.minecraft.util.RandomSource randomSourceCompat) {
             return new JellyBeanEatParticle(clientLevel, x, y, z, xd, yd, zd, itemParticleOption.getItem().create());

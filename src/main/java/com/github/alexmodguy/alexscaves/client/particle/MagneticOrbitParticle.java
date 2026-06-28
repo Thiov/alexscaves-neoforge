@@ -7,8 +7,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class MagneticOrbitParticle extends AbstractTrailParticle {
 
@@ -82,7 +80,6 @@ public class MagneticOrbitParticle extends AbstractTrailParticle {
         return TRAIL_TEXTURE;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class ScarletFactory implements ParticleProvider<SimpleParticleType> {
 
         public ScarletFactory() {
@@ -97,7 +94,6 @@ public class MagneticOrbitParticle extends AbstractTrailParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class AzureFactory implements ParticleProvider<SimpleParticleType> {
 
         public AzureFactory() {

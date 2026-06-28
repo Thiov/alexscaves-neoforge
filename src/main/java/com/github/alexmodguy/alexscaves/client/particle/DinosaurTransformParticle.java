@@ -8,8 +8,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class DinosaurTransformParticle extends AbstractTrailParticle {
     private static final Identifier TRAIL_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/trail.png");
@@ -88,7 +86,6 @@ public class DinosaurTransformParticle extends AbstractTrailParticle {
         return TRAIL_TEXTURE;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class AmberFactory implements ParticleProvider<SimpleParticleType> {
 
         public AmberFactory() {
@@ -103,7 +100,6 @@ public class DinosaurTransformParticle extends AbstractTrailParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class TectonicFactory implements ParticleProvider<SimpleParticleType> {
 
         public TectonicFactory() {

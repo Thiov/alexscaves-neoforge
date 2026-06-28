@@ -54,8 +54,6 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -349,7 +347,6 @@ public class NuclearFurnaceBlockEntity extends BaseContainerBlockEntity implemen
         return true;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public AABB getRenderBoundingBox() {
         BlockPos pos = this.getBlockPos();
         return new AABB(pos.getX() - 1, pos.getY() - 1, pos.getZ() - 1, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2);

@@ -7,8 +7,6 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class MagneticFlowParticle extends AbstractTrailParticle {
     private static final Identifier TRAIL_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/trail_mirrored.png");
@@ -93,7 +91,6 @@ public class MagneticFlowParticle extends AbstractTrailParticle {
         return TRAIL_TEXTURE;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class ScarletFactory implements ParticleProvider<SimpleParticleType> {
 
         public ScarletFactory() {
@@ -108,7 +105,6 @@ public class MagneticFlowParticle extends AbstractTrailParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class AzureFactory implements ParticleProvider<SimpleParticleType> {
 
         public AzureFactory() {

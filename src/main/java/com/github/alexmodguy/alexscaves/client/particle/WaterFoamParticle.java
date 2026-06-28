@@ -7,8 +7,6 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class WaterFoamParticle extends TextureSheetParticle {
 
@@ -67,7 +65,6 @@ public class WaterFoamParticle extends TextureSheetParticle {
         return this.quadSize * Mth.clamp(((float) this.age + scaleFactor) / (float) this.lifetime * 4.0F, 0.0F, 1.0F);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 
