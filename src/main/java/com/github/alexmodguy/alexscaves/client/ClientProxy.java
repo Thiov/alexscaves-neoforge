@@ -713,9 +713,11 @@ public class ClientProxy extends CommonProxy {
         // removed. Item tints are now data-driven: an ItemTintSource MapCodec is registered by id here and
         // referenced from each item's model JSON ("tints":[{"type":"alexscaves:..."}]). AC's per-item dynamic
         // tints (cave tablet/codex biome color, gazing pearl, jelly bean, biome treat) need that JSON + a set
-        // of ItemTintSource implementations to be ported.
-        // TODO 26.1.2: implement ItemTintSource types (CaveInfoItem biome color, GazingPearl, JellyBean,
-        // BiomeTreat) + add "tints" to their item model JSONs, then event.register(id, MapCodec) them here.
+        // of ItemTintSource implementations. DONE: AC's dynamic item tints (CaveInfoItem biome colour,
+        // GazingPearl, JellyBean, BiomeTreat) are implemented by ACDynamicTintSource, registered as
+        // "alexscaves:dynamic" via mixin.client.ItemTintSourcesMixin, and referenced from each item's model
+        // JSON "tints" array (assets/alexscaves/items/{cave_tablet,cave_codex,gazing_pearl,jelly_bean,
+        // biome_treat}.json). This RegisterColorHandlersEvent.ItemTintSources listener is intentionally empty.
         // Until then these items render with their default (untinted) colors.
     }
 
