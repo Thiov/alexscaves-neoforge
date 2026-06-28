@@ -31,9 +31,11 @@ public class DeferredSpawnEggItem extends SpawnEggItem {
     private final int secondaryColor;
 
     public DeferredSpawnEggItem(Supplier<? extends EntityType<? extends Mob>> type, int primaryColor, int secondaryColor, Properties properties) {
-        // 26.1: SpawnEggItem no longer takes the EntityType in its constructor (the type is
-        // resolved from a data component); keep the supplier and expose it via getType overrides.
-        super(properties);
+        // 26.1: SpawnEggItem no longer takes the EntityType in its constructor — it's resolved from the
+        // DataComponents.ENTITY_DATA component, which Item.Properties.spawnEgg(type) stamps. Stamping it (the
+        // cave_dweller-proven pattern) makes vanilla getType(stack)/byId/spawnsEntity + egg colour tinting work.
+        // type.get() is safe here: this runs during ITEM registration, after ENTITY_TYPE registration.
+        super(properties.spawnEgg(type.get()));
         this.type = type;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
@@ -51,7 +53,7 @@ public class DeferredSpawnEggItem extends SpawnEggItem {
         return secondaryColor;
     }
 
-    
+
     public EntityType<?> getType(HolderLookup.Provider registries, ItemStack stack) {
         return type.get();
     }

@@ -20,7 +20,7 @@
     },
     {   "from": [ 0, 0, 0 ],
       "to": [ 16, 8, 16 ],
-      "shade": false,
+      "shade": false, "light_emission": 15,
       "faces": {
         "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glow", "cullface": "down" },
         "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#glow" },

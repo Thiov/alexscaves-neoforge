@@ -1,6 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.item;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry;
 import com.github.alexmodguy.alexscaves.server.enchantment.ACEnchantmentHelper;
 import com.github.alexmodguy.alexscaves.server.enchantment.ACEnchantmentRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.item.DarkArrowEntity;
@@ -280,6 +281,36 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     
     public void onUseTick(Level level, LivingEntity living, ItemStack itemStack, int timeUsing) {
         super.onUseTick(level, living, itemStack, timeUsing);
+        if (level.isClientSide()) {
+            // Client-side charge feedback. 26.1.2 made inventoryTick SERVER-ONLY, so the client never charges
+            // UseTime (which drives the bow's pull animation via getPullingAmount) and never emitted the
+            // UNDERZEALOT_MAGIC charging aura — making a fully-functional draw look like the bow "does nothing".
+            // onUseTick runs on BOTH sides every using-tick, so reproduce the client charge here (mirrors the
+            // upstream DreadbowItem.inventoryTick isClientSide branch, incl. its per-tick charge particle).
+            int useTime = getUseTime(itemStack);
+            if (getPerfectShotTicks(itemStack) > 0) {
+                setPerfectShotTicks(itemStack, getPerfectShotTicks(itemStack) - 1);
+            }
+            boolean relentless = ACEnchantmentHelper.hasEnchantment(level, ACEnchantmentRegistry.RELENTLESS_DARKNESS, itemStack);
+            int twilightPerfection = ACEnchantmentHelper.getEnchantmentLevel(level, ACEnchantmentRegistry.TWILIGHT_PERFECTION, itemStack);
+            int maxLoadTime = getMaxLoadTime(level, itemStack);
+            if (useTime < maxLoadTime) {
+                int set = useTime + (relentless ? 3 : 1);
+                setUseTime(itemStack, set);
+                if (twilightPerfection > 0) {
+                    if (set >= maxLoadTime && useTime <= maxLoadTime) {
+                        setPerfectShotTicks(itemStack, 4 + (twilightPerfection - 1) * 3);
+                    } else {
+                        setPerfectShotTicks(itemStack, 0);
+                    }
+                }
+            }
+            if (relentless && useTime >= maxLoadTime) {
+                setUseTime(itemStack, 0);
+            }
+            Vec3 particlePos = living.position().add((level.getRandom().nextFloat() - 0.5F) * 2.5F, 0F, (level.getRandom().nextFloat() - 0.5F) * 2.5F);
+            level.addParticle(ACParticleRegistry.UNDERZEALOT_MAGIC.get(), particlePos.x, particlePos.y, particlePos.z, living.getX(), living.getY(0.5F), living.getZ());
+        }
         if (living instanceof Player player && ACEnchantmentHelper.hasEnchantment(level, ACEnchantmentRegistry.RELENTLESS_DARKNESS, itemStack) && timeUsing % 3 == 0) {
             boolean respite = ACEnchantmentHelper.hasEnchantment(level, ACEnchantmentRegistry.SHADED_RESPITE, itemStack) && !DarknessIncarnateEffect.isInLight(living, 11);
             player.playSound(ACSoundRegistry.DREADBOW_RELEASE.get());

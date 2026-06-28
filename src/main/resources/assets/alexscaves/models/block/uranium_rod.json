@@ -154,7 +154,7 @@
 				14,
 				10
 			],
-			"shade": false,
+			"shade": false, "light_emission": 15,
 			"faces": {
 				"north": {
 					"uv": [

@@ -546,7 +546,6 @@ public class ClientProxy extends CommonProxy {
      */
     private void registerClientExtensions(RegisterClientExtensionsEvent event) {
         IClientItemExtensions ister = (IClientItemExtensions) getISTERProperties();
-        IClientItemExtensions armor = (IClientItemExtensions) getArmorProperties();
         event.registerItem(ister,
                 ACItemRegistry.CAVE_MAP.get(), ACItemRegistry.DREADBOW.get(), ACItemRegistry.RAYGUN.get(),
                 ACItemRegistry.PRIMITIVE_CLUB.get(), ACItemRegistry.LIMESTONE_SPEAR.get(),
@@ -556,13 +555,11 @@ public class ClientProxy extends CommonProxy {
                 ACItemRegistry.SHOT_GUM.get(), ACItemRegistry.SUGAR_STAFF.get(),
                 ACBlockRegistry.SIREN_LIGHT.get().asItem(), ACBlockRegistry.COPPER_VALVE.get().asItem(),
                 ACBlockRegistry.BEHOLDER.get().asItem(), ACBlockRegistry.GOBTHUMPER.get().asItem());
-        event.registerItem(armor,
-                ACItemRegistry.PRIMORDIAL_HELMET.get(), ACItemRegistry.PRIMORDIAL_TUNIC.get(), ACItemRegistry.PRIMORDIAL_PANTS.get(),
-                ACItemRegistry.HAZMAT_MASK.get(), ACItemRegistry.HAZMAT_CHESTPLATE.get(), ACItemRegistry.HAZMAT_LEGGINGS.get(), ACItemRegistry.HAZMAT_BOOTS.get(),
-                ACItemRegistry.DIVING_HELMET.get(), ACItemRegistry.DIVING_CHESTPLATE.get(), ACItemRegistry.DIVING_LEGGINGS.get(), ACItemRegistry.DIVING_BOOTS.get(),
-                ACItemRegistry.HOOD_OF_DARKNESS.get(), ACItemRegistry.CLOAK_OF_DARKNESS.get(),
-                ACItemRegistry.RAINBOUNCE_BOOTS.get(),
-                ACItemRegistry.GINGERBREAD_HELMET.get(), ACItemRegistry.GINGERBREAD_CHESTPLATE.get(), ACItemRegistry.GINGERBREAD_LEGGINGS.get(), ACItemRegistry.GINGERBREAD_BOOTS.get());
+        // AC custom armor is NOT registered as an IClientItemExtensions armor model: in 26.1.2 that path only
+        // swaps the model the equipment-asset LAYERS draw with, and AC ships no equipment JSONs, so the layer
+        // list is always empty and nothing is drawn. The custom 3D armor is instead drawn directly by
+        // HumanoidArmorLayerMixin (mirroring the Fabric ACFabricArmorRenderer). Registering it here too would
+        // be a latent double-draw if equipment JSONs were ever added.
     }
 
     /**
