@@ -1,8 +1,14 @@
 package com.github.alexmodguy.alexscaves.mixin.client;
 
+import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.render.blockentity.AmbersolBlockRenderer;
+import com.github.alexmodguy.alexscaves.client.render.blockentity.HologramProjectorBlockRenderer;
 import com.github.alexmodguy.alexscaves.client.render.compat.SubmitNodeBufferSource;
+import com.github.alexmodguy.alexscaves.client.render.entity.CorrodentRenderer;
+import com.github.alexmodguy.alexscaves.client.render.entity.LicowitchRenderer;
 import com.github.alexmodguy.alexscaves.client.render.item.RaygunRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -59,6 +65,19 @@ public abstract class LevelRendererMixin {
             poseStack.translate(entityPos.x - cameraPos.x, entityPos.y - cameraPos.y, entityPos.z - cameraPos.z);
             RaygunRenderHelper.renderRaysFor(living, entityPos, poseStack, capture, partialTick, false, 0);
             poseStack.popPose();
+        }
+        // Restore the batched world renderers upstream drew from RenderLevelStageEvent (AFTER_ENTITIES /
+        // AFTER_TRANSLUCENT_BLOCKS). Their registered .render() populates the batch maps every frame, but the
+        // renderEntireBatch flush had no caller on 26.1.2 — so holograms, the corrodent corrosion overlay, the
+        // licowitch teleport double and the ambersol shine never drew. Each does its own camera-relative
+        // translate and bakes the pose into vertices, so route them through the same capture as the raygun.
+        Camera camera = minecraft.gameRenderer.getMainCamera();
+        LevelRenderer levelRenderer = (LevelRenderer) (Object) this;
+        HologramProjectorBlockRenderer.renderEntireBatch(levelRenderer, poseStack, 0, camera, partialTick, capture);
+        CorrodentRenderer.renderEntireBatch(levelRenderer, poseStack, 0, camera, partialTick, capture);
+        LicowitchRenderer.renderEntireBatch(levelRenderer, poseStack, 0, camera, partialTick, capture);
+        if (AlexsCaves.CLIENT_CONFIG.ambersolShines.get()) {
+            AmbersolBlockRenderer.renderEntireBatch(levelRenderer, poseStack, 0, camera, partialTick, capture);
         }
         capture.flushInto(collector, poseStack);
     }

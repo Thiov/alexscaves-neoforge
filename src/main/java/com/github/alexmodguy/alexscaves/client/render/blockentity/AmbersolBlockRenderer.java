@@ -33,14 +33,16 @@ public class AmbersolBlockRenderer<T extends AmbersolBlockEntity> implements com
     public AmbersolBlockRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
     }
 
-    public static void renderEntireBatch(LevelRenderer levelRenderer, PoseStack poseStack, int renderTick, Camera camera, float partialTick) {
+    // 26.1.2: draws into the caller-supplied MultiBufferSource (the LevelRendererMixin SubmitNodeBufferSource
+    // capture) instead of an immediate bufferSource(), which does not flush in the deferred level pass.
+    public static void renderEntireBatch(LevelRenderer levelRenderer, PoseStack poseStack, int renderTick, Camera camera, float partialTick, MultiBufferSource bufferIn) {
         if (!allOnScreen.isEmpty()) {
             List<BlockPos> sortedPoses = new ArrayList<BlockPos>(allOnScreen.keySet());
             Collections.sort(sortedPoses, (blockPos1, blockPos2) -> sortBlockPos(camera, blockPos1, blockPos2));
             poseStack.pushPose();
             Vec3 cameraPos = camera.position();
             poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-            MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+            MultiBufferSource multibuffersource$buffersource = bufferIn;
             for (BlockPos pos : sortedPoses) {
                 Vec3 blockAt = Vec3.atCenterOf(pos);
                 poseStack.pushPose();

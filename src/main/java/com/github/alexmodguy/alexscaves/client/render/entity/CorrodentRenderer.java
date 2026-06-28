@@ -55,12 +55,15 @@ public class CorrodentRenderer extends MobRenderer121X<CorrodentEntity, Corroden
         }
     }
 
-    public static void renderEntireBatch(LevelRenderer levelRenderer, PoseStack poseStack, int renderTick, Camera camera, float partialTick) {
+    // 26.1.2: draws into the caller-supplied MultiBufferSource (the LevelRendererMixin SubmitNodeBufferSource
+    // capture) instead of an immediate crumblingBufferSource()+endBatch(), which does not flush in the deferred
+    // level pass. The caller flushes the capture once after all batched renderers run.
+    public static void renderEntireBatch(LevelRenderer levelRenderer, PoseStack poseStack, int renderTick, Camera camera, float partialTick, MultiBufferSource bufferIn) {
         if (!allDugBlocksOnScreen.isEmpty()) {
             poseStack.pushPose();
             Vec3 cameraPos = camera.position();
             poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-            MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().crumblingBufferSource();
+            MultiBufferSource multibuffersource$buffersource = bufferIn;
             for (Map.Entry<BlockPos, Integer> posAndInt : allDugBlocksOnScreen.entrySet()) {
                 int progress = posAndInt.getValue() - 1;
                 if (progress >= 0 && progress < 10) {
@@ -73,7 +76,6 @@ public class CorrodentRenderer extends MobRenderer121X<CorrodentEntity, Corroden
                     poseStack.popPose();
                 }
             }
-            multibuffersource$buffersource.endBatch();
             poseStack.popPose();
         }
         allDugBlocksOnScreen.clear();
