@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector4f;
 
 public class QuarryBorderLightningParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
@@ -81,7 +79,6 @@ public class QuarryBorderLightningParticle extends com.github.alexmodguy.alexsca
         return ParticleRenderType.SINGLE_QUADS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
 
         public Factory() {

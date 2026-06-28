@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector4f;
 
 public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
@@ -80,7 +78,6 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
         return ParticleRenderType.SINGLE_QUADS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class ScarletFactory implements ParticleProvider<SimpleParticleType> {
 
         public ScarletFactory() {
@@ -92,7 +89,6 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class AzureFactory implements ParticleProvider<SimpleParticleType> {
 
         public AzureFactory() {

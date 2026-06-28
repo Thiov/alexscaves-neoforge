@@ -10,8 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class SirenLightBlockEntity extends BlockEntity {
     private float onProgress;
@@ -92,7 +90,6 @@ public class SirenLightBlockEntity extends BlockEntity {
         return color < 0 ? 0X00FF00 : color;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public AABB getRenderBoundingBox() {
         BlockPos pos = this.getBlockPos();
         BlockPos min = pos.offset(-3, -3, -3);

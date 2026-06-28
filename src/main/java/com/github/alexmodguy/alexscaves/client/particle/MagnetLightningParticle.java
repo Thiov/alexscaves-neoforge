@@ -17,8 +17,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector4f;
 
 public class MagnetLightningParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
@@ -104,7 +102,6 @@ public class MagnetLightningParticle extends com.github.alexmodguy.alexscaves.mc
         return ParticleRenderType.SINGLE_QUADS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
 
         public Factory() {

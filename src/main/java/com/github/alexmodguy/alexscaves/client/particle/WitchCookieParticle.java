@@ -4,8 +4,6 @@ import com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class WitchCookieParticle extends TextureSheetParticle {
 
@@ -55,7 +53,6 @@ public class WitchCookieParticle extends TextureSheetParticle {
         return ParticleRenderType.SINGLE_QUADS;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 
