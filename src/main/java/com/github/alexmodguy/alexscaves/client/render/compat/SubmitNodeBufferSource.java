@@ -63,13 +63,30 @@ public class SubmitNodeBufferSource implements MultiBufferSource {
                 }
                 return;
             }
-            collector.submitCustomGeometry(poseStack, type, (pose, consumer) -> {
-                replay(mesh, consumer);
-                mesh.close();
-                if (bytes != null) {
-                    bytes.close();
-                }
-            });
+            // QUADS geometry does NOT display through the customGeometry replay-into-consumer path — only
+            // TRIANGLES does, which is exactly why the port had to give the raygun a bespoke TRIANGLES pipeline
+            // and why every entity model (mobs, projectiles, the held BEWLR items, etc.), which renders as
+            // QUADS, was invisible. RenderType.draw sets up the sequential quad index buffer
+            // (getSequentialBuffer(mode())) and draws the mesh with the render type's own pipeline + the live
+            // camera modelview, so it renders QUADS correctly. It still runs deferred: inside the
+            // submitCustomGeometry callback, which fires during the feature-render phase. TRIANGLES geometry
+            // (the raygun beam) keeps the proven replay path so that working effect is untouched.
+            if (type.mode() == VertexFormat.Mode.QUADS) {
+                collector.submitCustomGeometry(poseStack, type, (pose, consumer) -> {
+                    type.draw(mesh); // uploads + draws + closes the mesh
+                    if (bytes != null) {
+                        bytes.close();
+                    }
+                });
+            } else {
+                collector.submitCustomGeometry(poseStack, type, (pose, consumer) -> {
+                    replay(mesh, consumer);
+                    mesh.close();
+                    if (bytes != null) {
+                        bytes.close();
+                    }
+                });
+            }
         });
         builders.clear();
         memory.clear();
