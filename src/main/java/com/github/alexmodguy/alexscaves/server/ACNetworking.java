@@ -71,7 +71,10 @@ public final class ACNetworking {
         registrar.playToServer(ArmorKeyMessage.TYPE, ArmorKeyMessage.CODEC, ArmorKeyMessage::handle);
 
         // ---- Alex's Caves: bidirectional ----
-        registrar.playBidirectional(UpdateItemTagMessage.TYPE, UpdateItemTagMessage.CODEC, UpdateItemTagMessage::handle);
+        // The single-handler playBidirectional only registers a SERVER handler (client handler = null),
+        // which fails NeoForge's "clientbound payload missing client-side handler" check. Pass the same
+        // flow-checking handler for both directions.
+        registrar.playBidirectional(UpdateItemTagMessage.TYPE, UpdateItemTagMessage.CODEC, UpdateItemTagMessage::handle, UpdateItemTagMessage::handle);
 
         // ---- Bundled Citadel ----
         // AnimationMessage (server -> client): the ONLY way the client learns a non-walk
@@ -84,6 +87,6 @@ public final class ACNetworking {
         registrar.playToServer(DanceJukeboxMessage.TYPE, DanceJukeboxMessage.CODEC, DanceJukeboxMessage::handle);
         // PropertiesMessage (bidirectional): CaveBookProgress sends it both to-server and
         // to-tracking-players; the Citadel data-sync depends on it.
-        registrar.playBidirectional(PropertiesMessage.TYPE, PropertiesMessage.CODEC, PropertiesMessage::handle);
+        registrar.playBidirectional(PropertiesMessage.TYPE, PropertiesMessage.CODEC, PropertiesMessage::handle, PropertiesMessage::handle);
     }
 }
