@@ -32,7 +32,7 @@ public abstract class MinecartSoundInstanceMixin extends AbstractTickableSoundIn
             cancellable = true
     )
     public void ac_tick(CallbackInfo ci) {
-        if (((MinecartAccessor) minecart).isOnMagLevRail()) {
+        if (minecart instanceof MinecartAccessor ac_mc && ac_mc.isOnMagLevRail()) {
             volume = 0.0F;
             ci.cancel();
         }

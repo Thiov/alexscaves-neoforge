@@ -78,7 +78,8 @@
     "client.SoundEngineMixin",
     "client.SoundManagerAccessor",
     "client.UnderwaterAmbientSoundHandlerMixin",
-    "client.UnderwaterAmbientSoundInstancesMixin"
+    "client.UnderwaterAmbientSoundInstancesMixin",
+    "client.EntityRenderDispatcherMixin"
   ],
   "injectors": {
     "defaultRequire": 1
