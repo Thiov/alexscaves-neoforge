@@ -52,7 +52,7 @@
 		{
 			"from": [3, 0, 2],
 			"to": [13, 16, 14],
-			"shade": false,
+			"shade": false, "light_emission": 15,
 			"faces": {
 				"east": {"uv": [16, 0, 4, 16], "texture": "#eyes"},
 				"west": {"uv": [4, 0, 16, 16], "texture": "#eyes"}

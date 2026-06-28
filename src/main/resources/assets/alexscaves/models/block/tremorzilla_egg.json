@@ -28,7 +28,7 @@
 			"from": [3, 0, 3],
 			"to": [13, 16, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
-			"shade": false,
+			"shade": false, "light_emission": 15,
 			"faces": {
 				"north": {"uv": [0, 0, 10, 16], "texture": "#side_glow"},
 				"east": {"uv": [0, 0, 10, 16], "texture": "#side_glow"},

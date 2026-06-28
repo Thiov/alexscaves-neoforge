@@ -95,7 +95,7 @@
 			"name": "eyes",
 			"from": [1, 1, 1],
 			"to": [15, 15, 15],
-			"shade": false,
+			"shade": false, "light_emission": 15,
 			"faces": {
 				"north": {"uv": [0, 0, 14, 14], "texture": "#eyes"},
 				"east": {"uv": [0, 0, 14, 14], "texture": "#eyes"},

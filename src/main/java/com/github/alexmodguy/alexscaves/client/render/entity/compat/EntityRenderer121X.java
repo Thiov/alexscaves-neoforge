@@ -5,42 +5,42 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
 public abstract class EntityRenderer121X<T extends Entity>
-        extends net.minecraft.client.renderer.entity.EntityRenderer<T, EntityRenderState> {
-    protected T currentEntity;
-    protected float currentEntityYaw;
-    protected float currentPartialTicks;
+        extends net.minecraft.client.renderer.entity.EntityRenderer<T, LegacyEntityRenderState> {
 
     protected EntityRenderer121X(EntityRendererProvider.Context context) {
         super(context);
     }
 
-    
-    public EntityRenderState createRenderState() {
-        return new EntityRenderState();
+    @Override
+    public LegacyEntityRenderState createRenderState() {
+        return new LegacyEntityRenderState();
     }
 
-    
-    public void extractRenderState(T entity, EntityRenderState state, float partialTicks) {
+    @Override
+    public void extractRenderState(T entity, LegacyEntityRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
-        this.currentEntity = entity;
-        this.currentPartialTicks = partialTicks;
-        this.currentEntityYaw = Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot());
+        // Carry the per-entity data ON the render state — NOT on shared renderer-instance fields — so the
+        // batched extract→submit split doesn't collapse every same-type instance onto the last one extracted.
+        state.legacyEntity = entity;
+        state.legacyPartialTicks = partialTicks;
+        state.legacyEntityYaw = Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot());
     }
 
-    
-    public void submit(EntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+    @Override
+    public void submit(LegacyEntityRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
         super.submit(state, poseStack, collector, cameraRenderState);
-        if (currentEntity != null) {
+        if (state.legacyEntity != null) {
+            @SuppressWarnings("unchecked")
+            T entity = (T) state.legacyEntity;
             SubmitNodeBufferSource capture = new SubmitNodeBufferSource();
             capture.bindLive(collector, poseStack);
-            this.render(currentEntity, currentEntityYaw, currentPartialTicks, poseStack, capture, state.lightCoords);
+            this.render(entity, state.legacyEntityYaw, state.legacyPartialTicks, poseStack, capture, state.lightCoords);
             capture.flushInto(collector, poseStack);
         }
     }

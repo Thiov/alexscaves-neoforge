@@ -23,7 +23,7 @@
         },
         {   "from": [ 0, 0, 0 ],
             "to": [ 16, 16, 16 ],
-            "shade": false,
+            "shade": false, "light_emission": 15,
             "faces": {
                 "down":  { "texture": "#top_glow", "cullface": "down" },
                 "up":    { "texture": "#top_glow", "cullface": "up" },
