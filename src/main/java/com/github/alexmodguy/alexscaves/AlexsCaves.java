@@ -151,6 +151,14 @@ public class AlexsCaves {
         ACPotPatternRegistry.init();
 
         PROXY.commonInit(modEventBus);
+        // clientInit MUST run here in the constructor — it registers the mod-bus listeners for the client
+        // setup/registration events (EntityRenderersEvent.RegisterRenderers, RegisterClientExtensionsEvent,
+        // ModelEvent, RegisterGuiLayersEvent, the fluid client extensions, ...). Deferring it via
+        // FMLClientSetupEvent.enqueueWork (as before) added those listeners AFTER the registration events had
+        // already fired, so registerRenderers NEVER ran → NO AC entity renderer was registered → every AC
+        // entity (mobs, projectiles, weapon effects, ...) rendered invisibly. commonInit (above) is already
+        // wired here for the same reason. On a dedicated server PROXY is CommonProxy and clientInit is a no-op.
+        PROXY.clientInit(modEventBus);
         ACBiomeRegistry.init();
     }
 
@@ -169,7 +177,8 @@ public class AlexsCaves {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> PROXY.clientInit(this.modEventBus));
+        // clientInit moved to the mod constructor (see comment there) — registering its listeners here, even
+        // via enqueueWork, is too late for the client registration events that fire during this phase.
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
