@@ -344,8 +344,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void clientInit(IEventBus modEventBus) {
-        // Game bus.
-        NeoForge.EVENT_BUS.register(new ClientEvents());
+        // Game bus. (ClientEvents has no @SubscribeEvent methods — it is static helpers called directly
+        // from mixins/this proxy — so it must NOT be bus-registered; NeoForge 26.1.2 throws otherwise.)
         NeoForge.EVENT_BUS.addListener(this::onClientTick);
         // Mod bus. (ACModelLayers::register is already wired by AlexsCaves.registerLayerDefinitions; do NOT
         // re-add it here or layer definitions get registered twice.)
