@@ -18,6 +18,12 @@ repositories {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
     }
+    maven {
+        // CurseMaven — pulls Astryxion's standalone Citadel jar straight from CurseForge by project+file id.
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
+        content { includeGroup 'curse.maven' }
+    }
     exclusiveContent {
         forRepository {
             maven {
@@ -60,6 +66,14 @@ dependencies {
     compileOnly "mezz.jei:jei-26.1-common-api:${project.jei_version}"
     compileOnly "mezz.jei:jei-26.1-neoforge-api:${project.jei_version}"
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    // Citadel — the standalone library (Astryxion's Citadel (NeoForge), the same one Alex's Mobs requires),
+    // depended on rather than bundled. compileOnly = compile against its API without shipping it; users
+    // install Citadel separately (declared as a required dependency in neoforge.mods.toml).
+    compileOnly "curse.maven:citadel-neoforge-1512529:8161084"
+    // ...and on the run classpath so dev runs (runClient/runServer) have Citadel loaded as a mod.
+    // runtimeOnly keeps it OUT of the published AC jar (it is not jarJar'd) — users install Citadel separately.
+    runtimeOnly "curse.maven:citadel-neoforge-1512529:8161084"
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {

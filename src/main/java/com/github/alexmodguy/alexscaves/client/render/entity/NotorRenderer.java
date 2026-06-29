@@ -199,9 +199,6 @@ public class NotorRenderer extends MobRenderer121X<NotorEntity, NotorModel> {
         BasicEntityModel model = (BasicEntityModel) baseModel;
         VertexConsumer ivertexbuilder = bufferIn.getBuffer(ACRenderTypes.getHologram(texture));
         matrixStack.pushPose();
-        model.young = living.isBaby();
-        model.riding = living.isPassenger();
-        model.attackTime = living.getAttackAnim(partialTicks);
         setModelFlags(model, true);
         model.prepareMobModel(living, 0.0F, 0.0F, partialTicks);
         model.setupAnim(living, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F);

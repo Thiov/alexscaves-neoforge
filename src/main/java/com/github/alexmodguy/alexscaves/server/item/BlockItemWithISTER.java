@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 public class BlockItemWithISTER extends BlockItemWithSupplier {
 
     public BlockItemWithISTER(DeferredHolder<Block, Block> blockSupplier, Properties props) {
-        super(blockSupplier, props);
+        super(blockSupplier, props.useBlockDescriptionPrefix());
     }
 
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {

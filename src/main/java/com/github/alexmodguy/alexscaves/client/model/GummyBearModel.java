@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.world.entity.HumanoidArm;
 
-public class GummyBearModel extends AdvancedEntityModel<GummyBearEntity> implements ArmedModel {
+public class GummyBearModel extends ACAdvancedEntityModel<GummyBearEntity> implements ArmedModel {
     private final AdvancedModelBox main;
     private final AdvancedModelBox body;
     private final AdvancedModelBox head;

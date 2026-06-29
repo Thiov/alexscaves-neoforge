@@ -81,15 +81,6 @@ public abstract class GameRendererMixin {
         ((ClientProxy) AlexsCaves.PROXY).preScreenRender(partialTick);
     }
 
-    @Inject(
-            method = {"Lnet/minecraft/client/renderer/GameRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;)V"},
-            remap = true,
-            at = @At("HEAD")
-    )
-    public void ac_beginPostEffects(DeltaTracker deltaTracker, CallbackInfo ci) {
-        PostEffectRegistry.beginFrame(Minecraft.getInstance().getMainRenderTarget());
-    }
-
 
     // 26.1: renderItemInHand(PoseStack, Camera, F)V -> renderItemInHand(CameraRenderState, F, Matrix4fc)V
     @Inject(

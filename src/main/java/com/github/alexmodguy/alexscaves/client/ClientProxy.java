@@ -116,13 +116,13 @@ public class ClientProxy extends CommonProxy {
     public static final Identifier WATCHER_EFFECT = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
             "textures/misc/watcher_effect.png");
     public static final Identifier IRRADIATED_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
-            "shaders/post/irradiated.json");
+            "irradiated");
     public static final Identifier HOLOGRAM_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
-            "shaders/post/hologram.json");
+            "hologram");
     public static final Identifier PURPLE_WITCH_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
-            "shaders/post/purple_witch.json");
+            "purple_witch");
     public static final Identifier SUGAR_RUSH_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
-            "shaders/post/sugar_rush.json");
+            "sugar_rush");
     public static final RandomSource random = RandomSource.create();
     public static int lastTremorTick = -1;
     public static float[] randomTremorOffsets = new float[3];

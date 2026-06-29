@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public abstract class SauropodBaseModel<T extends SauropodBaseEntity> extends AdvancedEntityModel<T> {
+public abstract class SauropodBaseModel<T extends SauropodBaseEntity> extends ACAdvancedEntityModel<T> {
     protected final AdvancedModelBox root;
     protected final AdvancedModelBox body;
     protected final AdvancedModelBox hips;

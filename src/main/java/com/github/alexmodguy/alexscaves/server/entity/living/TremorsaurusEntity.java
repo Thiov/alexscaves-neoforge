@@ -415,7 +415,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     public void setRecordPlayingNearby(BlockPos pos, boolean playing) {
-        this.onClientPlayMusicDisc(this.getId(), pos, playing);
+        com.github.alexmodguy.alexscaves.server.misc.ACDanceHelper.onClientPlayMusicDisc(this, this.getId(), pos, playing);
     }
 
     public void actuallyPlayAmbientSound() {

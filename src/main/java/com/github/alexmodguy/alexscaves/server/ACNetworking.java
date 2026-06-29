@@ -18,10 +18,6 @@ import com.github.alexmodguy.alexscaves.server.message.UpdateEffectVisualityEnti
 import com.github.alexmodguy.alexscaves.server.message.UpdateItemTagMessage;
 import com.github.alexmodguy.alexscaves.server.message.UpdateMagneticDataMessage;
 import com.github.alexmodguy.alexscaves.server.message.WorldEventMessage;
-import com.github.alexthe666.citadel.server.message.AnimationMessage;
-import com.github.alexthe666.citadel.server.message.DanceJukeboxMessage;
-import com.github.alexthe666.citadel.server.message.PropertiesMessage;
-import com.github.alexthe666.citadel.server.message.SyncClientTickRateMessage;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -76,17 +72,8 @@ public final class ACNetworking {
         // flow-checking handler for both directions.
         registrar.playBidirectional(UpdateItemTagMessage.TYPE, UpdateItemTagMessage.CODEC, UpdateItemTagMessage::handle, UpdateItemTagMessage::handle);
 
-        // ---- Bundled Citadel ----
-        // AnimationMessage (server -> client): the ONLY way the client learns a non-walk
-        // animation (roar/bite/attack) started. Carry-over fix from the Fabric port.
-        registrar.playToClient(AnimationMessage.TYPE, AnimationMessage.CODEC, AnimationMessage::handle);
-        // SyncClientTickRateMessage (server -> client): sent via PacketDistributor.sendToAllPlayers
-        // in ServerTickRateTracker. handle(...) is a no-op but the type MUST be registered or the send throws.
-        registrar.playToClient(SyncClientTickRateMessage.TYPE, SyncClientTickRateMessage.CODEC, SyncClientTickRateMessage::handle);
-        // DanceJukeboxMessage (client -> server): sent via PacketDistributor.sendToServer in IDancesToJukebox.
-        registrar.playToServer(DanceJukeboxMessage.TYPE, DanceJukeboxMessage.CODEC, DanceJukeboxMessage::handle);
-        // PropertiesMessage (bidirectional): CaveBookProgress sends it both to-server and
-        // to-tracking-players; the Citadel data-sync depends on it.
-        registrar.playBidirectional(PropertiesMessage.TYPE, PropertiesMessage.CODEC, PropertiesMessage::handle, PropertiesMessage::handle);
+        // Citadel's own payloads (AnimationMessage, SyncClientTickRateMessage, DanceJukeboxMessage,
+        // PropertiesMessage) are registered by the standalone Citadel mod itself — AC must NOT register them
+        // here too, or RegisterPayloadHandlersEvent throws a duplicate-payload-type error.
     }
 }

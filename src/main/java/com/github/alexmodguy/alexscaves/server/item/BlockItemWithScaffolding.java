@@ -22,7 +22,7 @@ public class BlockItemWithScaffolding extends BlockItemWithSupplier {
     private final DeferredHolder<Block, Block> block;
 
     public BlockItemWithScaffolding(DeferredHolder<Block, Block> blockSupplier, Properties props) {
-        super(blockSupplier, props);
+        super(blockSupplier, props.useBlockDescriptionPrefix());
         this.block = blockSupplier;
     }
 

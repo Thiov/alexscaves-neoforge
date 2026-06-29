@@ -426,14 +426,14 @@ public class ACBlockRegistry {
 
     private static DeferredHolder<Block, Block> registerBlockAndItemEdible(String name, Supplier<Block> block, FoodProperties foodProperties) {
         DeferredHolder<Block, Block> blockObj = DEF_REG.register(name, block);
-        ACItemRegistry.DEF_REG.register(name, () -> new BlockItemWithSupplier(blockObj, new Item.Properties().food(foodProperties)));
+        ACItemRegistry.DEF_REG.register(name, () -> new BlockItemWithSupplier(blockObj, new Item.Properties().food(foodProperties).useBlockDescriptionPrefix()));
         return blockObj;
     }
 
     private static Supplier<? extends BlockItemWithSupplier> getBlockSupplier(int itemType, DeferredHolder<Block, Block> blockObj) {
         switch (itemType) {
             default:
-                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties());
+                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().useBlockDescriptionPrefix());
             case 1:
                 return () -> new BlockItemWithSupplierLore(blockObj, new Item.Properties());
             case 2:
@@ -445,11 +445,11 @@ public class ACBlockRegistry {
             case 5:
                 return () -> new RadioactiveOnDestroyedBlockItem(blockObj, new Item.Properties(), 0.01F);
             case 6:
-                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON));
+                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON).useBlockDescriptionPrefix());
             case 7:
-                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant());
+                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant().useBlockDescriptionPrefix());
             case 8:
-                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant().rarity(ACItemRegistry.getRarityNuclear()));
+                return () -> new BlockItemWithSupplier(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant().rarity(ACItemRegistry.getRarityNuclear()).useBlockDescriptionPrefix());
             case 9:
                 return () -> new BlockItemWithISTER(blockObj, new Item.Properties().rarity(Rarity.UNCOMMON));
         }

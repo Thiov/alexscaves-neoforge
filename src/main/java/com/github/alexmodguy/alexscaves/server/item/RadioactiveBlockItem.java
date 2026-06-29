@@ -19,7 +19,7 @@ public class RadioactiveBlockItem extends BlockItemWithSupplier {
     private final float randomChanceOfRadiation;
 
     public RadioactiveBlockItem(DeferredHolder<Block, Block> blockSupplier, Properties props, float randomChanceOfRadiation) {
-        super(blockSupplier, props);
+        super(blockSupplier, props.useBlockDescriptionPrefix());
         this.randomChanceOfRadiation = randomChanceOfRadiation;
     }
 

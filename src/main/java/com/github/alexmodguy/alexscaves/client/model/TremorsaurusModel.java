@@ -17,7 +17,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public class TremorsaurusModel extends AdvancedEntityModel<TremorsaurusEntity> {
+public class TremorsaurusModel extends ACAdvancedEntityModel<TremorsaurusEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox rarm;
     private final AdvancedModelBox larm;

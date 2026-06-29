@@ -18,7 +18,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public class TremorzillaModel extends AdvancedEntityModel<TremorzillaEntity> {
+public class TremorzillaModel extends ACAdvancedEntityModel<TremorzillaEntity> {
     private final AdvancedModelBox root;
     private final HideableModelBoxWithChildren torso;
     private final AdvancedModelBox torsoSpikes;

@@ -92,9 +92,9 @@ public abstract class LivingEntityRenderer121X<T extends LivingEntity, M extends
     
     public void render(T entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource source,
             int packedLight) {
-        this.model.attackTime = this.getAttackAnim(entity, partialTicks);
-        this.model.riding = entity.isPassenger();
-        this.model.young = entity.isBaby();
+        if (this.model instanceof com.github.alexmodguy.alexscaves.client.model.ACAdvancedEntityModel<?> acm) {
+            acm.young = entity.isBaby();
+        }
 
         // 26.1 render-state bridge previously hardcoded these to 0 → no walk animation / head tracking.
         float limbSwing = entity.walkAnimation.position(partialTicks);
