@@ -11,6 +11,7 @@ import com.github.alexmodguy.alexscaves.server.message.PossessionKeyMessage;
 import com.github.alexmodguy.alexscaves.server.message.SpelunkeryTableChangeMessage;
 import com.github.alexmodguy.alexscaves.server.message.SpelunkeryTableCompleteTutorialMessage;
 import com.github.alexmodguy.alexscaves.server.message.SundropRainbowMessage;
+import com.github.alexmodguy.alexscaves.server.message.UpdateCitadelTagMessage;
 import com.github.alexmodguy.alexscaves.server.message.UpdateBossBarMessage;
 import com.github.alexmodguy.alexscaves.server.message.UpdateBossEruptionStatus;
 import com.github.alexmodguy.alexscaves.server.message.UpdateCaveBiomeMapTagMessage;
@@ -71,6 +72,9 @@ public final class ACNetworking {
         // which fails NeoForge's "clientbound payload missing client-side handler" check. Pass the same
         // flow-checking handler for both directions.
         registrar.playBidirectional(UpdateItemTagMessage.TYPE, UpdateItemTagMessage.CODEC, UpdateItemTagMessage::handle, UpdateItemTagMessage::handle);
+        // AC-owned cave-book sync. Replaces Citadel's PropertiesMessage, which the standalone Citadel
+        // registers as playToServer (C2S) ONLY — AC also needs the server→client direction (see CaveBookProgress).
+        registrar.playBidirectional(UpdateCitadelTagMessage.TYPE, UpdateCitadelTagMessage.CODEC, UpdateCitadelTagMessage::handle, UpdateCitadelTagMessage::handle);
 
         // Citadel's own payloads (AnimationMessage, SyncClientTickRateMessage, DanceJukeboxMessage,
         // PropertiesMessage) are registered by the standalone Citadel mod itself — AC must NOT register them
