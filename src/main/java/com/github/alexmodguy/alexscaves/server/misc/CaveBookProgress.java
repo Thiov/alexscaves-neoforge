@@ -2,8 +2,8 @@ package com.github.alexmodguy.alexscaves.server.misc;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
+import com.github.alexmodguy.alexscaves.server.message.UpdateCitadelTagMessage;
 import com.github.alexthe666.citadel.server.entity.CitadelEntityData;
-import com.github.alexthe666.citadel.server.message.PropertiesMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
@@ -48,7 +48,7 @@ public class CaveBookProgress {
         if (!player.level().isClientSide()) {
             syncCaveBookProgress(player);
         } else {
-            net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new PropertiesMessage("CitadelTagUpdate", tag, player.getId()));
+            net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(new UpdateCitadelTagMessage(player.getId(), tag));
         }
     }
 
@@ -56,7 +56,7 @@ public class CaveBookProgress {
         if (!player.level().isClientSide()) {
             PacketDistributor.sendToPlayersTrackingEntityAndSelf(
                 player,
-                new PropertiesMessage("CitadelTagUpdate", CitadelEntityData.getOrCreateCitadelTag(player), player.getId())
+                new UpdateCitadelTagMessage(player.getId(), CitadelEntityData.getOrCreateCitadelTag(player))
             );
         }
     }
