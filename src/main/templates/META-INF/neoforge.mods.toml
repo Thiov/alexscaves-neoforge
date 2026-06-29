@@ -33,10 +33,10 @@ config="alexscaves.mixins.json"
 
 [[dependencies.${mod_id}]]
     modId="citadel"
-    type="incompatible"
-    reason="Alex's Caves bundles the Citadel library inside its own jar; the standalone Citadel mod would supply duplicate com.github.alexthe666.citadel classes and conflict."
+    type="required"
+    reason="Alex's Caves uses the Citadel library (the animation/entity framework). Install the standalone Citadel (NeoForge) mod."
     versionRange="*"
-    ordering="NONE"
+    ordering="AFTER"
     side="BOTH"
 
 [[dependencies.${mod_id}]]

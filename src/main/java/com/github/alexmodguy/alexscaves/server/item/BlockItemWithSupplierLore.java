@@ -16,7 +16,7 @@ public class BlockItemWithSupplierLore extends BlockItemWithSupplier {
     private final DeferredHolder<Block, Block> block;
 
     public BlockItemWithSupplierLore(DeferredHolder<Block, Block> blockSupplier, Properties props) {
-        super(blockSupplier, props);
+        super(blockSupplier, props.useBlockDescriptionPrefix());
         this.block = blockSupplier;
     }
 

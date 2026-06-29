@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-public class RaycatModel extends AdvancedEntityModel<RaycatEntity> {
+public class RaycatModel extends ACAdvancedEntityModel<RaycatEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox head;
     private final AdvancedModelBox rarm;

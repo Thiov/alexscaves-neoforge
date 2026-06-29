@@ -37,11 +37,8 @@ public class WatcherRenderer extends MobRenderer121X<WatcherEntity, WatcherModel
 
     public void render(WatcherEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int light) {
         poseStack.pushPose();
-        this.model.attackTime = this.getAttackAnim(entity, partialTicks);
 
         boolean shouldSit = entity.isPassenger();
-        this.model.riding = shouldSit;
-        this.model.young = entity.isBaby();
         float f = Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
         float f1 = Mth.rotLerp(partialTicks, entity.yHeadRotO, entity.yHeadRot);
         float f2 = f1 - f;

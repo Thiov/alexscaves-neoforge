@@ -16,7 +16,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.util.Mth;
 
-public class GrottoceratopsModel extends AdvancedEntityModel<GrottoceratopsEntity> {
+public class GrottoceratopsModel extends ACAdvancedEntityModel<GrottoceratopsEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox bodySpikes;
     private final AdvancedModelBox rleg;

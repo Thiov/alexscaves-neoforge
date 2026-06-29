@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public class SubterranodonModel extends AdvancedEntityModel<SubterranodonEntity> {
+public class SubterranodonModel extends ACAdvancedEntityModel<SubterranodonEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox neck;
     private final AdvancedModelBox head;

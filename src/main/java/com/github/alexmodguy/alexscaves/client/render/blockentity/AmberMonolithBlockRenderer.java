@@ -108,9 +108,9 @@ public class AmberMonolithBlockRenderer<T extends AmberMonolithBlockEntity> impl
         BasicEntityModel model = (BasicEntityModel) baseModel;
         VertexConsumer vertexConsumer = bufferIn.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(texture));
         matrixStack.pushPose();
-        model.young = living.isBaby();
-        model.riding = living.isPassenger();
-        model.attackTime = living.getAttackAnim(partialTicks);
+        if (model instanceof com.github.alexmodguy.alexscaves.client.model.ACAdvancedEntityModel<?> acm) {
+            acm.young = living.isBaby();
+        }
         setAmberFlags(model, true);
         model.prepareMobModel(living, 0.0F, 0.0F, partialTicks);
         model.setupAnim(living, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F);

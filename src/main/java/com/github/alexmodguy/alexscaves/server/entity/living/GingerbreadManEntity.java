@@ -289,7 +289,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     public void setRecordPlayingNearby(BlockPos pos, boolean playing) {
-        this.onClientPlayMusicDisc(this.getId(), pos, playing);
+        com.github.alexmodguy.alexscaves.server.misc.ACDanceHelper.onClientPlayMusicDisc(this, this.getId(), pos, playing);
     }
 
     public boolean isDancing() {

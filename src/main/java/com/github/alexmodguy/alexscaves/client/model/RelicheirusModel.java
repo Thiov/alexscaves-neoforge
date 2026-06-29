@@ -15,7 +15,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.util.Mth;
 
-public class RelicheirusModel extends AdvancedEntityModel<RelicheirusEntity> {
+public class RelicheirusModel extends ACAdvancedEntityModel<RelicheirusEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox chest;
     private final AdvancedModelBox chestFeathers;

@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public class CandicornModel extends AdvancedEntityModel<CandicornEntity> {
+public class CandicornModel extends ACAdvancedEntityModel<CandicornEntity> {
 
     private final AdvancedModelBox main;
     private final AdvancedModelBox body;

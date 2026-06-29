@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.util.Mth;
 
-public class VallumraptorModel extends AdvancedEntityModel<VallumraptorEntity> {
+public class VallumraptorModel extends ACAdvancedEntityModel<VallumraptorEntity> {
     private final AdvancedModelBox body;
     private final AdvancedModelBox lleg;
     private final AdvancedModelBox lfoot;
