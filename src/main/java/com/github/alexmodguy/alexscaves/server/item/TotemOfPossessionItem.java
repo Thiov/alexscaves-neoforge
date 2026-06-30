@@ -53,7 +53,7 @@ import java.util.UUID;
 public class TotemOfPossessionItem extends Item implements UpdatesStackTags {
 
     public TotemOfPossessionItem() {
-        super(new Item.Properties().durability(1000).rarity(Rarity.UNCOMMON).attributes(createAttributes()));
+        super(new Item.Properties().durability(1000).rarity(Rarity.UNCOMMON).attributes(createAttributes()).enchantable(1));
     }
 
     public static ItemAttributeModifiers createAttributes() {

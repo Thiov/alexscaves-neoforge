@@ -27,7 +27,7 @@ import java.util.UUID;
 public class CandyCaneHookItem extends Item {
 
     public CandyCaneHookItem() {
-        super(new Item.Properties().durability(200));
+        super(new Item.Properties().durability(200).enchantable(1));
     }
 
     
