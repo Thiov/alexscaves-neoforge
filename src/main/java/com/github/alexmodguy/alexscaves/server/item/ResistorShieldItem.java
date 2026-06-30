@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 public class ResistorShieldItem extends ShieldItem {
 
     public ResistorShieldItem() {
-        super(new Item.Properties().stacksTo(1).durability(1000).rarity(Rarity.UNCOMMON));
+        super(new Item.Properties().stacksTo(1).durability(1000).rarity(Rarity.UNCOMMON).enchantable(1));
     }
 
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {

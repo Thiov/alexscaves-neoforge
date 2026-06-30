@@ -54,7 +54,7 @@ public class RaygunItem extends Item implements UpdatesStackTags, AlwaysCombinab
     public static final Predicate<ItemStack> AMMO = stack -> stack.getItem() == ACBlockRegistry.URANIUM_ROD.get().asItem();
 
     public RaygunItem() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().stacksTo(1).enchantable(1));
     }
 
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {

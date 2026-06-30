@@ -29,7 +29,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 public class GalenaGauntletItem extends Item {
 
     public GalenaGauntletItem() {
-        super(new Item.Properties().stacksTo(1).durability(400).repairable(com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.PACKED_GALENA.get().asItem()).rarity(Rarity.UNCOMMON));
+        super(new Item.Properties().stacksTo(1).durability(400).repairable(com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.PACKED_GALENA.get().asItem()).rarity(Rarity.UNCOMMON).enchantable(1));
     }
 
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {

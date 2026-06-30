@@ -189,7 +189,7 @@ public class ACItemRegistry {
     public static final DeferredHolder<Item, Item> PRIMORDIAL_SOUP = DEF_REG.register("primordial_soup", () -> new PrehistoricMixtureItem(new Item.Properties().stacksTo(1).food(ACFoods.PRIMORDIAL_SOUP)));
     public static final DeferredHolder<Item, Item> TOUGH_HIDE = DEF_REG.register("tough_hide", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> HEAVY_BONE = DEF_REG.register("heavy_bone", () -> new Item(new Item.Properties().stacksTo(16)));
-    public static final DeferredHolder<Item, Item> PRIMITIVE_CLUB = DEF_REG.register("primitive_club", () -> new PrimitiveClubItem(new Item.Properties().durability(120)));
+    public static final DeferredHolder<Item, Item> PRIMITIVE_CLUB = DEF_REG.register("primitive_club", () -> new PrimitiveClubItem(new Item.Properties().durability(120).enchantable(1)));
     public static final DeferredHolder<Item, Item> PRIMITIVE_CLUB_SPRITE = DEF_REG.register("primitive_club_inventory", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> PRIMORDIAL_HELMET = DEF_REG.register("primordial_helmet", () -> new PrimordialArmorItem(PRIMORDIAL_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
     public static final DeferredHolder<Item, Item> PRIMORDIAL_TUNIC = DEF_REG.register("primordial_tunic", () -> new PrimordialArmorItem(PRIMORDIAL_ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE));
@@ -198,7 +198,7 @@ public class ACItemRegistry {
     public static final DeferredHolder<Item, Item> LIMESTONE_SPEAR_SPRITE = DEF_REG.register("limestone_spear_inventory", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> OMINOUS_CATALYST = DEF_REG.register("ominous_catalyst", () -> new Item(new Item.Properties().rarity(Rarity.UNCOMMON).fireResistant()));
     public static final DeferredHolder<Item, Item> TECTONIC_SHARD = DEF_REG.register("tectonic_shard", () -> new Item(new Item.Properties().rarity(getRarityDemonic()).fireResistant()));
-    public static final DeferredHolder<Item, Item> EXTINCTION_SPEAR = DEF_REG.register("extinction_spear", () -> new ExtinctionSpearItem(new Item.Properties().durability(1300).rarity(getRarityDemonic()).fireResistant()));
+    public static final DeferredHolder<Item, Item> EXTINCTION_SPEAR = DEF_REG.register("extinction_spear", () -> new ExtinctionSpearItem(new Item.Properties().durability(1300).rarity(getRarityDemonic()).fireResistant().enchantable(1)));
     public static final DeferredHolder<Item, Item> EXTINCTION_SPEAR_SPRITE = DEF_REG.register("extinction_spear_inventory", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> DINOSAUR_POTTERY_SHERD = DEF_REG.register("dinosaur_pottery_sherd", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> FOOTPRINT_POTTERY_SHERD = DEF_REG.register("footprint_pottery_sherd", () -> new Item(new Item.Properties()));
@@ -254,10 +254,10 @@ public class ACItemRegistry {
     public static final DeferredHolder<Item, Item> GAZING_PEARL = DEF_REG.register("gazing_pearl", () -> new GazingPearlItem());
     public static final DeferredHolder<Item, Item> INK_BOMB = DEF_REG.register("ink_bomb", () -> new InkBombItem(new Item.Properties(), false));
     public static final DeferredHolder<Item, Item> GLOW_INK_BOMB = DEF_REG.register("glow_ink_bomb", () -> new InkBombItem(new Item.Properties(), true));
-    public static final DeferredHolder<Item, Item> MAGIC_CONCH = DEF_REG.register("magic_conch", () -> new MagicConchItem(new Item.Properties().durability(5).rarity(Rarity.UNCOMMON)));
-    public static final DeferredHolder<Item, Item> SEA_STAFF = DEF_REG.register("sea_staff", () -> new SeaStaffItem(new Item.Properties().durability(850).rarity(Rarity.UNCOMMON)));
+    public static final DeferredHolder<Item, Item> MAGIC_CONCH = DEF_REG.register("magic_conch", () -> new MagicConchItem(new Item.Properties().durability(5).rarity(Rarity.UNCOMMON).enchantable(1)));
+    public static final DeferredHolder<Item, Item> SEA_STAFF = DEF_REG.register("sea_staff", () -> new SeaStaffItem(new Item.Properties().durability(850).rarity(Rarity.UNCOMMON).enchantable(1)));
     public static final DeferredHolder<Item, Item> SEA_STAFF_SPRITE = DEF_REG.register("sea_staff_inventory", () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item, Item> ORTHOLANCE = DEF_REG.register("ortholance", () -> new OrtholanceItem(new Item.Properties().durability(340).rarity(Rarity.UNCOMMON)));
+    public static final DeferredHolder<Item, Item> ORTHOLANCE = DEF_REG.register("ortholance", () -> new OrtholanceItem(new Item.Properties().durability(340).rarity(Rarity.UNCOMMON).enchantable(1)));
     public static final DeferredHolder<Item, Item> ORTHOLANCE_SPRITE = DEF_REG.register("ortholance_inventory", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> DEPTH_CHARGE = DEF_REG.register("depth_charge", () -> new ThrownProjectileItem(new Item.Properties(), player -> new DepthChargeEntity(player.level(), player), -10.0F, 0.65F, 1.5F));
     public static final DeferredHolder<Item, Item> GUARDIAN_POTTERY_SHERD = DEF_REG.register("guardian_pottery_sherd", () -> new Item(new Item.Properties()));
@@ -326,7 +326,7 @@ public class ACItemRegistry {
     public static final DeferredHolder<Item, Item> RADIANT_ESSENCE = DEF_REG.register("radiant_essence", () -> new RadiantEssenceItem());
     public static final DeferredHolder<Item, Item> LICOWITCH_RADIANT_ESSENCE = DEF_REG.register("licowitch_radiant_essence", () -> new RadiantEssenceItem());
     public static final DeferredHolder<Item, Item> SACK_OF_SATING = DEF_REG.register("sack_of_sating", () -> new SackOfSatingItem());
-    public static final DeferredHolder<Item, Item> SUGAR_STAFF = DEF_REG.register("sugar_staff", () -> new SugarStaffItem(new Item.Properties().durability(100).rarity(Rarity.UNCOMMON)));
+    public static final DeferredHolder<Item, Item> SUGAR_STAFF = DEF_REG.register("sugar_staff", () -> new SugarStaffItem(new Item.Properties().durability(100).rarity(Rarity.UNCOMMON).enchantable(1)));
     public static final DeferredHolder<Item, Item> SUGAR_STAFF_SPRITE = DEF_REG.register("sugar_staff_inventory", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> GINGERBREAD_CRUMBS = DEF_REG.register("gingerbread_crumbs", () -> new Item(new Item.Properties().food(ACFoods.GINGERBREAD_CRUMBS)));
     public static final DeferredHolder<Item, Item> GINGERBREAD_HELMET = DEF_REG.register("gingerbread_helmet", () -> new GingerbreadArmorItem(GINGERBREAD_ARMOR_MATERIAL, ArmorItem.Type.HELMET));
