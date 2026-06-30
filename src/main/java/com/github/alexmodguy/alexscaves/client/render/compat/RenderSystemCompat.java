@@ -38,6 +38,15 @@ public class RenderSystemCompat {
         }
     }
 
+    public static boolean supportsShaderTexture() {
+        for (Method method : RenderSystem.class.getMethods()) {
+            if (method.getName().equals("setShaderTexture") && method.getParameterCount() == 2 && method.getParameterTypes()[0] == int.class) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void enableDepthTest() {
         invokeOptional("enableDepthTest");
     }

@@ -82,7 +82,7 @@ public class NaturalSpawnerMixin {
                                         //if (net.neoforged.neoforge.common.CommonHooks.canEntitySpawn(mob, level, d0, blockpos.getY(), d1, null, EntitySpawnReason.CHUNK_GENERATION) == -1)
                                         //    continue;
                                         if (mob.checkSpawnRules(level, EntitySpawnReason.CHUNK_GENERATION) && mob.checkSpawnObstruction(level)) {
-                                            spawngroupdata = mob.finalizeSpawn(level, ((net.minecraft.server.level.ServerLevel) level).getCurrentDifficultyAt(mob.blockPosition()), EntitySpawnReason.CHUNK_GENERATION, spawngroupdata);
+                                            spawngroupdata = mob.finalizeSpawn(level, level.getCurrentDifficultyAt(mob.blockPosition()), EntitySpawnReason.CHUNK_GENERATION, spawngroupdata);
                                             level.addFreshEntityWithPassengers(mob);
                                             flag = true;
                                         }
