@@ -20,7 +20,7 @@ public class DivingArmorItem extends ArmorItem {
     private final ACArmorMaterial acMaterial;
 
     public DivingArmorItem(ACArmorMaterial armorMaterial, Type slot) {
-        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)).attributes(createDivingAttributes(armorMaterial, slot)));
+        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)).attributes(createDivingAttributes(armorMaterial, slot)).enchantable(armorMaterial.getEnchantmentValue()));
         this.acMaterial = armorMaterial;
     }
 

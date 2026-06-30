@@ -25,7 +25,7 @@ public class RainbounceBootsItem extends ArmorItem implements CustomArmorPostRen
     private final ACArmorMaterial acMaterial;
 
     public RainbounceBootsItem(ACArmorMaterial rainbounceArmorMaterial) {
-        super(rainbounceArmorMaterial.getHolder(), Type.BOOTS, new Properties().durability(rainbounceArmorMaterial.getDurabilityForType(Type.BOOTS)));
+        super(rainbounceArmorMaterial.getHolder(), Type.BOOTS, new Properties().durability(rainbounceArmorMaterial.getDurabilityForType(Type.BOOTS)).enchantable(rainbounceArmorMaterial.getEnchantmentValue()));
         this.acMaterial = rainbounceArmorMaterial;
     }
 

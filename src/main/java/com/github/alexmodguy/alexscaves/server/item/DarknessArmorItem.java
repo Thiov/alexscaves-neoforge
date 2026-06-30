@@ -32,7 +32,7 @@ public class DarknessArmorItem extends ArmorItem implements CustomArmorPostRende
     private final ACArmorMaterial acMaterial;
 
     public DarknessArmorItem(ACArmorMaterial armorMaterial, Type slot) {
-        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)).rarity(ACItemRegistry.getRarityDemonic()));
+        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)).rarity(ACItemRegistry.getRarityDemonic()).enchantable(armorMaterial.getEnchantmentValue()));
         this.acMaterial = armorMaterial;
     }
 

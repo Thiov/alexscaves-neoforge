@@ -25,7 +25,7 @@ public class GingerbreadArmorItem extends ArmorItem {
     private final ACArmorMaterial acMaterial;
 
     public GingerbreadArmorItem(ACArmorMaterial armorMaterial, Type slot) {
-        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)));
+        super(armorMaterial.getHolder(), slot, new Properties().durability(armorMaterial.getDurabilityForType(slot)).enchantable(armorMaterial.getEnchantmentValue()));
         this.acMaterial = armorMaterial;
         this.defaultItemAttributes = createGingerbreadAttributes(armorMaterial, slot, MIN_SPEED_BOOST);
     }
