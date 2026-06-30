@@ -1378,7 +1378,7 @@ public class ClientProxy extends CommonProxy {
         float screenEffectIntensity = Minecraft.getInstance().options.screenEffectScale().get().floatValue();
         float watcherPossessionStrength = getPossessionStrengthAmount(partialTick);
         float nukeFlashAmount = getNukeFlashAmount(partialTick);
-        if (nukeFlashAmount > 0 && (AlexsCaves.CLIENT_CONFIG.nuclearBombFlash.get())) {
+        if (nukeFlashAmount > 0 && (AlexsCaves.CLIENT_CONFIG.nuclearBombFlash.get()) && RenderSystemCompat.supportsShaderTexture()) {
             int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             
@@ -1399,7 +1399,7 @@ public class ClientProxy extends CommonProxy {
             RenderSystemCompat.enableDepthTest();
             
         }
-        if (watcherPossessionStrength > 0) {
+        if (watcherPossessionStrength > 0 && RenderSystemCompat.supportsShaderTexture()) {
             int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             

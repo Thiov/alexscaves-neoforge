@@ -20,7 +20,8 @@ public final class SimpleCraftingRecipeSerializer {
 
     public static <T extends Recipe<?>> RecipeSerializer<T> create(Supplier<T> factory) {
         MapCodec<T> mapCodec = MapCodec.unit(factory);
-        StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.unit(factory.get());
+        StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.of((buf, recipe) -> {
+        }, buf -> factory.get());
         return new RecipeSerializer<>(mapCodec, streamCodec);
     }
 }
