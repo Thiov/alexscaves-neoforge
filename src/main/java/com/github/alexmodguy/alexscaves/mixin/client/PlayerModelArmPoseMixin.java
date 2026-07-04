@@ -1,15 +1,20 @@
 package com.github.alexmodguy.alexscaves.mixin.client;
 
+import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.render.entity.state.ACEffectRenderState;
 import com.github.alexmodguy.alexscaves.server.item.GalenaGauntletItem;
 import com.github.alexmodguy.alexscaves.server.item.OrtholanceItem;
 import com.github.alexmodguy.alexscaves.server.item.RaygunItem;
 import com.github.alexmodguy.alexscaves.server.item.ResistorShieldItem;
 import com.github.alexmodguy.alexscaves.server.item.ShotGumItem;
+import com.github.alexthe666.citadel.client.tick.ClientTickRateTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,9 +44,48 @@ public abstract class PlayerModelArmPoseMixin extends HumanoidModel<AvatarRender
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)V", at = @At("TAIL"))
     private void alexscaves$weaponArmPoses(AvatarRenderState state, CallbackInfo ci) {
         float partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+        // Sugar Rush gait first, so an actively-aimed AC weapon (below) still overrides the arm raise.
+        alexscaves$sugarRushGait(state);
         alexscaves$poseArm(this.rightArm, state.rightHandItemStack, state, partialTick, true);
         alexscaves$poseArm(this.leftArm, state.leftHandItemStack, state, partialTick, false);
         alexscaves$poseShotGum(state);
+    }
+
+    /**
+     * Frantic Sugar Rush walk/run gait (upstream {@code ClientEvents} ~632-663), driven off the render state's
+     * walk animation + head angles. {@code speedModifier} is scaled by the client tick rate so the animation
+     * keeps pace while Sugar Rush slow-motion is active (the tick-rate modifier is now client-side again).
+     * Skipped for the first-person local player, matching upstream's {@code !isFirstPersonPlayer} guard.
+     */
+    @Unique
+    private void alexscaves$sugarRushGait(AvatarRenderState state) {
+        if (!((ACEffectRenderState) state).alexscaves$isSugarRush()) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        Entity camera = minecraft.getCameraEntity();
+        if (camera != null && camera.getId() == state.id && minecraft.options.getCameraType().isFirstPerson()) {
+            return;
+        }
+        float speedModifier = 0.35F;
+        if (AlexsCaves.COMMON_CONFIG.sugarRushSlowsTime.get()
+                && AlexsCaves.PROXY.isTickRateModificationActive(minecraft.level)) {
+            float tickRate = ClientTickRateTracker.getForClient(minecraft).getClientTickRate() / 50.0F;
+            speedModifier *= tickRate;
+        }
+        float deltaSpeed = 1.0F;
+        float walkPos = state.walkAnimationPos;
+        float walkSpeed = state.walkAnimationSpeed;
+        float headXRot = state.xRot;
+        float headYRot = state.yRot;
+        this.rightArm.xRot = Mth.cos(walkPos * speedModifier + (float) Math.PI * 0.5F) * 2.0F * walkSpeed * 0.5F / deltaSpeed;
+        this.leftArm.xRot = Mth.cos(walkPos * speedModifier) * 2.0F * walkSpeed * 0.5F / deltaSpeed;
+        this.rightArm.zRot = (Mth.sin(walkPos * -speedModifier + (float) Math.PI * 0.5F) + 2.5F) * 1.5F * walkSpeed * 0.5F / deltaSpeed;
+        this.leftArm.zRot = (Mth.sin(walkPos * -speedModifier) - 2.5F) * 1.5F * walkSpeed * 0.5F / deltaSpeed;
+        this.head.xRot = headXRot * ((float) Math.PI / 180F) + Mth.cos(walkPos * speedModifier + (float) Math.PI) * 1.0F * walkSpeed * 0.5F / deltaSpeed;
+        this.head.yRot = headYRot * ((float) Math.PI / 180F) + Mth.sin(walkPos * speedModifier + (float) Math.PI) * 1.0F * walkSpeed * 0.5F / deltaSpeed;
+        this.leftLeg.xRot = Mth.cos(walkPos * speedModifier + (float) Math.PI) * 4.0F * walkSpeed * 0.5F / deltaSpeed;
+        this.rightLeg.xRot = Mth.cos(walkPos * speedModifier) * 4.0F * walkSpeed * 0.5F / deltaSpeed;
     }
 
     @Unique
