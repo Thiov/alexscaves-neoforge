@@ -56,7 +56,8 @@ public class DrainBlock extends TransparentBlock {
         return this.defaultBlockState().setValue(OPEN, Boolean.valueOf(context.getLevel().hasNeighborSignal(context.getClickedPos())));
     }
 
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    @Override
+    protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
         if (!worldIn.isClientSide()) {
             this.updateState(state, worldIn, pos, blockIn);
         }

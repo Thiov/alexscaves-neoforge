@@ -17,7 +17,7 @@ import org.joml.Matrix4f;
 
 import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
 
-public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     protected Vec3[] trailPositions = new Vec3[64];
     private int trailPointer = -1;
@@ -33,6 +33,8 @@ public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexsc
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;
+    
+        ACParticleWorldRender.add(this);
     }
 
     public void tick() {
@@ -65,9 +67,8 @@ public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexsc
         this.trailPositions[this.trailPointer] = currentPosition;
     }
 
-    public void render(VertexConsumer consumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         if (trailPointer > -1) {
-            MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
             VertexConsumer vertexconsumer = getVetrexConsumer(multibuffersource$buffersource);
 
             Vec3 cameraPos = camera.position();
@@ -102,12 +103,11 @@ public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexsc
                 samples++;
                 drawFrom = sample;
             }
-            multibuffersource$buffersource.endBatch();
             posestack.popPose();
         }
     }
 
-    protected VertexConsumer getVetrexConsumer(MultiBufferSource.BufferSource multibuffersource$buffersource) {
+    protected VertexConsumer getVetrexConsumer(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource) {
         return multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucentCullItemTarget(getTrailTexture()));
     }
 
@@ -141,6 +141,12 @@ public abstract class AbstractTrailParticle extends com.github.alexmodguy.alexsc
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 }

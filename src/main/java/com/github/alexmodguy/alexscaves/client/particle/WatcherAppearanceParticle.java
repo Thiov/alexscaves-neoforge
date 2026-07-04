@@ -20,7 +20,7 @@ import net.minecraft.resources.Identifier;
 import com.github.alexmodguy.alexscaves.mcshim.FastColor;
 import net.minecraft.util.Mth;
 
-public class WatcherAppearanceParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class WatcherAppearanceParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/entity/watcher_appearance.png");
     private final WatcherModel model = new WatcherModel();
     private final RenderType renderType = net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(TEXTURE);
@@ -30,13 +30,20 @@ public class WatcherAppearanceParticle extends com.github.alexmodguy.alexscaves.
         this.setSize(12, 12);
         this.gravity = 0.0F;
         this.lifetime = 30;
+        ACParticleWorldRender.add(this);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         float fogBefore = com.github.alexmodguy.alexscaves.client.render.compat.RenderSystemCompat.getShaderFogEnd();
         com.github.alexmodguy.alexscaves.client.render.compat.RenderSystemCompat.setShaderFogEnd(40);
         float age = this.age + partialTick;
@@ -54,11 +61,9 @@ public class WatcherAppearanceParticle extends com.github.alexmodguy.alexscaves.
         posestack.scale(-scale, -scale, scale);
         posestack.translate(0.0D, 0.5F, 2 + (1F - initalFlip));
         
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(this.renderType);
         this.model.positionForParticle(partialTick, age);
         this.model.renderToBuffer(posestack, vertexconsumer, 240, OverlayTexture.NO_OVERLAY, color);
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
         com.github.alexmodguy.alexscaves.client.render.compat.RenderSystemCompat.setShaderFogEnd(fogBefore);
     }

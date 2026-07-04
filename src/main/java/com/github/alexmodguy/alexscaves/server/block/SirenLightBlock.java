@@ -131,7 +131,8 @@ public class SirenLightBlock extends BaseEntityBlock {
         return createTickerHelper(p_152182_, ACBlockEntityRegistry.SIREN_LIGHT.get(), SirenLightBlockEntity::tick);
     }
 
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    @Override
+    protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
         if (!worldIn.isClientSide()) {
             this.updateState(state, worldIn, pos, blockIn);
         }

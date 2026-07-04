@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class TubeWormParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class TubeWormParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/tube_worm.png");
     private static final TubeWormModel MODEL = new TubeWormModel();
     private BlockPos blockPos;
@@ -49,6 +49,8 @@ public class TubeWormParticle extends com.github.alexmodguy.alexscaves.mcshim.Te
         this.checkScareCooldown = 5 + random.nextInt(10);
         this.prevTuckAmount = this.tuckAmount = 1;
         this.yRot = Direction.from2DDataValue(2 + random.nextInt(3)).toYRot();
+    
+        ACParticleWorldRender.add(this);
     }
 
     public boolean shouldCull() {
@@ -85,10 +87,11 @@ public class TubeWormParticle extends com.github.alexmodguy.alexscaves.mcshim.Te
 
     public void remove() {
         super.remove();
+        ACParticleWorldRender.remove(this);
         ((ClientProxy) AlexsCaves.PROXY).removeParticleAt(this.blockPos);
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         Vec3 vec3 = camera.position();
         float scale = 1;
         float f = (float) (Mth.lerp((double) partialTick, this.xo, this.x) - vec3.x());
@@ -99,17 +102,15 @@ public class TubeWormParticle extends com.github.alexmodguy.alexscaves.mcshim.Te
         posestack.pushPose();
         posestack.translate(f, f1 + 1, f2);
         posestack.scale(-scale, -scale, scale);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         MODEL.animateParticle(age, lerpedTuck, this.animationOffset, this.yRot, partialTick);
         VertexConsumer baseConsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(TEXTURE));
         MODEL.renderToBuffer(posestack, baseConsumer, getLightColor(partialTick), OverlayTexture.NO_OVERLAY, -1);
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

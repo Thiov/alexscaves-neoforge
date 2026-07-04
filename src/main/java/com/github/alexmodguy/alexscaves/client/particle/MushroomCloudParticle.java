@@ -25,7 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/mushroom_cloud.png");
     private static final Identifier TEXTURE_GLOW = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/mushroom_cloud_glow.png");
@@ -50,6 +50,8 @@ public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcsh
         this.scale = scale + 0.2F;
         this.setSize(3.0F, 3.0F);
         this.pink = pink;
+    
+        ACParticleWorldRender.add(this);
     }
 
     public boolean shouldCull() {
@@ -102,7 +104,7 @@ public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcsh
         Minecraft.getInstance().getSoundManager().queueTickingSound(new NuclearExplosionSound(soundEvent, this.x, this.y, this.z, duration, fadesAt, fadeInBy, looping));
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         Vec3 vec3 = camera.position();
         float f = (float) (Mth.lerp((double) partialTick, this.xo, this.x) - vec3.x());
         float f1 = (float) (Mth.lerp((double) partialTick, this.yo, this.y) - vec3.y());
@@ -111,7 +113,6 @@ public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcsh
         posestack.pushPose();
         posestack.translate(f, f1 - 0.5F, f2);
         posestack.scale(-scale, -scale, scale);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         MODEL.hideFireball(age >= BALL_FOR);
         float life = (float) (Math.log(1 + (age - BALL_FOR + partialTick) / (lifetime - BALL_FOR))) * 2F;
         float glowLife = life < 1F ? 1F - life : 0;
@@ -124,13 +125,18 @@ public class MushroomCloudParticle extends com.github.alexmodguy.alexscaves.mcsh
         MODEL.renderToBuffer(posestack, glowConsumer1, 240, OverlayTexture.NO_OVERLAY, ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha));
         VertexConsumer glowConsumer2 = multibuffersource$buffersource.getBuffer(ACRenderTypes.getEyesAlphaEnabled(pink ? TEXTURE_PINK_GLOW : TEXTURE_GLOW));
         MODEL.renderToBuffer(posestack, glowConsumer2, 240, OverlayTexture.NO_OVERLAY, ColorUtil.packColor(1.0F, 1.0F, 1.0F, glowLife * alpha));
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

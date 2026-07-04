@@ -30,10 +30,7 @@
       },
       "probability": 0.0005
     },
-    "fog_color": 1315096,
-    "sky_color": 5063513,
-    "water_color": 6320065,
-    "water_fog_color": 4811680
+    "water_color": 6320065
   },
   "features": [
     [],
@@ -222,5 +219,10 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 0.6
+  "temperature": 0.6,
+  "attributes": {
+    "minecraft:visual/fog_color": 1315096,
+    "minecraft:visual/sky_color": 5063513,
+    "minecraft:visual/water_fog_color": 4811680
+  }
 }

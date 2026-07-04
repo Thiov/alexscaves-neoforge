@@ -21,7 +21,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class BigSplashParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class BigSplashParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/splash.png");
     private static final Identifier TEXTURE_OVERLAY = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/splash_overlay.png");
     private static final SplashModel MODEL = new SplashModel();
@@ -35,6 +35,8 @@ public class BigSplashParticle extends com.github.alexmodguy.alexscaves.mcshim.T
         this.scale = scale;
         this.waterColor = BiomeColors.getAverageWaterColor(level, BlockPos.containing(x, y, z));
         this.setSize(3.0F, 3.0F);
+    
+        ACParticleWorldRender.add(this);
     }
 
     public boolean shouldCull() {
@@ -58,9 +60,10 @@ public class BigSplashParticle extends com.github.alexmodguy.alexscaves.mcshim.T
 
     public void remove() {
         super.remove();
+        ACParticleWorldRender.remove(this);
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         Vec3 vec3 = camera.position();
         float f = (float) (Mth.lerp((double) partialTick, this.xo, this.x) - vec3.x());
         float f1 = (float) (Mth.lerp((double) partialTick, this.yo, this.y) - vec3.y());
@@ -73,19 +76,17 @@ public class BigSplashParticle extends com.github.alexmodguy.alexscaves.mcshim.T
         posestack.pushPose();
         posestack.translate(f, f1 - 0.5F, f2);
         posestack.scale(-scale, -scale, scale);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         MODEL.setupAnim(null, 0, lifetime, age + partialTick, 0, 0);
         VertexConsumer baseConsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(TEXTURE));
         MODEL.renderToBuffer(posestack, baseConsumer, packedLight, OverlayTexture.NO_OVERLAY, ColorUtil.packColor(colorR, colorG, colorB, alpha));
         VertexConsumer overlayconsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(TEXTURE_OVERLAY));
         MODEL.renderToBuffer(posestack, overlayconsumer, packedLight, OverlayTexture.NO_OVERLAY, ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha));
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

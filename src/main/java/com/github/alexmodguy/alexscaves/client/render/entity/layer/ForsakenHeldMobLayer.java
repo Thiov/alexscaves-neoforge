@@ -56,21 +56,22 @@ public class ForsakenHeldMobLayer extends RenderLayer121X<ForsakenEntity, Forsak
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <E extends Entity> void renderEntity(E entityIn, double x, double y, double z, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
-        EntityRenderer121X<? super E> render = null;
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
+        net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw = manager.getRenderer(entityIn);
+        // Alex's Caves' immediate-mode "121X" render compat can only drive AC's own renderers. Vanilla
+        // renderers use the 26.1 deferred submit pipeline and are NOT EntityRenderer121X, so the original
+        // unconditional cast threw a ClassCastException — crashing the game the instant the Forsaken picked
+        // up any vanilla mob or the player. Only drive renderers we can actually drive; skip the rest.
+        if (!(raw instanceof EntityRenderer121X)) {
+            return;
+        }
+        EntityRenderer121X<? super E> render = (EntityRenderer121X<? super E>) raw;
         try {
-            render = (EntityRenderer121X<? super E>) manager.getRenderer(entityIn);
-
-            if (render != null) {
-                try {
-                    render.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
-                } catch (Throwable throwable1) {
-                    throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
-                }
-            }
-        } catch (Throwable throwable3) {
-            CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
+            render.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
+        } catch (Throwable throwable1) {
+            CrashReport crashreport = CrashReport.forThrowable(throwable1, "Rendering held entity in world");
             CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");
             entityIn.fillCrashReportCategory(crashreportcategory);
             CrashReportCategory crashreportcategory1 = crashreport.addCategory("Renderer details");

@@ -81,4 +81,31 @@ public abstract class LevelRendererMixin {
         }
         capture.flushInto(collector, poseStack);
     }
+
+    /**
+     * Draws every Alex's Caves custom-geometry particle (3D models, ribbons/trails, lightning). 26.1 removed
+     * {@code Particle#render} for non-quad particles; each such particle now implements
+     * {@link com.github.alexmodguy.alexscaves.client.particle.RenderInWorldParticle} and registers in
+     * {@link com.github.alexmodguy.alexscaves.client.particle.ACParticleWorldRender}. They keep ticking as
+     * normal; only their geometry draw moves here, through the same capture bridge as the raygun beams.
+     */
+    @Inject(method = "submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", at = @At("TAIL"))
+    private void alexscaves$renderCustomParticles(PoseStack poseStack, LevelRenderState levelRenderState, SubmitNodeCollector collector, CallbackInfo ci) {
+        if (com.github.alexmodguy.alexscaves.client.particle.ACParticleWorldRender.active().isEmpty()) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null) {
+            return;
+        }
+        float partialTick = minecraft.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+        Camera camera = minecraft.gameRenderer.getMainCamera();
+        SubmitNodeBufferSource capture = new SubmitNodeBufferSource();
+        capture.bindLive(collector, poseStack);
+        for (com.github.alexmodguy.alexscaves.client.particle.RenderInWorldParticle particle :
+                new java.util.ArrayList<>(com.github.alexmodguy.alexscaves.client.particle.ACParticleWorldRender.active())) {
+            particle.renderInWorld(capture, camera, partialTick);
+        }
+        capture.flushInto(collector, poseStack);
+    }
 }

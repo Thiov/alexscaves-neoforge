@@ -16,7 +16,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector4f;
 
-public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     private LightningRender lightningRender = new LightningRender();
 
@@ -35,6 +35,8 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
                 .lifespan(this.lifetime)
                 .spawn(LightningBoltData.SpawnFunction.CONSECUTIVE);
         lightningRender.update(this, bolt, 1.0F);
+    
+        ACParticleWorldRender.add(this);
     }
 
     public boolean shouldCull() {
@@ -58,8 +60,7 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
     }
 
 
-    public void render(VertexConsumer consumer, Camera camera, float partialTick) {
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         Vec3 cameraPos = camera.position();
         float x = (float) (Mth.lerp((double) partialTick, this.xo, this.x));
         float y = (float) (Mth.lerp((double) partialTick, this.yo, this.y));
@@ -69,13 +70,12 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
         posestack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         posestack.translate(x, y, z);
         lightningRender.render(partialTick, posestack, multibuffersource$buffersource);
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public static class ScarletFactory implements ParticleProvider<SimpleParticleType> {
@@ -98,5 +98,11 @@ public class ResistorShieldLightningParticle extends com.github.alexmodguy.alexs
             ResistorShieldLightningParticle particle = new ResistorShieldLightningParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, true);
             return particle;
         }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 }

@@ -46,7 +46,8 @@ public class ConfectionOvenBlock extends BaseEntityBlock {
         return new Vec3(d0, d1, d2);
     }
 
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    @Override
+    protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
         if (!worldIn.isClientSide()) {
             this.updateState(state, worldIn, pos, blockIn);
         }
