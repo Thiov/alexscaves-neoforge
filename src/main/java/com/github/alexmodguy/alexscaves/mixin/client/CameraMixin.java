@@ -68,6 +68,9 @@ public abstract class CameraMixin {
     @org.spongepowered.asm.mixin.Final
     private Quaternionf rotation;
 
+    @Shadow
+    private int matrixPropertiesDirty;
+
     @Inject(
             method = {"Lnet/minecraft/client/Camera;update(Lnet/minecraft/client/DeltaTracker;)V"},
             remap = true,
@@ -142,6 +145,10 @@ public abstract class CameraMixin {
                 && stunned.hasEffect(ACEffectRegistry.STUNNED)) {
             float roll = (float) (Math.sin((stunned.tickCount + partialTicks) * 0.2F) * 10.0F);
             this.rotation.rotateZ((float) Math.toRadians(roll));
+            // update() already recomputed + cached the view-rotation/projection matrices (clearing bits 1|2)
+            // before this TAIL, so re-dirty them (as setRotation does with |= 3) or extractRenderState returns
+            // the stale un-rolled matrix and nothing wobbles.
+            this.matrixPropertiesDirty |= 3;
         }
     }
 
