@@ -23,8 +23,9 @@ public class RageEffect extends MobEffect {
         super(MobEffectCategory.NEUTRAL, 0XBA2E2E);
     }
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int level) {
+    // 26.1: applyEffectTick gained a ServerLevel arg — the old overload silently never ran.
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int level) {
         AttributeInstance attributeinstance = entity.getAttribute(Attributes.ATTACK_DAMAGE);
         if (attributeinstance != null) {
             float levelScale = (1 + level) * 2.5F;
@@ -32,7 +33,7 @@ public class RageEffect extends MobEffect {
             removeRageModifier(entity);
             attributeinstance.addTransientModifier(new AttributeModifier(RAGE_ATTACK_DAMAGE_ID, (double) f, AttributeModifier.Operation.ADD_VALUE));
         }
-        if (!entity.level().isClientSide() && entity instanceof Mob mob && mob.getTarget() == null && entity.tickCount % 10 == 0 && entity.getRandom().nextInt(2) == 0) {
+        if (entity instanceof Mob mob && mob.getTarget() == null && entity.tickCount % 10 == 0 && entity.getRandom().nextInt(2) == 0) {
             AABB aabb = mob.getBoundingBox().inflate(80);
             LivingEntity randomTarget = null;
             for (LivingEntity living : mob.level().getEntitiesOfClass(LivingEntity.class, aabb, EntitySelector.LIVING_ENTITY_STILL_ALIVE)) {
@@ -68,7 +69,9 @@ public class RageEffect extends MobEffect {
         }
     }
 
-    public void onMobRemoved(LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
+    // 26.1: onMobRemoved also gained a ServerLevel arg.
+    @Override
+    public void onMobRemoved(ServerLevel serverLevel, LivingEntity entity, int amplifier, Entity.RemovalReason reason) {
         removeRageModifier(entity);
     }
 

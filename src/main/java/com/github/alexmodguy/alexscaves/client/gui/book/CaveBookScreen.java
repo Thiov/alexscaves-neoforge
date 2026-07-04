@@ -35,10 +35,12 @@ public class CaveBookScreen extends Screen {
     private static final Identifier BOOK_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/gui/book/cave_book_model.png");
     public static final float MOUSE_LEAN_THRESHOLD = 0.75F;
     public static final int PAGE_SIZE_IN_LINES = 15;
-    public static final int TEXT_COLOR = 0X826A41;
-    public static final int TEXT_LINK_COLOR = 0X111111;
-    public static final int TEXT_LINK_HOVER_COLOR = 0X0094FF;
-    public static final int TEXT_LINK_LOCKED_COLOR = 0XD3C9AB;
+    // 26.1's Font no longer force-fills a zero alpha channel (the old adjustColor is gone), so 24-bit colors
+    // render fully transparent — every book color must be explicit-opaque ARGB.
+    public static final int TEXT_COLOR = 0XFF826A41;
+    public static final int TEXT_LINK_COLOR = 0XFF111111;
+    public static final int TEXT_LINK_HOVER_COLOR = 0XFF0094FF;
+    public static final int TEXT_LINK_LOCKED_COLOR = 0XFFD3C9AB;
     private final CaveBookProgress caveBookProgress;
     public boolean unlockTooltip;
     private boolean incrementingPage;

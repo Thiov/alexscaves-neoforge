@@ -4,6 +4,7 @@ import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.message.UpdateEffectVisualityEntityMessage;
 import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,10 +22,13 @@ public class BubbledEffect extends MobEffect {
         super(MobEffectCategory.HARMFUL, 0X21B5FF);
     }
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    // 26.1: applyEffectTick gained a ServerLevel arg and is server-only; the old overload never ran, which
+    // disabled the whole drowning/air mechanic. The drown-burst bubbles switch from the (client-side)
+    // addParticle to sendParticles since this no longer executes on the client.
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amplifier) {
         // Periodically sync effect to clients to ensure visual stays in sync
-        if (!entity.level().isClientSide() && entity.tickCount % 40 == 0) {
+        if (entity.tickCount % 40 == 0) {
             MobEffectInstance instance = entity.getEffect(ACEffectRegistry.BUBBLED);
             if (instance != null) {
                 AlexsCaves.sendMSGToAll(new UpdateEffectVisualityEntityMessage(entity.getId(), entity.getId(), 1, instance.getDuration()));
@@ -49,7 +53,7 @@ public class BubbledEffect extends MobEffect {
                     double d2 = entity.getRandom().nextDouble() - entity.getRandom().nextDouble();
                     double d3 = entity.getRandom().nextDouble() - entity.getRandom().nextDouble();
                     double d4 = entity.getRandom().nextDouble() - entity.getRandom().nextDouble();
-                    entity.level().addParticle(ParticleTypes.BUBBLE, entity.getX() + d2, entity.getY() + d3, entity.getZ() + d4, vec3.x, vec3.y, vec3.z);
+                    serverLevel.sendParticles(ParticleTypes.BUBBLE, entity.getX() + d2, entity.getY() + d3, entity.getZ() + d4, 0, vec3.x, vec3.y, vec3.z, 1.0D);
                 }
                 entity.hurtOrSimulate(entity.damageSources().drown(), 2.0F);
             }

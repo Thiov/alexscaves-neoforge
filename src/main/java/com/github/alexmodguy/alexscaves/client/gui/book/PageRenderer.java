@@ -54,7 +54,8 @@ public class PageRenderer {
                 poseStack.translate(65, 7 - 5 * titleScale, 0);
                 poseStack.scale(titleScale, titleScale, 1F);
                 poseStack.translate(-titleLength / 2F, 0, 0);
-                screen.getMinecraft().font.drawInBatch8xOutline(title.getVisualOrderText(), 0.0F, 0.0F, 0XFFE7BF, 0XAA977F, poseStack.last().pose(), bufferSource, 15728880);
+                // Explicit-opaque colors: 26.1's Font renders zero-alpha colors fully transparent.
+                screen.getMinecraft().font.drawInBatch8xOutline(title.getVisualOrderText(), 0.0F, 0.0F, 0XFFFFE7BF, 0XFFAA977F, poseStack.last().pose(), bufferSource, 15728880);
                 poseStack.popPose();
             }
             if (!entry.getEntryText().isEmpty()) {

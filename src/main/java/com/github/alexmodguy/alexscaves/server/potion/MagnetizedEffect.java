@@ -2,6 +2,7 @@ package com.github.alexmodguy.alexscaves.server.potion;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.message.UpdateEffectVisualityEntityMessage;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,9 +14,10 @@ public class MagnetizedEffect extends MobEffect {
         super(MobEffectCategory.NEUTRAL, 0X53556C);
     }
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int tick) {
-        if (!entity.level().isClientSide() && entity.tickCount % 20 == 0) {
+    // 26.1: applyEffectTick gained a ServerLevel arg — the old overload silently never ran.
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int tick) {
+        if (entity.tickCount % 20 == 0) {
             MobEffectInstance instance = entity.getEffect(ACEffectRegistry.MAGNETIZING);
             if (instance != null) {
                 AlexsCaves.sendMSGToAll(new UpdateEffectVisualityEntityMessage(entity.getId(), entity.getId(), 2, instance.getDuration()));
