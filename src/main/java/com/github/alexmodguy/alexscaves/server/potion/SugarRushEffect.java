@@ -27,11 +27,10 @@ public class SugarRushEffect extends MobEffect {
         return duration > 0;
     }
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        if(entity.level().isClientSide()){
-            AlexsCaves.PROXY.playWorldSound(entity, (byte)18);
-        }
+    // 26.1: applyEffectTick is server-only (new ServerLevel arg). The looping sugar-rush jingle upstream
+    // played from the client-side tick now lives in ClientProxy's client effect tick.
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amplifier) {
         return true;
     }
 

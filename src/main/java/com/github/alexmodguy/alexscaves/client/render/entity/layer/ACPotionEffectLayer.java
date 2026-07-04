@@ -55,6 +55,10 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
             "textures/entity/sugar_rush.png");
     private static final Identifier TRAIL_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
             "textures/particle/teletor_trail.png");
+    // Flat white for the radiation glow duplicate: upstream's irradiated shader output solid green regardless
+    // of the entity texture, so tint a uniform texture rather than the (mostly dark) skin.
+    private static final Identifier TEXTURE_FLAT_WHITE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/misc/flat_white.png");
     // Fixed alpha: upstream faded via DarknessIncarnateEffect.getIntensity, which is dead client-side on 26.1
     // (see the darkness-silhouette note), so the trail would otherwise be invisible.
     private static final int TRAIL_ALPHA = 178;
@@ -73,16 +77,19 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
 
         if (effect.alexscaves$isIrradiated() && glowConfig) {
             int level = effect.alexscaves$getIrradiatedLevel();
-            Identifier texture = alexscaves$textureFor(state);
             RenderType glow = level >= IrradiatedEffect.BLUE_LEVEL
-                    ? ACRenderTypes.getBlueRadiationGlow(texture)
-                    : ACRenderTypes.getRadiationGlow(texture);
+                    ? ACRenderTypes.getBlueRadiationGlow(TEXTURE_FLAT_WHITE)
+                    : ACRenderTypes.getRadiationGlow(TEXTURE_FLAT_WHITE);
             float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.9F : Math.min(level * 0.33F, 1.0F);
+            // Upstream's irradiated core shader painted the duplicate model radioactive green (blue past
+            // BLUE_LEVEL); the shader is disabled in this port, so bake the color into the emissive tint.
+            int tint = level >= IrradiatedEffect.BLUE_LEVEL
+                    ? ColorUtil.packColor(0.35F, 0.8F, 1.0F, alpha)
+                    : ColorUtil.packColor(0.47F, 0.84F, 0.06F, alpha);
             // order(1): draw the overlay pass after the base model (same trick as vanilla EyesLayer) so the
             // coplanar overlay wins the depth test instead of z-fighting under the skin.
             collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
-                    LivingEntityRenderer.getOverlayCoords(state, 0.0F),
-                    ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha), null, state.outlineColor, null);
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), tint, null, state.outlineColor, null);
         }
 
         if (effect.alexscaves$isBubbled()) {

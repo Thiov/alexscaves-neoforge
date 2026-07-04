@@ -3,6 +3,7 @@ package com.github.alexmodguy.alexscaves.server.potion;
 import com.github.alexmodguy.alexscaves.server.entity.util.DarknessIncarnateUserAccessor;
 import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -25,8 +26,9 @@ public class DarknessIncarnateEffect extends MobEffect {
     }
 
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
+    // 26.1: applyEffectTick gained a ServerLevel arg — the old overload silently never ran (no darkness flight).
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amplifier) {
         toggleFlight(entity, true);
         if (entity.onGround()) {
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.1, 0));

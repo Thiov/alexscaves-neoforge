@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.potion;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -27,18 +28,11 @@ public class DeepsightEffect extends MobEffect {
         return true;
     }
 
-    
-    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        if (!entity.level().isClientSide()) {
-            return true;
-        }
-        MobEffectInstance instance = entity.getEffect(ACEffectRegistry.DEEPSIGHT);
-        if (instance != null) {
-            int duration = instance.getDuration();
-            if (!entityStartDurations.containsKey(entity) || duration > entityStartDurations.get(entity)) {
-                entityStartDurations.put(entity, duration);
-            }
-        }
+    // 26.1: applyEffectTick is server-only now; upstream used the client-side call to record each entity's
+    // start duration for the fog ramp. That tracking moved into getIntensity below (first client-side query
+    // records the baseline), so this is a plain keep-alive.
+    @Override
+    public boolean applyEffectTick(ServerLevel serverLevel, LivingEntity entity, int amplifier) {
         return true;
     }
 
@@ -64,10 +58,15 @@ public class DeepsightEffect extends MobEffect {
         } else {
             DeepsightEffect deepsightEffect = (DeepsightEffect) instance.getEffect().value();
             int duration = instance.getDuration();
-            int maxDuration = deepsightEffect.entityStartDurations.getOrDefault(player, duration);
-            if (duration > maxDuration) {
+            // First client-side query records the baseline (upstream did this in the then-client-side
+            // applyEffectTick); afterwards the ticking-down duration ramps the intensity 0 -> 1.
+            Integer tracked = deepsightEffect.entityStartDurations.get(player);
+            int maxDuration;
+            if (tracked == null || duration > tracked) {
                 maxDuration = duration;
                 deepsightEffect.entityStartDurations.put(player, maxDuration);
+            } else {
+                maxDuration = tracked;
             }
             float activeTime = maxDuration - duration + partialTicks;
             return Math.min(20, (Math.min(activeTime, duration + partialTicks))) * 0.05F;

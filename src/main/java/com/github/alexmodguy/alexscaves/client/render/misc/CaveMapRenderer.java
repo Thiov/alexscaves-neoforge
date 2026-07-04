@@ -293,8 +293,9 @@ public class CaveMapRenderer {
             poseStack.pushPose();
             poseStack.scale(1.1F, 1.1F, 1.1F);
             float f1 = (float) (-textWidth / 4);
-            int color1 = 0X87695B;
-            int color2 = 0XEBDCC2;
+            // Explicit-opaque colors: 26.1's Font renders zero-alpha colors fully transparent.
+            int color1 = 0XFF87695B;
+            int color2 = 0XFFEBDCC2;
             font.drawInBatch8xOutline(component.getVisualOrderText(), f1, 0.0F, color1, color2, poseStack.last().pose(), multiBufferSource, light);
             poseStack.popPose();
             poseStack.popPose();

@@ -228,11 +228,35 @@ public class ClientProxy extends CommonProxy {
             lastSampledWaterFogColor = Vec3.ZERO;
             return;
         }
-        // Darkness Incarnate trail buffer (upstream clientLivingTick). Records each afflicted entity's position
-        // into a 64-slot ring so ACPotionEffectLayer can draw the shadow ribbon behind it.
+        // Per-entity client effect tick. 26.1 made MobEffect#applyEffectTick server-only, so the client-side
+        // pieces upstream ran from the effect ticks live here instead: darkness trail recording, stun star
+        // particles, the sugar rush jingle, and the local player's client-authoritative motion damping.
         for (Entity rendered : minecraft.level.entitiesForRendering()) {
             if (!(rendered instanceof LivingEntity living)) {
                 continue;
+            }
+            if (living.isAlive() && living.hasEffect(com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry.STUNNED)) {
+                // Stun stars orbiting the head (upstream StunnedEffect#applyEffectTick, client side).
+                if (minecraft.level.getRandom().nextFloat() < living.getBbWidth() * 0.12F) {
+                    minecraft.level.addParticle(com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry.STUN_STAR.get(),
+                            living.getX(), living.getEyeY(), living.getZ(),
+                            living.getId(), minecraft.level.getRandom().nextFloat() * 360, 0);
+                }
+                if (living == minecraft.player && living.getDeltaMovement().y > 0) {
+                    living.setDeltaMovement(living.getDeltaMovement().multiply(1, 0.1D, 1));
+                }
+            }
+            if (living.isAlive() && living.hasEffect(com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry.SUGAR_RUSH)) {
+                // Looping sugar rush jingle (upstream SugarRushEffect#applyEffectTick, client side).
+                AlexsCaves.PROXY.playWorldSound(living, (byte) 18);
+            }
+            if (living == minecraft.player && living.isAlive()
+                    && living.hasEffect(com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry.BUBBLED)
+                    && !living.canBreatheUnderwater()
+                    && !net.minecraft.world.effect.MobEffectUtil.hasWaterBreathing(living)
+                    && !minecraft.player.getAbilities().invulnerable) {
+                // Upstream's bubbled horizontal drag ran on both sides; player motion is client-authoritative.
+                living.setDeltaMovement(living.getDeltaMovement().multiply(0.8F, 1.0F, 0.8F));
             }
             if (living.hasEffect(com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry.DARKNESS_INCARNATE)
                     && living.isAlive()) {
