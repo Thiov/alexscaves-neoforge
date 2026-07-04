@@ -2,7 +2,9 @@ package com.github.alexmodguy.alexscaves.client.render;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -81,32 +83,36 @@ public final class ACRenderTypes {
                             .useOverlay()
                             .createRenderSetup()));
 
-    // Unlit translucent WITH depth write: clone of vanilla entity_translucent_emissive (emissive snippet =
-    // full texture brightness, no diffuse/lightmap dimming) minus its DepthStencilState(LEQUAL, false)
-    // override, so the default depth-writing state applies. Vanilla's emissive type doesn't write depth,
-    // which let the cave book's page text bleed through the front cover.
-    private static final RenderPipeline ENTITY_TRANSLUCENT_UNLIT_PIPELINE = RenderPipelines.register(
+    // Genuinely unlit translucent for the cave book model + page widgets — the NeoForge getUnlitTranslucent
+    // equivalent. EMISSIVE skips the LIGHTMAP but the entity shader's DEFAULT lighting branch still runs
+    // minecraft_mix_light, whose MINECRAFT_AMBIENT_LIGHT = 0.4 floor multiplies the parchment down to ~40%
+    // brightness (the grey the tilted pages showed, regardless of the UI light rig — both ENTITY_IN_UI and
+    // ITEMS_FLAT gave ~0.4). NO_CARDINAL_LIGHTING takes the entity.vsh `vertexColor = Color` branch instead:
+    // no diffuse, no ambient floor, full texture brightness. Depth test only (no write, like emissive) — a
+    // depth-WRITING clone greyed the whole screen on some setups; the cave book hides page content until the
+    // cover opens instead.
+    private static final RenderPipeline ENTITY_UNLIT_TRANSLUCENT_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/entity_translucent_unlit"))
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/entity_unlit_translucent"))
                     .withShaderDefine("ALPHA_CUTOUT", 0.1F)
-                    .withShaderDefine("PER_FACE_LIGHTING")
+                    .withShaderDefine("NO_CARDINAL_LIGHTING")
                     .withSampler("Sampler1")
                     .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                     .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                     .build());
 
-    private static final Function<Identifier, RenderType> ENTITY_TRANSLUCENT_UNLIT = Util.memoize(
-            texture -> RenderType.create("alexscaves_entity_translucent_unlit",
-                    RenderSetup.builder(ENTITY_TRANSLUCENT_UNLIT_PIPELINE)
+    private static final Function<Identifier, RenderType> ENTITY_UNLIT_TRANSLUCENT = Util.memoize(
+            texture -> RenderType.create("alexscaves_entity_unlit_translucent",
+                    RenderSetup.builder(ENTITY_UNLIT_TRANSLUCENT_PIPELINE)
                             .withTexture("Sampler0", texture)
                             .useLightmap()
                             .useOverlay()
                             .sortOnUpload()
                             .createRenderSetup()));
 
-    /** Unlit (fullbright) translucent that still writes depth — the NeoForge getUnlitTranslucent equivalent. */
     public static RenderType getUnlitTranslucent(Identifier texture) {
-        return ENTITY_TRANSLUCENT_UNLIT.apply(texture);
+        return ENTITY_UNLIT_TRANSLUCENT.apply(texture);
     }
 
     private ACRenderTypes() {
@@ -223,10 +229,10 @@ public final class ACRenderTypes {
     }
 
     // Sepia post program is disabled in this port; entities in the cave book render with
-    // their normal palette. Unlit translucent: the original sepia type was unlit, and the lit
-    // entityTranslucent runs the page-flat quads through the UI diffuse rig, greying them out.
+    // their normal palette. Genuinely unlit (NO_CARDINAL_LIGHTING): the original sepia type was unlit, and the
+    // entity shader's default diffuse (0.4 ambient floor) greys the page-flat quads under the UI light rig.
     public static RenderType getBookWidget(Identifier locationIn, boolean sepia) {
-        return ENTITY_TRANSLUCENT_UNLIT.apply(locationIn);
+        return ENTITY_UNLIT_TRANSLUCENT.apply(locationIn);
     }
 
     // Original: translucent + default cull + item entity output target. The cull variant
