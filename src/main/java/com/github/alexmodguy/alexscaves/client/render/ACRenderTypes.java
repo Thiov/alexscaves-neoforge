@@ -84,13 +84,18 @@ public final class ACRenderTypes {
                             .createRenderSetup()));
 
     // Genuinely unlit translucent for the cave book model + page widgets — the NeoForge getUnlitTranslucent
-    // equivalent. EMISSIVE skips the LIGHTMAP but the entity shader's DEFAULT lighting branch still runs
-    // minecraft_mix_light, whose MINECRAFT_AMBIENT_LIGHT = 0.4 floor multiplies the parchment down to ~40%
-    // brightness (the grey the tilted pages showed, regardless of the UI light rig — both ENTITY_IN_UI and
-    // ITEMS_FLAT gave ~0.4). NO_CARDINAL_LIGHTING takes the entity.vsh `vertexColor = Color` branch instead:
-    // no diffuse, no ambient floor, full texture brightness. Depth test only (no write, like emissive) — a
-    // depth-WRITING clone greyed the whole screen on some setups; the cave book hides page content until the
-    // cover opens instead.
+    // equivalent. Two things had to be true at once:
+    //  1. FULL BRIGHTNESS. EMISSIVE skips the LIGHTMAP but the entity shader's DEFAULT lighting branch still
+    //     runs minecraft_mix_light, whose MINECRAFT_AMBIENT_LIGHT = 0.4 floor multiplied the parchment down to
+    //     ~40% (the grey the tilted pages showed, regardless of the UI light rig — both ENTITY_IN_UI and
+    //     ITEMS_FLAT gave ~0.4). NO_CARDINAL_LIGHTING takes the entity.vsh `vertexColor = Color` branch: no
+    //     diffuse, no ambient floor, straight texture brightness.
+    //  2. DEPTH WRITE. Vanilla's emissive translucent doesn't write depth, so the flat page-text quads (drawn
+    //     right after the book model, into the same PIP depth buffer) painted on top of the closed front cover
+    //     during the opening swing. Writing depth (LEQUAL, write=true) lets the cover occlude the pages behind
+    //     it — true 3D order — so text only appears as the cover lifts. (The old "whole-screen grey" from a
+    //     depth-writing clone was the PER_FACE_LIGHTING pipeline's diffuse, NOT the depth write; with
+    //     NO_CARDINAL_LIGHTING the settled book stays fully bright.)
     private static final RenderPipeline ENTITY_UNLIT_TRANSLUCENT_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
                     .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/entity_unlit_translucent"))
@@ -99,7 +104,7 @@ public final class ACRenderTypes {
                     .withSampler("Sampler1")
                     .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                     .withCull(false)
-                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
                     .build());
 
     private static final Function<Identifier, RenderType> ENTITY_UNLIT_TRANSLUCENT = Util.memoize(
