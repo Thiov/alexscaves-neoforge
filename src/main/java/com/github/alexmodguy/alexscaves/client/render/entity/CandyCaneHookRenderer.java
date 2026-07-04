@@ -97,8 +97,9 @@ public class CandyCaneHookRenderer extends EntityRenderer121X<CandyCaneHookEntit
             double d6;
             float f3;
             if ((this.entityRenderDispatcher.options == null || this.entityRenderDispatcher.options.getCameraType().isFirstPerson()) && player == Minecraft.getInstance().player) {
-                double d7 = 960.0D / (double) this.entityRenderDispatcher.options.fov().get().intValue();
-                Vec3 vec3 = this.entityRenderDispatcher.camera.getNearPlane(1.0F).getPointOnPlane((float) i * 0.7F, -0.5F);
+                int fov = this.entityRenderDispatcher.options.fov().get().intValue();
+                double d7 = 960.0D / (double) fov;
+                Vec3 vec3 = this.entityRenderDispatcher.camera.getNearPlane((float) fov).getPointOnPlane((float) i * 0.7F, -0.5F);
                 vec3 = vec3.scale(d7);
                 vec3 = vec3.yRot(f1 * 0.5F);
                 vec3 = vec3.xRot(-f1 * 0.7F);

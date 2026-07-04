@@ -85,12 +85,14 @@ public class SubmitNodeBufferSource implements MultiBufferSource {
         boolean hasUv1 = format.contains(VertexFormatElement.UV1);
         boolean hasUv2 = format.contains(VertexFormatElement.UV2);
         boolean hasNormal = format.contains(VertexFormatElement.NORMAL);
+        boolean hasLineWidth = format.contains(VertexFormatElement.LINE_WIDTH);
         int posOffset = format.getOffset(VertexFormatElement.POSITION);
         int colorOffset = hasColor ? format.getOffset(VertexFormatElement.COLOR) : 0;
         int uv0Offset = hasUv0 ? format.getOffset(VertexFormatElement.UV0) : 0;
         int uv1Offset = hasUv1 ? format.getOffset(VertexFormatElement.UV1) : 0;
         int uv2Offset = hasUv2 ? format.getOffset(VertexFormatElement.UV2) : 0;
         int normalOffset = hasNormal ? format.getOffset(VertexFormatElement.NORMAL) : 0;
+        int lineWidthOffset = hasLineWidth ? format.getOffset(VertexFormatElement.LINE_WIDTH) : 0;
         for (int i = 0; i < drawState.vertexCount(); i++) {
             int base = i * stride;
             consumer.addVertex(vertexData.getFloat(base + posOffset), vertexData.getFloat(base + posOffset + 4), vertexData.getFloat(base + posOffset + 8));
@@ -108,6 +110,11 @@ public class SubmitNodeBufferSource implements MultiBufferSource {
             }
             if (hasNormal) {
                 consumer.setNormal(vertexData.get(base + normalOffset) / 127.0F, vertexData.get(base + normalOffset + 1) / 127.0F, vertexData.get(base + normalOffset + 2) / 127.0F);
+            }
+            if (hasLineWidth) {
+                // Required by RenderTypes.lines() — without re-emitting it the replay threw
+                // "Missing elements in vertex: LineWidth" (crashed on any captured line box, e.g. the magnet range).
+                consumer.setLineWidth(vertexData.getFloat(base + lineWidthOffset));
             }
         }
     }

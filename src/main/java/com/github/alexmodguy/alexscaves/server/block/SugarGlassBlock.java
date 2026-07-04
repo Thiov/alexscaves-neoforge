@@ -19,7 +19,8 @@ public class SugarGlassBlock extends TransparentBlock {
         super(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).noOcclusion().requiresCorrectToolForDrops().strength(0.3F, 0.0F).sound(SoundType.GLASS));
     }
 
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
+    @Override
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entityIn, double fallDistance) {
         if (!(entityIn.getType().builtInRegistryHolder().is(ACTagRegistry.CANDY_MOBS)) && !ACFluidHelper.isInAnyFluid(entityIn) && !level.isClientSide()) {
             level.destroyBlock(pos, true);
         }

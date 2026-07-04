@@ -47,7 +47,11 @@ public final class ShapeRenderCompat {
 
     private static void line(VertexConsumer consumer, PoseStack.Pose pose, float x1, float y1, float z1,
             float x2, float y2, float z2, float r, float g, float b, float a, float nx, float ny, float nz) {
-        consumer.addVertex(pose, x1, y1, z1).setColor(r, g, b, a).setNormal(pose, nx, ny, nz);
-        consumer.addVertex(pose, x2, y2, z2).setColor(r, g, b, a).setNormal(pose, nx, ny, nz);
+        // 26.1's RenderTypes.lines() vertex format REQUIRES a per-vertex LineWidth element; omitting it throws
+        // "Missing elements in vertex: LineWidth" and crashed the world render whenever a magnet block's range
+        // box was drawn (holding a neodymium ingot near a magnet) — and the world could then never reload,
+        // since the magnet block is saved.
+        consumer.addVertex(pose, x1, y1, z1).setColor(r, g, b, a).setNormal(pose, nx, ny, nz).setLineWidth(1.0F);
+        consumer.addVertex(pose, x2, y2, z2).setColor(r, g, b, a).setNormal(pose, nx, ny, nz).setLineWidth(1.0F);
     }
 }

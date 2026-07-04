@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
@@ -39,6 +40,17 @@ public class ResistorShieldItem extends ShieldItem {
 
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {
         consumer.accept((IClientItemExtensions) AlexsCaves.PROXY.getISTERProperties());
+    }
+
+    // 26.1: ShieldItem no longer sets a use duration/animation (moved to the BLOCKS_ATTACKS component).
+    // Item.getUseDuration returns 0 without that component, so onUseTick's bash loop never ran (dead shield).
+    // Restore the vanilla-shield use loop directly so startUsingItem keeps the item in use and onUseTick fires.
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return 72000;
+    }
+
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.BLOCK;
     }
 
     
