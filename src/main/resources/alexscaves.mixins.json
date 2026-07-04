@@ -30,6 +30,7 @@
     "LivingEntityEquipSoundMixin",
     "LivingEntityTemptRangeMixin",
     "MonsterMixin",
+    "MobMixin",
     "MultiNoiseBiomeSourceMixin",
     "MultifaceGrowthFeatureMixin",
     "NaturalSpawnerMixin",
