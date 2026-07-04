@@ -407,6 +407,7 @@ public class ClientProxy extends CommonProxy {
         modEventBus.addListener(this::registerRenderers);
         modEventBus.addListener(this::registerClientExtensions);
         modEventBus.addListener(this::registerGuiLayers);
+        modEventBus.addListener(this::registerPipRenderers);
         modEventBus.addListener(ACFluidRegistryClient::registerClientExtensions);
         modEventBus.addListener(ACFluidRegistryClient::registerFluidModels);
 
@@ -627,6 +628,18 @@ public class ClientProxy extends CommonProxy {
         event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH,
                 Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "irradiated_hearts"),
                 new com.github.alexmodguy.alexscaves.client.render.hud.IrradiatedHeartGuiLayer());
+    }
+
+    /**
+     * Registers the Cave Compendium's custom Picture-In-Picture renderer via NeoForge's own event (mod bus).
+     * The Fabric port appends the renderer to the raw list GameRenderer hands GuiRenderer (a mixin WrapOperation),
+     * but NeoForge patches that list to hold {@code PictureInPictureRendererRegistration} wrappers — adding a raw
+     * renderer there ClassCastExceptions in {@code PictureInPictureRendererPool.createPools} at startup. This
+     * event is NeoForge's supported registration path and builds the wrapper for us.
+     */
+    private void registerPipRenderers(RegisterPictureInPictureRenderersEvent event) {
+        event.register(com.github.alexmodguy.alexscaves.client.gui.book.CaveBookPipRenderState.class,
+                com.github.alexmodguy.alexscaves.client.gui.book.CaveBookPipRenderer::new);
     }
 
     public void setupParticles(RegisterParticleProvidersEvent registry) {
