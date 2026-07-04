@@ -77,19 +77,11 @@ public class EntityWidget extends BookWidget {
         if (actualRenderEntity == null) {
             return;
         }
-        // Freeze every per-frame interpolation source so the preview can't jitter: age (tickCount, else
-        // ageInTicks = tickCount + partialTick sawtooths every frame), position/body-yaw/pitch (setOldPosAndRot)
-        // and head yaw (yHeadRotO/yBodyRotO, the source of the "vibrating head" on big mobs). The regular-mob
-        // path below renders a fully static pose anyway; this covers the CustomBookEntityRenderer + fallback
-        // dispatcher paths.
-        if (Minecraft.getInstance().player != null) {
-            actualRenderEntity.tickCount = Minecraft.getInstance().player.tickCount;
-        }
-        actualRenderEntity.setOldPosAndRot();
-        if (actualRenderEntity instanceof LivingEntity living) {
-            living.yHeadRotO = living.yHeadRot;
-            living.yBodyRotO = living.yBodyRot;
-        }
+        // IMPORTANT: leave the preview entity completely untouched (tickCount stays 0, old pos/rot at
+        // defaults), exactly like upstream's never-ticked book entity. Dozens of AC models derive
+        // "partialTicks = ageInTicks - entity.tickCount" in setupAnim; the static path passes ageInTicks=1,
+        // so a synced tickCount turns that into a huge negative value and flings parts off-page (a synced
+        // tickCount made the Gammaroach preview vanish via its death-animation offset).
         float entityScale = 100.0F * getScale();
         float entityBBSize = Math.max(actualRenderEntity.getBbWidth(), actualRenderEntity.getBbHeight());
         if ((double) entityBBSize > 1.0D) {
