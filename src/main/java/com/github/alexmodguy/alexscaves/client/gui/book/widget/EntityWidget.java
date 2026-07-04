@@ -115,7 +115,10 @@ public class EntityWidget extends BookWidget {
                 }
                 matrixStack.mulPose(Axis.YP.rotationDegrees(180));
                 matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, GuiCompatPartialTick(), matrixStack, bufferIn, packedLight);
+                // partialTick = 0 (NOT the live delta): upstream passed a fixed 0.0F here. A live partial-tick
+                // makes ageInTicks = tickCount + partialTick sawtooth 0->1 every frame on the never-ticked
+                // preview entity, jittering the idle head-bob/limb animations these renderers still run.
+                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, matrixStack, bufferIn, packedLight);
                 if (sepia) {
                     customBookEntityRenderer.setSepiaFlag(false);
                 }
@@ -141,7 +144,10 @@ public class EntityWidget extends BookWidget {
                 // Non-living / non-legacy renderers: dispatcher submit path (needs the same flips as above).
                 matrixStack.mulPose(Axis.YP.rotationDegrees(180));
                 matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, GuiCompatPartialTick(), matrixStack, bufferIn, packedLight);
+                // partialTick = 0 (NOT the live delta): upstream passed a fixed 0.0F here. A live partial-tick
+                // makes ageInTicks = tickCount + partialTick sawtooth 0->1 every frame on the never-ticked
+                // preview entity, jittering the idle head-bob/limb animations these renderers still run.
+                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, matrixStack, bufferIn, packedLight);
             }
         } catch (Throwable throwable3) {
             CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
@@ -151,9 +157,5 @@ public class EntityWidget extends BookWidget {
             crashreportcategory1.setDetail("Assigned renderer", manager.getRenderer(entityIn));
             throw new ReportedException(crashreport);
         }
-    }
-
-    private static float GuiCompatPartialTick() {
-        return Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
     }
 }
