@@ -279,6 +279,19 @@ public class ClientProxy extends CommonProxy {
                 darknessTrailPointerMap.remove(living);
             }
         }
+        // Cloak+Hood of Darkness special-ability key (fly + watcher view). 26.1 made Item#inventoryTick
+        // server-only, so the client key poll that upstream ran there is dead code; poll it here instead
+        // (mirrors the mounted-entity pattern). The server ArmorKeyMessage handler applies DarknessIncarnate.
+        net.minecraft.world.entity.player.Player darknessCloakPlayer = minecraft.player;
+        if (darknessCloakPlayer != null && darknessCloakPlayer.isAlive()) {
+            net.minecraft.world.item.ItemStack darknessCloak = darknessCloakPlayer.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+            if (darknessCloak.is(com.github.alexmodguy.alexscaves.server.item.ACItemRegistry.CLOAK_OF_DARKNESS.get())
+                    && com.github.alexmodguy.alexscaves.server.item.DarknessArmorItem.getMeterProgress(darknessCloak) >= 1.0F
+                    && AlexsCaves.PROXY.isKeyDown(2)) {
+                AlexsCaves.sendMSGToServer(new com.github.alexmodguy.alexscaves.server.message.ArmorKeyMessage(
+                        net.minecraft.world.entity.EquipmentSlot.CHEST.ordinal(), darknessCloakPlayer.getId(), 2));
+            }
+        }
         acSkyOverrideAmount = ACBiomeRegistry.calculateBiomeSkyOverride(cameraEntity);
         if (acSkyOverrideAmount > 0.0F) {
             acSkyOverrideColor = BiomeSampler.sampleBiomesVec3(
@@ -628,6 +641,9 @@ public class ClientProxy extends CommonProxy {
         event.registerAbove(VanillaGuiLayers.PLAYER_HEALTH,
                 Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "irradiated_hearts"),
                 new com.github.alexmodguy.alexscaves.client.render.hud.IrradiatedHeartGuiLayer());
+        event.registerAbove(VanillaGuiLayers.HOTBAR,
+                Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "riding_meter"),
+                new com.github.alexmodguy.alexscaves.client.render.hud.RidingMeterGuiLayer());
     }
 
     /**
