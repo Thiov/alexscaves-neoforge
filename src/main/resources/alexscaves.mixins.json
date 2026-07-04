@@ -46,6 +46,7 @@
     "UtilMixin"
   ],
   "client": [
+    "client.LightmapRenderStateExtractorMixin",
     "client.AdvancementTabAccessor",
     "client.AdvancementTabMixin",
     "client.AdvancementWidgetAccessor",
