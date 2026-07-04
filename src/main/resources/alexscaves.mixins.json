@@ -39,7 +39,6 @@
     "PlayerMixin",
     "PotionUtilsMixin",
     "SeagrassFeatureMixin",
-    "ServerLevelTickRateMixin",
     "ShipwreckStructureMixin",
     "SwampHutPieceMixin",
     "UtilMixin"
@@ -56,6 +55,7 @@
     "client.ClientChunkCacheStorageMixin",
     "client.ClientLevelDataMixin",
     "client.ClientPacketListenerMixin",
+    "client.DeltaTrackerTimerMixin",
     "client.EntityRenderDispatcherMixin",
     "client.FogRendererMixin",
     "client.GameRendererAccessor",
