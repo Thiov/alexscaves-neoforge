@@ -35,6 +35,9 @@ public class CaveBookPipRenderer extends PictureInPictureRenderer<CaveBookPipRen
 
     @Override
     protected void renderToTexture(CaveBookPipRenderState state, PoseStack poseStack) {
+        // Conventional PIP entity light rig. The book model uses the NO_CARDINAL_LIGHTING unlit render type
+        // (see ACRenderTypes.getUnlitTranslucent), so the parchment ignores this rig entirely and renders at
+        // full texture brightness — the preset here only matters for any diffuse-lit widgets drawn in the PIP.
         Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ENTITY_IN_UI);
         float widthGui = state.x1() - state.x0();
         // prepare() put the origin at the horizontal centre; shift it back to the left edge (GUI x = 0) so the
