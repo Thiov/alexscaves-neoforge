@@ -18,7 +18,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
-import net.neoforged.neoforge.client.NeoForgeRenderTypes;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -281,7 +280,9 @@ public class CaveBookScreen extends Screen {
         poseStack.pushPose();
         BOOK_MODEL.setupAnim(null, openBookAmount, pageAngle, pageUp, -20 * openBookAmount - 10 * pageFlipBump, 0);
         BOOK_MODEL.mouseOver(mouseLeanX, mouseLeanY, ageInTicks, flip, canGoLeft(), canGoRight());
-        BOOK_MODEL.renderToBuffer(poseStack, bufferSource.getBuffer(NeoForgeRenderTypes.getUnlitTranslucent(BOOK_TEXTURE)), 240, OverlayTexture.NO_OVERLAY, -1);
+        // AC's own unlit-with-depth-write type: vanilla's emissive translucent doesn't write depth (page text
+        // bled through the front cover) and the lit types grey the model through the UI diffuse rig.
+        BOOK_MODEL.renderToBuffer(poseStack, bufferSource.getBuffer(com.github.alexmodguy.alexscaves.client.render.ACRenderTypes.getUnlitTranslucent(BOOK_TEXTURE)), 240, OverlayTexture.NO_OVERLAY, -1);
         renderBookContents(poseStack, mouseX, mouseY, partialTick);
         poseStack.popPose();
         poseStack.popPose();

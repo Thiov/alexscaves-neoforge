@@ -136,14 +136,12 @@ public abstract class CameraMixin {
         // Stunned camera roll (upstream ClientEvents ~342-345). 26.1's Camera has no roll parameter
         // (setRotation only takes yaw/pitch), so roll the rotation quaternion around the view axis in place.
         // update() runs before Camera#extractRenderState captures orientation + view matrix from rotation(),
-        // and alignWithEntity resets rotation each frame, so there is no accumulation.
+        // and alignWithEntity resets rotation each frame, so there is no accumulation. Upstream applies the
+        // roll unconditionally (no screenEffectScale involvement).
         if (player instanceof net.minecraft.world.entity.LivingEntity stunned
                 && stunned.hasEffect(ACEffectRegistry.STUNNED)) {
-            float screenScale = Minecraft.getInstance().options.screenEffectScale().get().floatValue();
-            if (screenScale > 0.0F) {
-                float roll = (float) (Math.sin((stunned.tickCount + partialTicks) * 0.2F) * 10.0F) * screenScale;
-                this.rotation.rotateZ((float) Math.toRadians(roll));
-            }
+            float roll = (float) (Math.sin((stunned.tickCount + partialTicks) * 0.2F) * 10.0F);
+            this.rotation.rotateZ((float) Math.toRadians(roll));
         }
     }
 

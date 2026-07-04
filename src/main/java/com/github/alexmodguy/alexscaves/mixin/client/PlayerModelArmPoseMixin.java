@@ -68,10 +68,10 @@ public abstract class PlayerModelArmPoseMixin extends HumanoidModel<AvatarRender
             return;
         }
         float speedModifier = 0.35F;
-        if (AlexsCaves.COMMON_CONFIG.sugarRushSlowsTime.get()
-                && AlexsCaves.PROXY.isTickRateModificationActive(minecraft.level)) {
-            float tickRate = ClientTickRateTracker.getForClient(minecraft).getClientTickRate() / 50.0F;
-            speedModifier *= tickRate;
+        if (AlexsCaves.COMMON_CONFIG.sugarRushSlowsTime.get()) {
+            // Our slow-motion is a fixed 2x client tick stretch (Citadel's tracker never carries the
+            // sugar-rush modifier in this port), so scale the gait by the same constant.
+            speedModifier *= 2.0F;
         }
         float deltaSpeed = 1.0F;
         float walkPos = state.walkAnimationPos;
