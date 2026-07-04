@@ -30,6 +30,11 @@ public interface ACEffectRenderState {
 
     void alexscaves$setDarknessIncarnate(boolean darkness);
 
+    /** Precomputed Darkness Incarnate trail ribbon points (entity-relative), or null. Point 0 is the anchor. */
+    net.minecraft.world.phys.Vec3[] alexscaves$getDarknessTrail();
+
+    void alexscaves$setDarknessTrail(net.minecraft.world.phys.Vec3[] trail);
+
     boolean alexscaves$isSugarRush();
 
     void alexscaves$setSugarRush(boolean sugarRush);
