@@ -39,6 +39,7 @@
     "PlayerMixin",
     "PotionUtilsMixin",
     "SeagrassFeatureMixin",
+    "ServerLevelTickRateMixin",
     "ShipwreckStructureMixin",
     "SwampHutPieceMixin",
     "UtilMixin"
