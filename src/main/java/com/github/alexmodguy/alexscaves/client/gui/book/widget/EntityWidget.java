@@ -1,10 +1,15 @@
 package com.github.alexmodguy.alexscaves.client.gui.book.widget;
 
+import com.github.alexmodguy.alexscaves.client.model.ACAdvancedEntityModel;
+import com.github.alexmodguy.alexscaves.client.render.ACRenderTypes;
 import com.github.alexmodguy.alexscaves.client.render.compat.EntityRenderCompat;
 import com.github.alexmodguy.alexscaves.client.render.entity.CustomBookEntityRenderer;
+import com.github.alexmodguy.alexscaves.client.render.entity.compat.LivingEntityRenderer121X;
+import com.github.alexthe666.citadel.client.model.basic.BasicEntityModel;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.math.Axis;
 import net.minecraft.CrashReport;
@@ -13,6 +18,7 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.Identifier;
@@ -71,25 +77,26 @@ public class EntityWidget extends BookWidget {
         if (actualRenderEntity == null) {
             return;
         }
-        // The preview entity is never added to the world or ticked, so its tickCount stays 0 and renderers
-        // derive ageInTicks = tickCount + partialTick — which sawtooths 0->1 every frame, jittering idle
-        // animations. Advance its age in lockstep with the client and freeze old pos/rot so neither the
-        // animation nor the position/rotation interpolation jitters.
+        // Freeze every per-frame interpolation source so the preview can't jitter: age (tickCount, else
+        // ageInTicks = tickCount + partialTick sawtooths every frame), position/body-yaw/pitch (setOldPosAndRot)
+        // and head yaw (yHeadRotO/yBodyRotO, the source of the "vibrating head" on big mobs). The regular-mob
+        // path below renders a fully static pose anyway; this covers the CustomBookEntityRenderer + fallback
+        // dispatcher paths.
         if (Minecraft.getInstance().player != null) {
             actualRenderEntity.tickCount = Minecraft.getInstance().player.tickCount;
         }
         actualRenderEntity.setOldPosAndRot();
+        if (actualRenderEntity instanceof LivingEntity living) {
+            living.yHeadRotO = living.yHeadRot;
+            living.yBodyRotO = living.yBodyRot;
+        }
         float entityScale = 100.0F * getScale();
         float entityBBSize = Math.max(actualRenderEntity.getBbWidth(), actualRenderEntity.getBbHeight());
         if ((double) entityBBSize > 1.0D) {
             entityScale /= entityBBSize * 1.5F;
         }
-        // The entity dispatcher draws the model feet-at-origin, so anchoring at the box centre leaves the body
-        // extending upward out of the frame (heads overlapping the page title). Drop the anchor by half the
-        // entity's rendered height so its vertical centre sits at the box centre instead.
-        float centerY = actualRenderEntity.getBbHeight() * entityScale * 0.5F;
         poseStack.pushPose();
-        poseStack.translate(getX(), getY() + centerY, 120);
+        poseStack.translate(getX(), getY(), 120);
         poseStack.scale(entityScale, entityScale, entityScale);
         poseStack.mulPose(Axis.XP.rotationDegrees(rotX));
         poseStack.mulPose(Axis.YP.rotationDegrees(rotY));
@@ -102,18 +109,47 @@ public class EntityWidget extends BookWidget {
         return sepia;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void renderEntity(Entity entityIn, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
             var renderer = manager.getRenderer(entityIn);
-            if (renderer instanceof CustomBookEntityRenderer customBookEntityRenderer && sepia) {
-                customBookEntityRenderer.setSepiaFlag(true);
-            }
-            matrixStack.mulPose(Axis.YP.rotationDegrees(180));
-            matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
-            EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, GuiCompatPartialTick(), matrixStack, bufferIn, packedLight);
-            if (renderer instanceof CustomBookEntityRenderer customBookEntityRenderer && sepia) {
-                customBookEntityRenderer.setSepiaFlag(false);
+            if (renderer instanceof CustomBookEntityRenderer customBookEntityRenderer) {
+                // Upstream's CustomBookEntityRenderer branch verbatim: full dispatcher render, flipped into
+                // GUI space (the dispatcher internally applies scale(-1,-1,1), so the 180° flips are needed
+                // HERE and only here).
+                if (sepia) {
+                    customBookEntityRenderer.setSepiaFlag(true);
+                }
+                matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+                matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, GuiCompatPartialTick(), matrixStack, bufferIn, packedLight);
+                if (sepia) {
+                    customBookEntityRenderer.setSepiaFlag(false);
+                }
+            } else if (entityIn instanceof LivingEntity living && renderer instanceof LivingEntityRenderer121X livingRenderer) {
+                // Regular mobs: upstream's direct static-model render, verbatim — and critically with NO
+                // 180° flips. Vanilla/Citadel models are authored +Y-down, which already matches the page's
+                // GUI space; the flips only exist to undo the dispatcher's internal scale(-1,-1,1). Applying
+                // them here mirrored every direct-rendered mob upside down (Grottoceratops) and pushed
+                // ground-anchored models upward out of the frame (Notor/Trilocaris invisible). The static
+                // pose (ageInTicks=1, no head yaw) also means zero frame-to-frame jitter, like the original.
+                BasicEntityModel model = livingRenderer.getModel();
+                if (model instanceof ACAdvancedEntityModel acm) {
+                    acm.young = living.isBaby();
+                }
+                VertexConsumer vertexConsumer = bufferIn.getBuffer(
+                        ACRenderTypes.getBookWidget(livingRenderer.getTextureLocation(living), sepia));
+                matrixStack.pushPose();
+                model.setupAnim(living, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F);
+                matrixStack.scale(living.getScale(), living.getScale(), living.getScale());
+                model.renderToBuffer(matrixStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+                matrixStack.popPose();
+            } else {
+                // Non-living / non-legacy renderers: dispatcher submit path (needs the same flips as above).
+                matrixStack.mulPose(Axis.YP.rotationDegrees(180));
+                matrixStack.mulPose(Axis.ZP.rotationDegrees(180));
+                EntityRenderCompat.render(entityIn, 0.0D, 0.0D, 0.0D, 0.0F, GuiCompatPartialTick(), matrixStack, bufferIn, packedLight);
             }
         } catch (Throwable throwable3) {
             CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
