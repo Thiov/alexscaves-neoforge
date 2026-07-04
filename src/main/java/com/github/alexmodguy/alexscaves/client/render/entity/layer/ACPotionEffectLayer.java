@@ -1,26 +1,220 @@
 package com.github.alexmodguy.alexscaves.client.render.entity.layer;
 
-import com.github.alexmodguy.alexscaves.client.render.entity.compat.RenderLayer121X;
-import com.github.alexmodguy.alexscaves.client.render.entity.compat.RenderLayerParent121X;
-import com.github.alexthe666.citadel.client.model.basic.BasicEntityModel;
+import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.render.ACRenderTypes;
+import com.github.alexmodguy.alexscaves.client.render.ColorUtil;
+import com.github.alexmodguy.alexscaves.client.render.compat.RenderSystemCompat;
+import com.github.alexmodguy.alexscaves.client.render.entity.state.ACEffectRenderState;
+import com.github.alexmodguy.alexscaves.mcshim.BufferUploader;
+import com.github.alexmodguy.alexscaves.server.potion.IrradiatedEffect;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.Identifier;
+import org.joml.Matrix4f;
 
-public class ACPotionEffectLayer<T extends LivingEntity, M extends BasicEntityModel<T>> extends RenderLayer121X<T, M> {
+/**
+ * 26.1 render-state port of Alex's Caves' potion-effect overlay. Runs off the extracted
+ * {@link LivingEntityRenderState} + the {@link ACEffectRenderState} duck flags rather than the live entity,
+ * and pushes its extra passes through the deferred submit pipeline (a plain {@code render()} no longer exists).
+ * Attached to every vanilla living renderer by {@code VanillaLivingEntityRendererMixin}.
+ *
+ * <p>Effect branches (mirroring upstream {@code ACPotionEffectLayer#render}):
+ * <ul>
+ *   <li>Irradiated — re-render the model emissive/green, alpha scaling with amplifier (blue past lvl 4).</li>
+ *   <li>Bubbled — a water shell + bubble cube around the entity, emitted as custom geometry.</li>
+ *   <li>Darkness Incarnate — a black silhouette fading with the effect intensity.</li>
+ *   <li>Sugar Rush — a candy-skin overlay on humanoids (textures/entity/sugar_rush.png).</li>
+ * </ul>
+ */
+public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends RenderLayer<S, M> {
 
-    public ACPotionEffectLayer(RenderLayerParent121X<T, M> parent) {
+    private static final Identifier TEXTURE_BUBBLE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/entity/deep_one/bubble.png");
+    private static final Identifier TEXTURE_WATER = Identifier.withDefaultNamespace("textures/block/water_still.png");
+    public static final Identifier INSIDE_BUBBLE_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/misc/inside_bubble.png");
+    public static final Identifier TEXTURE_DARKNESS = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/entity/darkness_incarnate.png");
+    public static final Identifier TEXTURE_SUGAR_RUSH = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/entity/sugar_rush.png");
+
+    private final RenderLayerParent<S, M> parent;
+
+    public ACPotionEffectLayer(RenderLayerParent<S, M> parent) {
         super(parent);
+        this.parent = parent;
     }
+
+    @Override
+    public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, S state, float yRot, float xRot) {
+        ACEffectRenderState effect = (ACEffectRenderState) state;
+        boolean glowConfig = AlexsCaves.CLIENT_CONFIG.radiationGlowEffect.get();
+
+        if (effect.alexscaves$isIrradiated() && glowConfig) {
+            int level = effect.alexscaves$getIrradiatedLevel();
+            Identifier texture = alexscaves$textureFor(state);
+            RenderType glow = level >= IrradiatedEffect.BLUE_LEVEL
+                    ? ACRenderTypes.getBlueRadiationGlow(texture)
+                    : ACRenderTypes.getRadiationGlow(texture);
+            float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.9F : Math.min(level * 0.33F, 1.0F);
+            // order(1): draw the overlay pass after the base model (same trick as vanilla EyesLayer) so the
+            // coplanar overlay wins the depth test instead of z-fighting under the skin.
+            collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F),
+                    ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha), null, state.outlineColor, null);
+        }
+
+        if (effect.alexscaves$isBubbled()) {
+            float bodyYaw = state.bodyRot;
+            float size = (float) Math.ceil(Math.max(state.boundingBoxHeight, state.boundingBoxWidth));
+            float waterAnimOffset = (float) (Math.round(state.ageInTicks * 0.4)) % 16.0F;
+            int waterColor = effect.alexscaves$getBubbleWaterColor();
+            poseStack.pushPose();
+            poseStack.translate(0.0F, 1.4F - size * 0.5F, 0.0F);
+            poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - bodyYaw));
+            poseStack.scale(1.1F, 1.1F, 1.1F);
+            submitBubble(collector, poseStack, ACRenderTypes.getBubbledCull(TEXTURE_WATER), lightCoords, size - 0.1F,
+                    size * 0.5F, size * 0.5F * 0.0625F, -0.0625F * waterAnimOffset, true, waterColor);
+            submitBubble(collector, poseStack, ACRenderTypes.getBubbledNoCull(TEXTURE_BUBBLE), lightCoords, size,
+                    1.0F, 1.0F, 0.0F, false, waterColor);
+            poseStack.popPose();
+        }
+
+        // Darkness Incarnate has no branch here: a coplanar black overlay z-fights the base model in 26.1's
+        // deferred pipeline (flickers per face). It is rendered instead by tinting the base model itself black
+        // via LivingEntityRenderer#getModelTint (see VanillaLivingEntityRendererMixin) — a single solid pass,
+        // so there is no second coplanar geometry to fight.
+
+        if (effect.alexscaves$isSugarRush() && this.getParentModel() instanceof HumanoidModel) {
+            // Candy "eyes" overlay. entityTranslucent (not entityCutout): the overlay is coplanar with the base
+            // head, so it must draw in the translucent (painter's-order) pass to land on top instead of
+            // z-fighting under the skin in the solid pass. Its opaque pixels read the same as cutout.
+            collector.order(1).submitModel(this.getParentModel(), state, poseStack,
+                    ACRenderTypes.entityTranslucent(TEXTURE_SUGAR_RUSH), lightCoords,
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F),
+                    ColorUtil.packColor(1.0F, 1.0F, 1.0F, 1.0F), null, state.outlineColor, null);
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Identifier alexscaves$textureFor(S state) {
+        // parent is always a LivingEntityRenderer (the layer is only added to those); its getTextureLocation
+        // resolves per-state (player skin, mob texture, ...).
+        return ((LivingEntityRenderer) this.parent).getTextureLocation(state);
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // First-person "inside a bubble" overlay. Called from GameRendererMixin after the item-in-hand pass.
+    // 26.1 deleted the immediate-mode core-shader path used upstream (GameRenderer::getPositionTexShader,
+    // RenderSystem.setShader*); the port routes such 2D overlays through RenderSystemCompat, which reports
+    // unsupported on 26.1 -> these no-op exactly like the nuke-flash / watcher screen overlays. The geometry
+    // is kept so the tint lights up untouched if a compatible shader path returns.
+    // ------------------------------------------------------------------------------------------------
 
     public static void renderBubbledFirstPerson(PoseStack poseStack) {
+        poseStack.pushPose();
+        renderBubbledFluid(Minecraft.getInstance(), poseStack, TEXTURE_BUBBLE, false);
+        renderBubbledFluid(Minecraft.getInstance(), poseStack, INSIDE_BUBBLE_TEXTURE, true);
+        poseStack.popPose();
     }
 
-    public static void renderBubbledFluid(Minecraft minecraft, PoseStack poseStack, net.minecraft.resources.Identifier texture, boolean translate) {
+    public static void renderBubbledFluid(Minecraft minecraft, PoseStack poseStack, Identifier texture, boolean translate) {
+        if (minecraft.player == null || !RenderSystemCompat.supportsShaderTexture()) {
+            return;
+        }
+        RenderSystemCompat.setShaderTexture(texture);
+        Matrix4f matrix4f = poseStack.last().pose();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        if (translate) {
+            float f7 = -minecraft.player.getYRot() / 64.0F;
+            float f8 = minecraft.player.getXRot() / 64.0F;
+            bufferbuilder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(4.0F + f7, 4.0F + f8);
+            bufferbuilder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(0.0F + f7, 4.0F + f8);
+            bufferbuilder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(0.0F + f7, 0.0F + f8);
+            bufferbuilder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(4.0F + f7, 0.0F + f8);
+        } else {
+            float min = -0.5F;
+            float max = 1.5F;
+            bufferbuilder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(max, max);
+            bufferbuilder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(min, max);
+            bufferbuilder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(min, min);
+            bufferbuilder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(max, min);
+        }
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+        RenderSystemCompat.enableDepthTest();
     }
 
-    
-    public void render(PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    // ------------------------------------------------------------------------------------------------
+    // Bubble cube geometry (upstream renderBubble / renderCubeFace), emitted through submitCustomGeometry.
+    // ------------------------------------------------------------------------------------------------
+
+    private static void submitBubble(SubmitNodeCollector collector, PoseStack poseStack, RenderType renderType,
+            int packedLight, float size, float textureScaleXZ, float textureScaleY, float uvOffset, boolean water,
+            int waterColor) {
+        collector.submitCustomGeometry(poseStack, renderType, (pose, buffer) ->
+                renderBubbleCube(pose.pose(), buffer, packedLight, size, textureScaleXZ, textureScaleY, uvOffset, water,
+                        waterColor));
+    }
+
+    private static void renderBubbleCube(Matrix4f matrix4f, VertexConsumer consumer, int packedLight, float size,
+            float textureScaleXZ, float textureScaleY, float uvOffset, boolean water, int waterColor) {
+        float cubeStart = size * -0.5F;
+        float cubeEnd = size * 0.5F;
+        renderCubeFace(matrix4f, consumer, packedLight, cubeStart, cubeEnd, cubeStart, cubeEnd, cubeEnd, cubeEnd, cubeEnd,
+                cubeEnd, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+        renderCubeFace(matrix4f, consumer, packedLight, cubeStart, cubeEnd, cubeEnd, cubeStart, cubeStart, cubeStart,
+                cubeStart, cubeStart, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+        renderCubeFace(matrix4f, consumer, packedLight, cubeEnd, cubeEnd, cubeEnd, cubeStart, cubeStart, cubeEnd, cubeEnd,
+                cubeStart, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+        renderCubeFace(matrix4f, consumer, packedLight, cubeStart, cubeStart, cubeStart, cubeEnd, cubeStart, cubeEnd,
+                cubeEnd, cubeStart, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+        renderCubeFace(matrix4f, consumer, packedLight, cubeStart, cubeEnd, cubeStart, cubeStart, cubeStart, cubeStart,
+                cubeEnd, cubeEnd, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+        renderCubeFace(matrix4f, consumer, packedLight, cubeStart, cubeEnd, cubeEnd, cubeEnd, cubeEnd, cubeEnd, cubeStart,
+                cubeStart, textureScaleXZ, textureScaleY, uvOffset, water, waterColor);
+    }
+
+    private static void renderCubeFace(Matrix4f matrix4f, VertexConsumer vertexConsumer, int packedLightIn, float f1,
+            float f2, float f3, float f4, float f5, float f6, float f7, float f8, float textureScaleXZ,
+            float textureScaleY, float uvOffset, boolean water, int waterColor) {
+        int overlayCoords = OverlayTexture.NO_OVERLAY;
+        int colorR = 255;
+        int colorG = 255;
+        int colorB = 255;
+        int colorA = water ? 200 : 255;
+        if (water) {
+            colorR = waterColor >> 16 & 255;
+            colorG = waterColor >> 8 & 255;
+            colorB = waterColor & 255;
+        }
+        vertexConsumer.addVertex(matrix4f, f1, f3, f5).setColor(colorR, colorG, colorB, colorA)
+                .setUv(0.0F, textureScaleY + uvOffset).setOverlay(overlayCoords).setLight(packedLightIn)
+                .setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, f2, f3, f6).setColor(colorR, colorG, colorB, colorA)
+                .setUv(textureScaleXZ, textureScaleY + uvOffset).setOverlay(overlayCoords).setLight(packedLightIn)
+                .setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, f2, f4, f7).setColor(colorR, colorG, colorB, colorA)
+                .setUv(textureScaleXZ, uvOffset).setOverlay(overlayCoords).setLight(packedLightIn)
+                .setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, f1, f4, f8).setColor(colorR, colorG, colorB, colorA)
+                .setUv(0.0F, uvOffset).setOverlay(overlayCoords).setLight(packedLightIn)
+                .setNormal(0.0F, -1.0F, 0.0F);
     }
 }
