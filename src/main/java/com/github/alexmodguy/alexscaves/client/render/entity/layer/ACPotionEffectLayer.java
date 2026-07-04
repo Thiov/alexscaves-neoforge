@@ -81,11 +81,10 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
                     ? ACRenderTypes.getBlueRadiationGlow(TEXTURE_FLAT_WHITE)
                     : ACRenderTypes.getRadiationGlow(TEXTURE_FLAT_WHITE);
             float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.9F : Math.min(level * 0.33F, 1.0F);
-            // Upstream's irradiated core shader painted the duplicate model radioactive green (blue past
-            // BLUE_LEVEL); the shader is disabled in this port, so bake the color into the emissive tint.
-            int tint = level >= IrradiatedEffect.BLUE_LEVEL
-                    ? ColorUtil.packColor(0.35F, 0.8F, 1.0F, alpha)
-                    : ColorUtil.packColor(0.47F, 0.84F, 0.06F, alpha);
+            // The custom irradiated shader forces the pulsing green/blue itself and only reads the
+            // vertexColor alpha (through the flat-white Sampler0) as the effect fade — so the tint is
+            // plain white carrying just the alpha, not a baked color.
+            int tint = ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha);
             // order(1): draw the overlay pass after the base model (same trick as vanilla EyesLayer) so the
             // coplanar overlay wins the depth test instead of z-fighting under the skin.
             collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
@@ -147,30 +146,35 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
     }
 
     public static void renderBubbledFluid(Minecraft minecraft, PoseStack poseStack, Identifier texture, boolean translate) {
-        if (minecraft.player == null || !RenderSystemCompat.supportsShaderTexture()) {
+        if (minecraft.player == null) {
             return;
         }
-        RenderSystemCompat.setShaderTexture(texture);
+        // 26.1 deleted the immediate-mode position_tex path used upstream. Draw the fullscreen first-person
+        // overlay exactly like vanilla's underwater / fire in-helmet effect (ScreenEffectRenderer#renderWater):
+        // RenderTypes.blockScreenEffect over the shared buffer source, flushed by GameRendererMixin. The call
+        // site injects at vanilla's own screen-effect point, so the hud3d projection + identity modelview are
+        // active and the -1..1 (z=-0.5) quad fills the view. The look-based UV pan matches upstream exactly.
+        // inside_bubble.png is a fully-opaque blue water tile, so the look-panned water layer must be drawn
+        // translucent (you see the world THROUGH the bubble); the bubble-edge layer (bubble.png) keeps full
+        // alpha because its own texture is transparent except for the rim highlights.
         Matrix4f matrix4f = poseStack.last().pose();
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferbuilder = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        int color = translate ? 0x80FFFFFF : 0xFFFFFFFF;
+        VertexConsumer builder = minecraft.renderBuffers().bufferSource().getBuffer(RenderTypes.blockScreenEffect(texture));
         if (translate) {
             float f7 = -minecraft.player.getYRot() / 64.0F;
             float f8 = minecraft.player.getXRot() / 64.0F;
-            bufferbuilder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(4.0F + f7, 4.0F + f8);
-            bufferbuilder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(0.0F + f7, 4.0F + f8);
-            bufferbuilder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(0.0F + f7, 0.0F + f8);
-            bufferbuilder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(4.0F + f7, 0.0F + f8);
+            builder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(4.0F + f7, 4.0F + f8).setColor(color);
+            builder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(0.0F + f7, 4.0F + f8).setColor(color);
+            builder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(0.0F + f7, 0.0F + f8).setColor(color);
+            builder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(4.0F + f7, 0.0F + f8).setColor(color);
         } else {
             float min = -0.5F;
             float max = 1.5F;
-            bufferbuilder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(max, max);
-            bufferbuilder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(min, max);
-            bufferbuilder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(min, min);
-            bufferbuilder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(max, min);
+            builder.addVertex(matrix4f, -1.0F, -1.0F, -0.5F).setUv(max, max).setColor(color);
+            builder.addVertex(matrix4f, 1.0F, -1.0F, -0.5F).setUv(min, max).setColor(color);
+            builder.addVertex(matrix4f, 1.0F, 1.0F, -0.5F).setUv(min, min).setColor(color);
+            builder.addVertex(matrix4f, -1.0F, 1.0F, -0.5F).setUv(max, min).setColor(color);
         }
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-        RenderSystemCompat.enableDepthTest();
     }
 
     // ------------------------------------------------------------------------------------------------

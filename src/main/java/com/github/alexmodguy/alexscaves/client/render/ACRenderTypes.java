@@ -4,6 +4,7 @@ import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -120,6 +121,48 @@ public final class ACRenderTypes {
         return ENTITY_UNLIT_TRANSLUCENT.apply(texture);
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Irradiated (radiation-glow) effect — faithful port of upstream's rendertype_irradiated core
+    // shader. The 1.21.1 mod painted a duplicate model with a custom GLSL program that forces a
+    // pulsing radioactive green/blue driven by GameTime; 26.1 supports custom core shaders again via
+    // RenderPipeline.withVertexShader/withFragmentShader(Identifier), so we restore the real shader
+    // (assets/alexscaves/shaders/core/rendertype_irradiated{,_blue}.{vsh,fsh}) instead of a flat tint.
+    // Built from ENTITY_EMISSIVE_SNIPPET (DynamicTransforms + Projection UBOs + Sampler0 + ENTITY
+    // format) with the Globals UBO added for GameTime; overlay depth (no write), no cull, translucent.
+    private static final RenderPipeline IRRADIATED_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_irradiated"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> IRRADIATED = Util.memoize(
+            texture -> RenderType.create("alexscaves_irradiated",
+                    RenderSetup.builder(IRRADIATED_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
+    private static final RenderPipeline BLUE_IRRADIATED_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_blue_irradiated"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> BLUE_IRRADIATED = Util.memoize(
+            texture -> RenderType.create("alexscaves_blue_irradiated",
+                    RenderSetup.builder(BLUE_IRRADIATED_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
     private ACRenderTypes() {
     }
 
@@ -177,15 +220,16 @@ public final class ACRenderTypes {
         return RenderTypes.entityTranslucent(locationIn);
     }
 
-    // Irradiated program + post glow are disabled; emissive translucent keeps the fullbright
-    // green glow on the model.
+    // Faithful restore: custom irradiated core shader forces the pulsing radioactive green driven by
+    // GameTime (the flat white Sampler0 supplies only the model-shaped alpha; the vertexColor alpha is
+    // the effect fade). See IRRADIATED_PIPELINE above.
     public static RenderType getRadiationGlow(Identifier locationIn) {
-        return RenderTypes.entityTranslucentEmissive(locationIn);
+        return IRRADIATED.apply(locationIn);
     }
 
-    // Same as getRadiationGlow for the blue variant.
+    // BLUE_LEVEL variant — same shader, pulsing blue instead of green.
     public static RenderType getBlueRadiationGlow(Identifier locationIn) {
-        return RenderTypes.entityTranslucentEmissive(locationIn);
+        return BLUE_IRRADIATED.apply(locationIn);
     }
 
     // Real TRIANGLES type: the ferrouslime spike renderer emits 3 vertices per spike face,

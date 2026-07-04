@@ -1,9 +1,9 @@
-#version 150
+#version 330
+
+#moj_import <minecraft:dynamictransforms.glsl>
+#moj_import <minecraft:globals.glsl>
 
 uniform sampler2D Sampler0;
-
-uniform vec4 ColorModulator;
-uniform float GameTime;
 
 in vec4 vertexColor;
 in vec2 texCoord0;
@@ -12,11 +12,11 @@ out vec4 fragColor;
 
 void main() {
     float animation = GameTime * 2000.0;
-    float animation1 = sin(animation) + 1;
+    float animation1 = sin(animation) + 1.0;
     vec4 defaultColor = texture(Sampler0, texCoord0) * vertexColor;
     if (defaultColor.a < 0.1) {
         discard;
     }
-    vec4 color = vec4(0, animation1 * 0.15 + 0.85, animation1 * 0.15 + 0.85, defaultColor.a);
+    vec4 color = vec4(0.15, 0.6, animation1 * 0.1 + 0.75, defaultColor.a);
     fragColor = color * ColorModulator;
 }
