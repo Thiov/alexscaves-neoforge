@@ -20,10 +20,7 @@
       "replace_current_music": false,
       "sound": "alexscaves:primordial_caves_music"
     },
-    "sky_color": 15845747,
-    "fog_color": 15915104,
     "water_color": 370073,
-    "water_fog_color": 370073,
     "grass_color": 11785728,
     "foliage_color": 10601538
   },
@@ -160,5 +157,10 @@
     ],
     "water_creature": []
   },
-  "temperature": 0.95
+  "temperature": 0.95,
+  "attributes": {
+    "minecraft:visual/fog_color": 15915104,
+    "minecraft:visual/sky_color": 15845747,
+    "minecraft:visual/water_fog_color": 370073
+  }
 }

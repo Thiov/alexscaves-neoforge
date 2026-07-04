@@ -25,7 +25,7 @@ import java.util.Optional;
 
 import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
 
-public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
     public static final ParticleLimit PARTICLE_GROUP = new ParticleLimit(100);
     private static final RenderType RAINBOW_RENDER_TYPE = ACRenderTypes.getRainbow(Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/rainbow.png"));
     public int rainbowVecCount = 64;
@@ -56,6 +56,8 @@ public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.Tex
         this.lifetime = (int) (fillSpeed + this.totalDistance * 4);
         this.gravity = 0;
         this.setSize(3.0F, 3.0F);
+    
+        ACParticleWorldRender.add(this);
     }
 
     protected void rebakeRainbowVecs(double totalDistance) {
@@ -73,8 +75,7 @@ public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.Tex
         return false;
     }
 
-    public void render(VertexConsumer consumer, Camera camera, float partialTick) {
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(RAINBOW_RENDER_TYPE);
         Vec3 cameraPos = camera.position();
         PoseStack posestack = new PoseStack();
@@ -107,7 +108,6 @@ public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.Tex
             vertIndex++;
             posestack.popPose();
         }
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
 
     }
@@ -129,7 +129,7 @@ public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.Tex
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public void tick() {
@@ -159,5 +159,11 @@ public class RainbowParticle extends com.github.alexmodguy.alexscaves.mcshim.Tex
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, net.minecraft.util.RandomSource randomSourceCompat) {
             return new RainbowParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
         }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 }

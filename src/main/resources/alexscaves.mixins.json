@@ -5,7 +5,9 @@
   "minVersion": "0.8",
   "mixins": [
     "AbstractArrowMixin",
+    "AbstractMinecartMixin",
     "BiomeSourceMixin",
+    "BlockBehaviourIdMixin",
     "ChunkGeneratorAccessor",
     "ChunkStatusMixin",
     "CoralFeatureMixin",
@@ -19,6 +21,7 @@
     "GeodeFeatureMixin",
     "IllagerMixin",
     "ItemEntityMixin",
+    "ItemIdMixin",
     "ItemStackMixin",
     "JigsawStructureMixin",
     "KelpFeatureMixin",
@@ -27,8 +30,8 @@
     "LivingEntityEquipSoundMixin",
     "LivingEntityTemptRangeMixin",
     "MonsterMixin",
-    "MultifaceGrowthFeatureMixin",
     "MultiNoiseBiomeSourceMixin",
+    "MultifaceGrowthFeatureMixin",
     "NaturalSpawnerMixin",
     "NoiseBasedChunkGeneratorMixin",
     "OceanMonumentStructureMixin",
@@ -38,15 +41,13 @@
     "SeagrassFeatureMixin",
     "ShipwreckStructureMixin",
     "SwampHutPieceMixin",
-    "UtilMixin",
-    "BlockBehaviourIdMixin",
-    "ItemIdMixin"
+    "UtilMixin"
   ],
   "client": [
     "client.AdvancementTabAccessor",
     "client.AdvancementTabMixin",
-    "client.AdvancementsScreenAccessor",
     "client.AdvancementWidgetAccessor",
+    "client.AdvancementsScreenAccessor",
     "client.BiomeAmbientSoundsHandlerInstanceMixin",
     "client.BiomeAmbientSoundsHandlerMixin",
     "client.CameraAccessor",
@@ -54,9 +55,11 @@
     "client.ClientChunkCacheStorageMixin",
     "client.ClientLevelDataMixin",
     "client.ClientPacketListenerMixin",
+    "client.EntityRenderDispatcherMixin",
     "client.FogRendererMixin",
     "client.GameRendererAccessor",
     "client.GameRendererMixin",
+    "client.GuiGraphicsExtractorAccessor",
     "client.HumanoidArmorLayerMixin",
     "client.ItemFrameRendererMixin",
     "client.ItemInHandRendererAccessor",
@@ -78,8 +81,7 @@
     "client.SoundEngineMixin",
     "client.SoundManagerAccessor",
     "client.UnderwaterAmbientSoundHandlerMixin",
-    "client.UnderwaterAmbientSoundInstancesMixin",
-    "client.EntityRenderDispatcherMixin"
+    "client.UnderwaterAmbientSoundInstancesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

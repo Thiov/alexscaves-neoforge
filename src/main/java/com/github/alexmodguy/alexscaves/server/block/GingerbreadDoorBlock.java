@@ -149,7 +149,8 @@ public class GingerbreadDoorBlock extends Block {
         }
     }
 
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos1, boolean idk) {
+    @Override
+    protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, net.minecraft.world.level.redstone.Orientation orientation, boolean idk) {
         boolean flag = level.hasNeighborSignal(blockPos);
         if (!this.defaultBlockState().is(block) && flag != blockState.getValue(POWERED)) {
             if (flag != blockState.getValue(OPEN)) {

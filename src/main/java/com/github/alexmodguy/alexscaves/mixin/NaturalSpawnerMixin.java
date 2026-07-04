@@ -2,6 +2,7 @@ package com.github.alexmodguy.alexscaves.mixin;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
+import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
 import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -111,7 +112,11 @@ public class NaturalSpawnerMixin {
             int height = level.getMinY() + Math.round(heightRange * random.nextFloat());
             mutableBlockPos.setY(height);
             Holder<Biome> holder = level.getBiome(mutableBlockPos);
-            if (!holder.value().getMobSettings().getMobs(ACEntityRegistry.CAVE_CREATURE).isEmpty() && !cavesWithCreatures.contains(holder)) {
+            // Only Alex's Caves biomes provide "cave creatures". Because this port aliases the custom
+            // CAVE_CREATURE MobCategory to vanilla CREATURE, the biome tag is what distinguishes a real cave
+            // biome from a surface biome that merely has animals — without it, overworld biomes (cows/sheep)
+            // match here and dilute or replace dinosaur spawns.
+            if (holder.is(ACTagRegistry.ALEXS_CAVES_BIOMES) && !holder.value().getMobSettings().getMobs(ACEntityRegistry.CAVE_CREATURE).isEmpty() && !cavesWithCreatures.contains(holder)) {
                 cavesWithCreatures.add(holder);
             }
         }

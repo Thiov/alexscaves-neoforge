@@ -58,7 +58,7 @@ public class StunStarParticle extends AbstractTrailParticle {
         return 240;
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         if (age < 2) {
             return;
         }
@@ -75,7 +75,6 @@ public class StunStarParticle extends AbstractTrailParticle {
             quaternion.mul(Axis.ZP.rotation(f3));
         }
 
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(CENTER_TEXTURE));
 
         Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
@@ -103,8 +102,7 @@ public class StunStarParticle extends AbstractTrailParticle {
         vertexconsumer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setColor(this.rCol, this.gCol, this.bCol, alpha).setUv(f8, f5).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
         vertexconsumer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setColor(this.rCol, this.gCol, this.bCol, alpha).setUv(f7, f5).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
         vertexconsumer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setColor(this.rCol, this.gCol, this.bCol, alpha).setUv(f7, f6).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
-        multibuffersource$buffersource.endBatch();
-        super.render(vertexConsumer, camera, partialTick);
+        super.renderInWorld(multibuffersource$buffersource, camera, partialTick);
     }
 
     public void tick() {

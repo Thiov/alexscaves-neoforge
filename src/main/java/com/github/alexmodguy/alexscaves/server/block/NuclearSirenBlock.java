@@ -78,7 +78,8 @@ public class NuclearSirenBlock extends BaseEntityBlock implements SimpleWaterlog
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    @Override
+    protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
         if (!worldIn.isClientSide()) {
             this.updateState(state, worldIn, pos, blockIn);
         }

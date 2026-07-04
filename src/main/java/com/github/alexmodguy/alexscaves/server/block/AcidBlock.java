@@ -96,8 +96,9 @@ public class AcidBlock extends LiquidBlock {
         tickCorrosion(worldIn, pos);
     }
 
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, worldIn, pos, blockIn, null, isMoving);
+    @Override
+    protected void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, net.minecraft.world.level.redstone.Orientation orientation, boolean isMoving) {
+        super.neighborChanged(state, worldIn, pos, blockIn, orientation, isMoving);
         tickCorrosion(worldIn, pos);
     }
 

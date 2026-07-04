@@ -22,7 +22,7 @@ import org.joml.Matrix3f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     private static final Identifier[] TEXTURES = new Identifier[]{
             Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/void_eye_0.png"),
@@ -50,6 +50,8 @@ public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshi
         this.prevCameraOffsetY = cameraOffsetY;
         this.cameraOffsetX = cameraOffsetX;
         this.cameraOffsetY = cameraOffsetY;
+    
+        ACParticleWorldRender.add(this);
     }
 
     public void tick() {
@@ -70,7 +72,7 @@ public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshi
 
 
     
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         this.alpha = VoidBeingCloudParticle.getAlphaFromAge(age, lifetime);
         Vec3 vec3 = camera.position();
         float f = (float) (Mth.lerp((double) partialTick, this.xo, this.x) - vec3.x());
@@ -84,7 +86,6 @@ public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshi
             float f3 = Mth.lerp(partialTick, this.oRoll, this.roll);
             quaternion.mul(Axis.ZP.rotation(f3));
         }
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer portalStatic = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucent(TEXTURES[textureIndex]));
         PoseStack posestack = new PoseStack();
         PoseStack.Pose posestack$pose = posestack.last();
@@ -119,17 +120,22 @@ public class VoidBeingEyeParticle extends com.github.alexmodguy.alexscaves.mcshi
         portalStatic.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setColor(packedColor).setUv(f7, f5).setOverlay(OverlayTexture.NO_OVERLAY).setLight(j).setNormal(0.0F, -1.0F, 0.0F);
         portalStatic.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setColor(packedColor).setUv(f7, f6).setOverlay(OverlayTexture.NO_OVERLAY).setLight(j).setNormal(0.0F, -1.0F, 0.0F);
 
-        multibuffersource$buffersource.endBatch();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, net.minecraft.util.RandomSource randomSourceCompat) {
             return new VoidBeingEyeParticle(worldIn, x, y, z, (float) xSpeed, (float) ySpeed);
         }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 }

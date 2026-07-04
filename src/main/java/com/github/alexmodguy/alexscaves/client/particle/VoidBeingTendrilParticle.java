@@ -23,7 +23,7 @@ import org.joml.Vector3f;
 
 import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
 
-public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     private static final Identifier TENDRIL_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/particle/void_being_cloud_tendril.png");
 
@@ -61,6 +61,8 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
         this.cameraOffsetX = (random.nextFloat() - 0.5F) * 1.3F;
         this.cameraOffsetY = (random.nextFloat() - 0.5F) * 1.3F;
         this.seekByTime = (int) seekByTime;
+    
+        ACParticleWorldRender.add(this);
     }
 
     public void tick() {
@@ -100,7 +102,7 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
     }
 
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         Vec3 cameraPos = camera.position();
         double x = (float) (Mth.lerp((double) partialTick, this.xo, this.x));
         double y = (float) (Mth.lerp((double) partialTick, this.yo, this.y));
@@ -109,7 +111,6 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
         Quaternionf quaternion = new Quaternionf(camera.rotation());
         cameraOffset.rotate(quaternion);
         float width = targetId == -1 ? 1.5F : 1.5F + (age / (float) lifetime);
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucentCullItemTarget(TENDRIL_TEXTURE));
         PoseStack posestack = new PoseStack();
         posestack.pushPose();
@@ -139,7 +140,6 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
             samples++;
             drawFrom = drawTo;
         }
-        multibuffersource$buffersource.endBatch();
         posestack.popPose();
     }
 
@@ -161,7 +161,7 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
 
@@ -169,5 +169,11 @@ public class VoidBeingTendrilParticle extends com.github.alexmodguy.alexscaves.m
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, net.minecraft.util.RandomSource randomSourceCompat) {
             return new VoidBeingTendrilParticle(worldIn, x, y, z, xSpeed, ySpeed);
         }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        ACParticleWorldRender.remove(this);
     }
 }

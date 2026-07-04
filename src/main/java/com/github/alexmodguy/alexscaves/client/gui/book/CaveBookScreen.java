@@ -220,8 +220,42 @@ public class CaveBookScreen extends Screen {
         float partialTick = GuiCompat.gamePartialTick();
         this.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = new PoseStack();
-        MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
+        // Input state (hover flags) still has to be computed every frame here, because mouseClicked/canGo* read it.
+        float ageInTicks = tickCount + partialTick;
+        float bookScale = 221 - (1F - Math.min(ageInTicks, 5F) / 5F) * 180F;
+        int i = this.width / 2;
+        int j = this.height / 2;
+        float mouseLeanX = (mouseX - i) / bookScale;
+        float mouseLeanY = (mouseY - j) / bookScale;
+        this.hoveringPageLeft = mouseLeanX < -MOUSE_LEAN_THRESHOLD && canGoLeft();
+        this.hoveringPageRight = mouseLeanX > MOUSE_LEAN_THRESHOLD && canGoRight();
+
+        // 26.1: 3D-in-GUI must go through the deferred Picture-In-Picture pipeline (render to an offscreen
+        // texture, then blit) — an immediate bufferSource.endBatch() at extraction time never reaches the
+        // screen. The book model + pages are drawn by CaveBookPipRenderer#renderToTexture.
+        ((com.github.alexmodguy.alexscaves.mixin.client.GuiGraphicsExtractorAccessor) (Object) guiGraphics)
+                .alexscaves$getGuiRenderState()
+                .addPicturesInPictureState(new CaveBookPipRenderState(this, mouseX, mouseY, partialTick,
+                        0, 0, this.width, this.height, 1.0F, null));
+
+        if (currentEntry != null) {
+            currentEntry.mouseOver(this, entryPageNumber, mouseLeanX, mouseLeanY);
+        }
+        super.extractRenderState(guiGraphics, mouseX, mouseY, fakePartialTickThatsZeroForSomeReason);
+        if (unlockTooltip) {
+            List<Component> list = new ArrayList<>();
+            list.add(Component.translatable("book.alexscaves.page_locked_0").withStyle(ChatFormatting.GRAY));
+            list.add(Component.translatable("book.alexscaves.page_locked_1").withStyle(ChatFormatting.GRAY));
+            GuiCompat.setTooltip(guiGraphics, this.font, list, mouseX - 5, mouseY - 5);
+        }
+    }
+
+    /**
+     * Draws the 3D book model and its page contents. Called from {@link CaveBookPipRenderer} with a pose stack
+     * already re-established in top-left GUI-pixel space. Must NOT call {@code bufferSource.endBatch()} — the
+     * PIP renderer flushes with the offscreen output override active.
+     */
+    public void renderBookModelAndContents(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, int mouseX, int mouseY, float partialTick) {
         float ageInTicks = tickCount + partialTick;
         float openGuiAmount = Math.min(ageInTicks, 5F) / 5F;
         float invOpenGuiAmount = 1F - openGuiAmount;
@@ -235,8 +269,6 @@ public class CaveBookScreen extends Screen {
         int j = this.height / 2;
         float mouseLeanX = (mouseX - i) / bookScale;
         float mouseLeanY = (mouseY - j) / bookScale;
-        this.hoveringPageLeft = mouseLeanX < -MOUSE_LEAN_THRESHOLD && canGoLeft();
-        this.hoveringPageRight = mouseLeanX > MOUSE_LEAN_THRESHOLD && canGoRight();
 
         poseStack.pushPose();
         poseStack.translate(i + invOpenGuiAmount * i * 0.5F, j + 6 + 15 * pageFlipBump, 100.0F);
@@ -249,20 +281,8 @@ public class CaveBookScreen extends Screen {
         BOOK_MODEL.mouseOver(mouseLeanX, mouseLeanY, ageInTicks, flip, canGoLeft(), canGoRight());
         BOOK_MODEL.renderToBuffer(poseStack, bufferSource.getBuffer(NeoForgeRenderTypes.getUnlitTranslucent(BOOK_TEXTURE)), 240, OverlayTexture.NO_OVERLAY, -1);
         renderBookContents(poseStack, mouseX, mouseY, partialTick);
-        bufferSource.endBatch();
         poseStack.popPose();
         poseStack.popPose();
-
-        if (currentEntry != null) {
-            currentEntry.mouseOver(this, entryPageNumber, mouseLeanX, mouseLeanY);
-        }
-        super.extractRenderState(guiGraphics, mouseX, mouseY, fakePartialTickThatsZeroForSomeReason);
-        if (unlockTooltip) {
-            List<Component> list = new ArrayList<>();
-            list.add(Component.translatable("book.alexscaves.page_locked_0").withStyle(ChatFormatting.GRAY));
-            list.add(Component.translatable("book.alexscaves.page_locked_1").withStyle(ChatFormatting.GRAY));
-            GuiCompat.setTooltip(guiGraphics, this.font, list, mouseX - 5, mouseY - 5);
-        }
     }
 
     private void renderBookContents(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {

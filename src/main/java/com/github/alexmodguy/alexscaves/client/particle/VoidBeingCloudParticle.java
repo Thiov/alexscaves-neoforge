@@ -29,7 +29,7 @@ import org.joml.Matrix3f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle {
+public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcshim.TextureSheetParticle implements RenderInWorldParticle {
 
     private final int textureSize;
     private static int currentlyUsedTextures = 0;
@@ -67,6 +67,8 @@ public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcs
         this.renderType = ACRenderTypes.getVoidBeingCloud(resourcelocation);
         this.targetId = target;
         this.totalTendrils = totalTendrils;
+    
+        ACParticleWorldRender.add(this);
     }
 
     public void tick() {
@@ -140,9 +142,10 @@ public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcs
     public void remove() {
         this.removed = true;
         currentlyUsedTextures--;
+            ACParticleWorldRender.remove(this);
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
         if (this.requiresUpload) {
             this.updateTexture();
             this.requiresUpload = false;
@@ -159,7 +162,6 @@ public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcs
             float f3 = Mth.lerp(partialTick, this.oRoll, this.roll);
             quaternion.mul(Axis.ZP.rotation(f3));
         }
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexConsumer1 = multibuffersource$buffersource.getBuffer(renderType);
         PoseStack posestack = new PoseStack();
         PoseStack.Pose posestack$pose = posestack.last();
@@ -187,12 +189,11 @@ public class VoidBeingCloudParticle extends com.github.alexmodguy.alexscaves.mcs
         vertexConsumer1.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setColor(packedColor).setUv(f7, f5).setOverlay(OverlayTexture.NO_OVERLAY).setLight(j).setNormal(0.0F, -1.0F, 0.0F);
         vertexConsumer1.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setColor(packedColor).setUv(f7, f6).setOverlay(OverlayTexture.NO_OVERLAY).setLight(j).setNormal(0.0F, -1.0F, 0.0F);
 
-        multibuffersource$buffersource.endBatch();
     }
 
     
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.SINGLE_QUADS;
+        return ParticleRenderType.NO_RENDER;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {

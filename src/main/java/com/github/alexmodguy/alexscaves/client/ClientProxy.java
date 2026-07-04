@@ -41,7 +41,7 @@ import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
 import com.github.alexmodguy.alexscaves.server.level.biome.BiomeSampler;
 import com.github.alexmodguy.alexscaves.server.misc.ACKeybindRegistry;
 import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
-import com.github.alexthe666.citadel.client.shader.PostEffectRegistry;
+import com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry;
 import com.github.alexthe666.citadel.client.tick.ClientTickRateTracker;
 import com.github.alexthe666.citadel.server.tick.ServerTickRateTracker;
 import com.google.common.collect.ImmutableList;
@@ -123,6 +123,8 @@ public class ClientProxy extends CommonProxy {
             "purple_witch");
     public static final Identifier SUGAR_RUSH_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
             "sugar_rush");
+    public static final Identifier WATCHER_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "watcher_perspective");
     public static final RandomSource random = RandomSource.create();
     public static int lastTremorTick = -1;
     public static float[] randomTremorOffsets = new float[3];
@@ -362,7 +364,8 @@ public class ClientProxy extends CommonProxy {
         // HOLOGRAM and PURPLE_WITCH were targeted (separate-render-target) glows upstream — running them
         // full-screen would tint/blur the whole screen, so they are NOT registered here; the raygun beam
         // gets a targeted geometry glow in RaygunRenderHelper instead.
-        PostEffectRegistry.registerEffect(SUGAR_RUSH_SHADER);
+        ACPostEffectRegistry.registerEffect(SUGAR_RUSH_SHADER);
+        ACPostEffectRegistry.registerEffect(WATCHER_SHADER);
         ACBlockRenderLayerRegistry.register();
         hasACSplashText = random.nextInt(300) == 0;
         // NOTE: the two Fabric BlockRenderLayerMap.INSTANCE.putFluids(...) calls were removed. On NeoForge the

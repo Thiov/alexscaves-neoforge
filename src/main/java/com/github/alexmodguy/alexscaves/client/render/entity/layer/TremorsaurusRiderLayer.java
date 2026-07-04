@@ -49,7 +49,11 @@ public class TremorsaurusRiderLayer extends RenderLayer121X<TremorsaurusEntity, 
         EntityRenderer121X<? super E> render = null;
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
         try {
-            render = (EntityRenderer121X<? super E>) manager.getRenderer(entityIn);
+            net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw121x = manager.getRenderer(entityIn);
+            if (!(raw121x instanceof EntityRenderer121X)) {
+                return;
+            }
+            render = (EntityRenderer121X<? super E>) raw121x;
 
             if (render != null) {
                 try {

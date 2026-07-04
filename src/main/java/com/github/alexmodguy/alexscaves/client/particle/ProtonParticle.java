@@ -46,8 +46,8 @@ public class ProtonParticle extends MagneticOrbitParticle {
         return 240;
     }
 
-    public void render(VertexConsumer vertexConsumer, Camera camera, float partialTick) {
-        super.render(vertexConsumer, camera, partialTick);
+    public void renderInWorld(net.minecraft.client.renderer.MultiBufferSource multibuffersource$buffersource, Camera camera, float partialTick) {
+        super.renderInWorld(multibuffersource$buffersource, camera, partialTick);
         Vec3 vec3 = camera.position();
         float f = (float) (Mth.lerp((double) partialTick, this.xo, this.x) - vec3.x());
         float f1 = (float) (Mth.lerp((double) partialTick, this.yo, this.y) - vec3.y());
@@ -61,7 +61,6 @@ public class ProtonParticle extends MagneticOrbitParticle {
             quaternion.mul(Axis.ZP.rotation(f3));
         }
 
-        MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
         VertexConsumer vertexconsumer = multibuffersource$buffersource.getBuffer(net.minecraft.client.renderer.rendertype.RenderTypes.entityTranslucentCullItemTarget(getTexture()));
 
         Vector3f vector3f1 = new Vector3f(-1.0F, -1.0F, 0.0F);
@@ -90,7 +89,6 @@ public class ProtonParticle extends MagneticOrbitParticle {
         vertexconsumer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setColor(packedColor).setUv(f8, f5).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
         vertexconsumer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setColor(packedColor).setUv(f7, f5).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
         vertexconsumer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setColor(packedColor).setUv(f7, f6).setOverlay(NO_OVERLAY).setLight(j).setNormal(0.0F, 1.0F, 0.0F);
-        multibuffersource$buffersource.endBatch();
     }
 
     public float getAlpha() {
