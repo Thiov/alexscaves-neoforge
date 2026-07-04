@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 public class MineGuardianAnchorRenderer extends EntityRenderer121X<MineGuardianAnchorEntity> {
 
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/entity/mine_guardian_anchor.png");
-    private static final Identifier TEXTURE_CHAIN = Identifier.withDefaultNamespace("textures/block/chain.png");
+    private static final Identifier TEXTURE_CHAIN = Identifier.withDefaultNamespace("textures/block/iron_chain.png");
     private static final MineGuardianAnchorModel MODEL = new MineGuardianAnchorModel();
 
     public MineGuardianAnchorRenderer(EntityRendererProvider.Context renderManagerIn) {

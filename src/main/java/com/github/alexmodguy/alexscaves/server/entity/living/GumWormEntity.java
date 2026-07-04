@@ -930,8 +930,8 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
         return !state.is(ACTagRegistry.GUM_WORM_BLOCKS_DIGGING) && state.getFluidState().isEmpty() && state.canOcclude();
     }
 
-    public boolean isInvulnerableTo(DamageSource damageSource) {
-        return super.isInvulnerableToBase(damageSource) || damageSource.is(DamageTypes.IN_WALL) || damageSource.is(DamageTypes.CACTUS) || damageSource.is(DamageTypes.DROWN) || damageSource.is(DamageTypes.FALL) || damageSource.getEntity() != null && isRidingPlayer(damageSource.getEntity());
+    public boolean isInvulnerableTo(ServerLevel serverLevel, DamageSource damageSource) {
+        return super.isInvulnerableTo(serverLevel, damageSource) || damageSource.is(DamageTypes.IN_WALL) || damageSource.is(DamageTypes.CACTUS) || damageSource.is(DamageTypes.DROWN) || damageSource.is(DamageTypes.FALL) || damageSource.getEntity() != null && isRidingPlayer(damageSource.getEntity());
     }
 
     
