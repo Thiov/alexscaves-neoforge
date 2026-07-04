@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.Entity;
 import org.joml.Quaternionf;
@@ -19,8 +20,10 @@ import org.joml.Quaternionf;
  *
  * <p>The mod's legacy renderers draw into a {@link MultiBufferSource}. When that buffer is the
  * port's {@link SubmitNodeBufferSource} capture (the BER / nested entity-renderer path), the
- * submit is routed straight to the live collector it is bound to. Otherwise the entity draw is
- * skipped gracefully (no crash) - matching {@link ItemRenderCompat}.
+ * submit is routed straight to the live collector it is bound to. Otherwise (the Cave Compendium's
+ * entity previews, which draw into the book PIP's plain buffer source) we borrow the game's
+ * {@link FeatureRenderDispatcher} submit storage and flush it immediately — the same mechanism
+ * vanilla {@code GuiEntityRenderer} uses to render a live entity inside a GUI picture-in-picture.
  */
 public final class EntityRenderCompat {
 
@@ -32,13 +35,20 @@ public final class EntityRenderCompat {
         if (entity == null) {
             return;
         }
-        SubmitNodeCollector collector = ItemRenderCompat.collectorFrom(bufferSource);
-        if (collector == null) {
-            return;
-        }
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         EntityRenderState state = dispatcher.extractEntity(entity, partialTicks);
-        dispatcher.submit(state, cameraState(), x, y, z, poseStack, collector);
+        SubmitNodeCollector collector = ItemRenderCompat.collectorFrom(bufferSource);
+        if (collector != null) {
+            // BER capture path: the caller owns the collector and flushes it.
+            dispatcher.submit(state, cameraState(), x, y, z, poseStack, collector);
+            return;
+        }
+        // Standalone GUI path (cave book): submit into the feature dispatcher's own node storage and
+        // render it right away, exactly like GuiEntityRenderer#renderToTexture. Without this the entity
+        // preview boxes stay empty (26.1 entities can't draw straight to a plain MultiBufferSource).
+        FeatureRenderDispatcher featureDispatcher = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher();
+        dispatcher.submit(state, cameraState(), x, y, z, poseStack, featureDispatcher.getSubmitNodeStorage());
+        featureDispatcher.renderAllFeatures();
     }
 
     private static CameraRenderState cameraState() {
