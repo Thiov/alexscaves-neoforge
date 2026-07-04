@@ -8,17 +8,7 @@ import com.github.alexmodguy.alexscaves.client.render.entity.layer.ACPotionEffec
 import com.github.alexmodguy.alexscaves.server.entity.item.SubmarineEntity;
 import com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry;
 import com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry;
-import com.github.alexmodguy.alexscaves.client.gui.book.CaveBookPipRenderer;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.render.GuiRenderer;
-import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
-import net.minecraft.client.renderer.state.gui.GuiRenderState;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -56,18 +46,11 @@ public abstract class GameRendererMixin {
     @Final
     private Camera mainCamera;
 
-    // Register the Cave Compendium's custom Picture-In-Picture renderer by appending it to the (immutable)
-    // list GameRenderer hands to the GuiRenderer. Without a registered renderer for its state class, the
-    // book's PIP submission would be silently dropped.
-    @WrapOperation(
-            method = "<init>",
-            at = @At(value = "NEW", target = "(Lnet/minecraft/client/renderer/state/gui/GuiRenderState;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;Ljava/util/List;)Lnet/minecraft/client/gui/render/GuiRenderer;")
-    )
-    private GuiRenderer ac_registerCaveBookRenderer(GuiRenderState guiRenderState, MultiBufferSource.BufferSource bufferSource, SubmitNodeCollector collector, FeatureRenderDispatcher featureRenderDispatcher, List<PictureInPictureRenderer<?>> renderers, Operation<GuiRenderer> original) {
-        List<PictureInPictureRenderer<?>> mutable = new ArrayList<>(renderers);
-        mutable.add(new CaveBookPipRenderer(bufferSource));
-        return original.call(guiRenderState, bufferSource, collector, featureRenderDispatcher, mutable);
-    }
+    // NOTE: the Cave Compendium's Picture-In-Picture renderer is registered on NeoForge via
+    // RegisterPictureInPictureRenderersEvent (see ClientProxy#registerPipRenderers), NOT by wrapping the
+    // GuiRenderer constructor as the Fabric port does. NeoForge patches the renderer list GameRenderer hands
+    // GuiRenderer to hold PictureInPictureRendererRegistration wrappers, so injecting a raw renderer there
+    // ClassCastExceptions in PictureInPictureRendererPool.createPools during startup.
 
     @Inject(
             method = {"Lnet/minecraft/client/renderer/GameRenderer;tick()V"},
