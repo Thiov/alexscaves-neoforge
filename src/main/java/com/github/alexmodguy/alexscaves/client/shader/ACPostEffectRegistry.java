@@ -33,7 +33,15 @@ public class ACPostEffectRegistry {
     }
 
     public static void renderEffectForNextTick(Identifier id) {
-        ENABLED_THIS_FRAME.add(id);
+        // Only queue effects that were actually registered (SUGAR_RUSH, WATCHER). HOLOGRAM / IRRADIATED /
+        // PURPLE_WITCH are intentionally NOT registered — they were separate-render-target glows upstream and
+        // full-screen they'd tint the whole screen — yet their entity renderers (Notor, Tremorzilla, Raycat,
+        // Licowitch) still request them every frame. Trying to load a nonexistent post chain makes the vanilla
+        // ShaderManager log "Failed to load post chain" (surfaced to the player as "resource failed to load"),
+        // which fired constantly once book entity previews started rendering those mobs.
+        if (REGISTERED.contains(id)) {
+            ENABLED_THIS_FRAME.add(id);
+        }
     }
 
     /**

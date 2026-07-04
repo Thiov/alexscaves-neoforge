@@ -103,7 +103,7 @@ public class CraftingRecipeWidget extends BookWidget {
             ItemWidget.renderItem(ingredientStack, poseStack, bufferSource, sepia, itemScale);
             poseStack.popPose();
         } else {
-            NonNullList<Ingredient> ingredients = getDisplayIngredients(recipe);
+            NonNullList<Optional<Ingredient>> ingredients = getDisplayIngredients(recipe);
             NonNullList<ItemStack> displayedStacks = NonNullList.create();
             int width = 3;
             int height = 3;
@@ -115,8 +115,7 @@ public class CraftingRecipeWidget extends BookWidget {
             int renderY = 0;
             int renderX = 0;
             for (int i = 0; i < ingredients.size(); i++) {
-                Ingredient ingredient = ingredients.get(i);
-                ItemStack stack = pickStack(ingredient, playerTicks);
+                ItemStack stack = ingredients.get(i).map(ing -> pickStack(ing, playerTicks)).orElse(ItemStack.EMPTY);
                 if (i % width == 0) {
                     if (i != 0) {
                         renderY++;
@@ -145,18 +144,24 @@ public class CraftingRecipeWidget extends BookWidget {
         poseStack.popPose();
     }
 
-    private NonNullList<Ingredient> getDisplayIngredients(Recipe<?> recipe) {
+    // Returns one slot per grid cell; Optional.empty() marks a blank slot. 26.1's Ingredient CANNOT be air
+    // (Ingredient.of(AIR) throws "Ingredient can't contain air"), so empty slots must stay as empty Optionals
+    // and render as no item — never as a fake air ingredient (that crashed on any recipe with gaps).
+    private NonNullList<Optional<Ingredient>> getDisplayIngredients(Recipe<?> recipe) {
+        NonNullList<Optional<Ingredient>> ingredients = NonNullList.create();
         if (recipe instanceof SpecialRecipeInGuideBook specialRecipe) {
-            return specialRecipe.getDisplayIngredients();
-        }
-        NonNullList<Ingredient> ingredients = NonNullList.create();
-        if (recipe instanceof ShapedRecipe shapedRecipe) {
-            for (Optional<Ingredient> ingredient : shapedRecipe.getIngredients()) {
-                ingredients.add(ingredient.orElseGet(() -> Ingredient.of(net.minecraft.world.item.Items.AIR)));
+            for (Ingredient ingredient : specialRecipe.getDisplayIngredients()) {
+                ingredients.add(Optional.ofNullable(ingredient));
             }
             return ingredients;
         }
-        ingredients.addAll(recipe.placementInfo().ingredients());
+        if (recipe instanceof ShapedRecipe shapedRecipe) {
+            ingredients.addAll(shapedRecipe.getIngredients());
+            return ingredients;
+        }
+        for (Ingredient ingredient : recipe.placementInfo().ingredients()) {
+            ingredients.add(Optional.ofNullable(ingredient));
+        }
         return ingredients;
     }
 

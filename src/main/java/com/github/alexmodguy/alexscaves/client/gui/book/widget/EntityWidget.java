@@ -71,13 +71,25 @@ public class EntityWidget extends BookWidget {
         if (actualRenderEntity == null) {
             return;
         }
+        // The preview entity is never added to the world or ticked, so its tickCount stays 0 and renderers
+        // derive ageInTicks = tickCount + partialTick — which sawtooths 0->1 every frame, jittering idle
+        // animations. Advance its age in lockstep with the client and freeze old pos/rot so neither the
+        // animation nor the position/rotation interpolation jitters.
+        if (Minecraft.getInstance().player != null) {
+            actualRenderEntity.tickCount = Minecraft.getInstance().player.tickCount;
+        }
+        actualRenderEntity.setOldPosAndRot();
         float entityScale = 100.0F * getScale();
         float entityBBSize = Math.max(actualRenderEntity.getBbWidth(), actualRenderEntity.getBbHeight());
         if ((double) entityBBSize > 1.0D) {
             entityScale /= entityBBSize * 1.5F;
         }
+        // The entity dispatcher draws the model feet-at-origin, so anchoring at the box centre leaves the body
+        // extending upward out of the frame (heads overlapping the page title). Drop the anchor by half the
+        // entity's rendered height so its vertical centre sits at the box centre instead.
+        float centerY = actualRenderEntity.getBbHeight() * entityScale * 0.5F;
         poseStack.pushPose();
-        poseStack.translate(getX(), getY(), 120);
+        poseStack.translate(getX(), getY() + centerY, 120);
         poseStack.scale(entityScale, entityScale, entityScale);
         poseStack.mulPose(Axis.XP.rotationDegrees(rotX));
         poseStack.mulPose(Axis.YP.rotationDegrees(rotY));
