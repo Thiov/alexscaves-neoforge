@@ -28,6 +28,7 @@
     "LakeFeatureMixin",
     "LevelChunkSectionAccessor",
     "LivingEntityEquipSoundMixin",
+    "LivingEntityMixin",
     "LivingEntityTemptRangeMixin",
     "MonsterMixin",
     "MobMixin",
