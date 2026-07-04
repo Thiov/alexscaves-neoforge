@@ -24,6 +24,8 @@ public class LivingEntityRenderStateMixin implements ACEffectRenderState {
     @Unique
     private boolean alexscaves$darknessIncarnate;
     @Unique
+    private net.minecraft.world.phys.Vec3[] alexscaves$darknessTrail;
+    @Unique
     private boolean alexscaves$sugarRush;
 
     @Override
@@ -74,6 +76,16 @@ public class LivingEntityRenderStateMixin implements ACEffectRenderState {
     @Override
     public void alexscaves$setDarknessIncarnate(boolean darkness) {
         this.alexscaves$darknessIncarnate = darkness;
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3[] alexscaves$getDarknessTrail() {
+        return alexscaves$darknessTrail;
+    }
+
+    @Override
+    public void alexscaves$setDarknessTrail(net.minecraft.world.phys.Vec3[] trail) {
+        this.alexscaves$darknessTrail = trail;
     }
 
     @Override

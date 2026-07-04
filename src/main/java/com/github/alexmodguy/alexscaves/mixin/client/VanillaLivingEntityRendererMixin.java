@@ -4,14 +4,19 @@ import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.client.render.entity.layer.ACPotionEffectLayer;
 import com.github.alexmodguy.alexscaves.client.render.entity.state.ACEffectRenderState;
 import com.github.alexmodguy.alexscaves.server.potion.ACEffectRegistry;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -59,9 +64,42 @@ public abstract class VanillaLivingEntityRendererMixin {
                     entity.level().getBiome(entity.blockPosition()).value().getWaterColor());
         }
 
-        effectState.alexscaves$setDarknessIncarnate(entity.hasEffect(ACEffectRegistry.DARKNESS_INCARNATE) && entity.isAlive());
+        boolean darkness = entity.hasEffect(ACEffectRegistry.DARKNESS_INCARNATE) && entity.isAlive();
+        effectState.alexscaves$setDarknessIncarnate(darkness);
+        // Precompute the trail ribbon (entity-relative) now, while the live entity + client-side trail buffer
+        // are available; rendered later at submit HEAD where the poseStack is at the entity's world position.
+        if (darkness) {
+            Vec3 trailOffset = new Vec3(0.0, entity.getBbHeight() * 0.5F, 0.0);
+            double ex = Mth.lerp(partialTicks, entity.xOld, entity.getX());
+            double ey = Mth.lerp(partialTicks, entity.yOld, entity.getY());
+            double ez = Mth.lerp(partialTicks, entity.zOld, entity.getZ());
+            Vec3[] points = new Vec3[61];
+            points[0] = trailOffset;
+            for (int s = 0; s < 60; s++) {
+                points[s + 1] = AlexsCaves.PROXY.getDarknessTrailPosFor(entity, s + 5, partialTicks)
+                        .subtract(ex, ey, ez).add(trailOffset);
+            }
+            effectState.alexscaves$setDarknessTrail(points);
+        } else {
+            effectState.alexscaves$setDarknessTrail(null);
+        }
 
         effectState.alexscaves$setSugarRush(entity.hasEffect(ACEffectRegistry.SUGAR_RUSH));
+    }
+
+    /**
+     * Renders the Darkness Incarnate trail (upstream {@code postRenderLiving}). Injected at submit HEAD because
+     * the poseStack there is still at the entity's world position (before the model-space transforms), which the
+     * precomputed entity-relative ribbon points expect.
+     */
+    @Inject(method = "submit", at = @At("HEAD"))
+    private void alexscaves$submitDarknessTrail(LivingEntityRenderState state, PoseStack poseStack,
+            SubmitNodeCollector collector, CameraRenderState camera, CallbackInfo ci) {
+        Vec3[] trail = ((ACEffectRenderState) state).alexscaves$getDarknessTrail();
+        if (trail != null) {
+            ACPotionEffectLayer.submitDarknessTrail(collector, poseStack, trail, state.boundingBoxHeight * 0.8F,
+                    state.lightCoords);
+        }
     }
 
     /**

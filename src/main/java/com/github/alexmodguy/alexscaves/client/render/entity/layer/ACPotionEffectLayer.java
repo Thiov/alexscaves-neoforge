@@ -5,9 +5,9 @@ import com.github.alexmodguy.alexscaves.client.render.ACRenderTypes;
 import com.github.alexmodguy.alexscaves.client.render.ColorUtil;
 import com.github.alexmodguy.alexscaves.client.render.compat.RenderSystemCompat;
 import com.github.alexmodguy.alexscaves.client.render.entity.state.ACEffectRenderState;
-import com.github.alexmodguy.alexscaves.mcshim.BufferUploader;
 import com.github.alexmodguy.alexscaves.server.potion.IrradiatedEffect;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.github.alexmodguy.alexscaves.mcshim.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -53,6 +53,11 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
             "textures/entity/darkness_incarnate.png");
     public static final Identifier TEXTURE_SUGAR_RUSH = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
             "textures/entity/sugar_rush.png");
+    private static final Identifier TRAIL_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "textures/particle/teletor_trail.png");
+    // Fixed alpha: upstream faded via DarknessIncarnateEffect.getIntensity, which is dead client-side on 26.1
+    // (see the darkness-silhouette note), so the trail would otherwise be invisible.
+    private static final int TRAIL_ALPHA = 178;
 
     private final RenderLayerParent<S, M> parent;
 
@@ -159,6 +164,39 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
         }
         BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
         RenderSystemCompat.enableDepthTest();
+    }
+
+    // ------------------------------------------------------------------------------------------------
+    // Darkness Incarnate trail ribbon (upstream postRenderLiving ~171-222). Called from a submit HEAD hook
+    // (VanillaLivingEntityRendererMixin) where the poseStack is at the entity's world position. The points are
+    // precomputed entity-relative in extractRenderState so no live entity ref is held on the render state.
+    // ------------------------------------------------------------------------------------------------
+
+    public static void submitDarknessTrail(SubmitNodeCollector collector, PoseStack poseStack,
+            net.minecraft.world.phys.Vec3[] points, float trailHeight, int packedLight) {
+        if (points == null || points.length < 2) {
+            return;
+        }
+        collector.submitCustomGeometry(poseStack, ACRenderTypes.entityTranslucent(TRAIL_TEXTURE), (pose, buffer) -> {
+            Matrix4f matrix4f = pose.pose();
+            int segments = points.length - 1;
+            for (int s = 0; s < segments; s++) {
+                net.minecraft.world.phys.Vec3 a = points[s];
+                net.minecraft.world.phys.Vec3 b = points[s + 1];
+                float u1 = s / (float) segments;
+                float u2 = (s + 1) / (float) segments;
+                trailVertex(matrix4f, buffer, (float) a.x, (float) a.y - trailHeight, (float) a.z, u1, 1.0F, packedLight);
+                trailVertex(matrix4f, buffer, (float) b.x, (float) b.y - trailHeight, (float) b.z, u2, 1.0F, packedLight);
+                trailVertex(matrix4f, buffer, (float) b.x, (float) b.y + trailHeight, (float) b.z, u2, 0.0F, packedLight);
+                trailVertex(matrix4f, buffer, (float) a.x, (float) a.y + trailHeight, (float) a.z, u1, 0.0F, packedLight);
+            }
+        });
+    }
+
+    private static void trailVertex(Matrix4f matrix4f, VertexConsumer buffer, float x, float y, float z, float u,
+            float v, int packedLight) {
+        buffer.addVertex(matrix4f, x, y, z).setColor(0, 0, 0, TRAIL_ALPHA).setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(0.0F, 1.0F, 0.0F);
     }
 
     // ------------------------------------------------------------------------------------------------

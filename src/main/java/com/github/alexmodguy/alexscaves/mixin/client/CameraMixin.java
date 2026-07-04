@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,6 +63,10 @@ public abstract class CameraMixin {
 
     @Shadow
     private boolean detached;
+
+    @Shadow
+    @org.spongepowered.asm.mixin.Final
+    private Quaternionf rotation;
 
     @Inject(
             method = {"Lnet/minecraft/client/Camera;update(Lnet/minecraft/client/DeltaTracker;)V"},
@@ -125,6 +130,19 @@ public abstract class CameraMixin {
                         ClientProxy.randomTremorOffsets[0] * 0.2F * intensity,
                         ClientProxy.randomTremorOffsets[1] * 0.2F * intensity,
                         ClientProxy.randomTremorOffsets[2] * 0.5F * intensity);
+            }
+        }
+
+        // Stunned camera roll (upstream ClientEvents ~342-345). 26.1's Camera has no roll parameter
+        // (setRotation only takes yaw/pitch), so roll the rotation quaternion around the view axis in place.
+        // update() runs before Camera#extractRenderState captures orientation + view matrix from rotation(),
+        // and alignWithEntity resets rotation each frame, so there is no accumulation.
+        if (player instanceof net.minecraft.world.entity.LivingEntity stunned
+                && stunned.hasEffect(ACEffectRegistry.STUNNED)) {
+            float screenScale = Minecraft.getInstance().options.screenEffectScale().get().floatValue();
+            if (screenScale > 0.0F) {
+                float roll = (float) (Math.sin((stunned.tickCount + partialTicks) * 0.2F) * 10.0F) * screenScale;
+                this.rotation.rotateZ((float) Math.toRadians(roll));
             }
         }
     }
