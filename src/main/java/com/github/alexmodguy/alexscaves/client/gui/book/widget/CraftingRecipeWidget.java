@@ -1,12 +1,17 @@
 package com.github.alexmodguy.alexscaves.client.gui.book.widget;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.render.ACRenderTypes;
 import com.github.alexthe666.citadel.recipe.SpecialRecipeInGuideBook;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import org.joml.Matrix4f;
+
+import static net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -17,7 +22,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 
@@ -41,6 +45,7 @@ public class CraftingRecipeWidget extends BookWidget {
 
     private static final Identifier CRAFTING_GRID_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/gui/book/crafting_grid.png");
     private static final Identifier SMELTING_GRID_TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/gui/book/smelting_grid.png");
+    private static final int GRID_TEXTURE_SIZE = 64;
 
     public CraftingRecipeWidget(int displayPage, String recipeId, boolean sepia, int x, int y, float scale) {
         super(displayPage, Type.CRAFTING_RECIPE, x, y, scale);
@@ -65,6 +70,22 @@ public class CraftingRecipeWidget extends BookWidget {
         poseStack.pushPose();
         poseStack.translate(getX(), getY(), 0);
         poseStack.scale(getScale(), getScale(), 1);
+
+        // Grid/slot background (crafting or smelting frame). Upstream draws this behind the item icons; the
+        // port had dropped it, leaving the recipe items floating without a frame.
+        VertexConsumer vertexconsumer = bufferSource.getBuffer(ACRenderTypes.getBookWidget(smelting ? SMELTING_GRID_TEXTURE : CRAFTING_GRID_TEXTURE, sepia));
+        poseStack.pushPose();
+        poseStack.scale(1.5F, 1.5F, 1);
+        Matrix4f matrix4f = poseStack.last().pose();
+        float scaledU1 = 55 / (float) GRID_TEXTURE_SIZE;
+        float scaledV1 = 37 / (float) GRID_TEXTURE_SIZE;
+        float texWidth = 55 / 2F;
+        float texHeight = 37 / 2F;
+        vertexconsumer.addVertex(matrix4f, -texWidth, -texHeight, 0.0F).setColor(1.0F, 1.0F, 1.0F, 1.0F).setUv(0, 0).setOverlay(NO_OVERLAY).setLight(240).setNormal(0.0F, 1.0F, 0.0F);
+        vertexconsumer.addVertex(matrix4f, texWidth, -texHeight, 0.0F).setColor(1.0F, 1.0F, 1.0F, 1.0F).setUv(scaledU1, 0).setOverlay(NO_OVERLAY).setLight(240).setNormal(0.0F, 1.0F, 0.0F);
+        vertexconsumer.addVertex(matrix4f, texWidth, texHeight, 0.0F).setColor(1.0F, 1.0F, 1.0F, 1.0F).setUv(scaledU1, scaledV1).setOverlay(NO_OVERLAY).setLight(240).setNormal(0.0F, 1.0F, 0.0F);
+        vertexconsumer.addVertex(matrix4f, -texWidth, texHeight, 0.0F).setColor(1.0F, 1.0F, 1.0F, 1.0F).setUv(0, scaledV1).setOverlay(NO_OVERLAY).setLight(240).setNormal(0.0F, 1.0F, 0.0F);
+        poseStack.popPose();
 
         if (smelting) {
             List<Ingredient> placementIngredients = recipe.placementInfo().ingredients();
@@ -176,9 +197,16 @@ public class CraftingRecipeWidget extends BookWidget {
 
     private Recipe<?> getRecipeByName(String registryName) {
         try {
-            if (Minecraft.getInstance().getConnection() != null && Minecraft.getInstance().getConnection().recipes() instanceof RecipeManager manager) {
+            // 26.1 no longer ships full recipes to the client: ClientPacketListener#recipes() returns a
+            // ClientRecipeContainer (recipe *displays* only, keyed by opaque RecipeDisplayId with no recipe
+            // ResourceLocation), so a client-side byKey(recipeId) is impossible. The RecipeManager only lives
+            // on the server. Resolve against the integrated server's manager, which covers singleplayer (where
+            // the Cave Compendium is used). On a dedicated server the client has no manager, so the recipe grid
+            // stays empty — a full fix would sync the recipe over a custom packet.
+            net.minecraft.server.MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
+            if (server != null) {
                 ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> key = ResourceKey.create(Registries.RECIPE, Identifier.parse(registryName));
-                Optional<RecipeHolder<?>> holder = manager.byKey(key);
+                Optional<RecipeHolder<?>> holder = server.getRecipeManager().byKey(key);
                 if (holder.isPresent()) {
                     return holder.get().value();
                 }
