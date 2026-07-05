@@ -163,6 +163,52 @@ public final class ACRenderTypes {
                             .withTexture("Sampler0", texture)
                             .createRenderSetup()));
 
+    // ADDITIVE outer-glow "shell": a slightly-scaled-up emissive duplicate drawn over the skin-mix overlay to
+    // add a radiating green/blue halo (the port can't reproduce upstream's separate-target screen bloom; this
+    // is the same additive-shell trick the raygun beam glow uses). Same core vertex shader, a pure-light
+    // fragment shader, ADDITIVE blend, no cull (back faces of the expanded shell contribute to the halo).
+    private static final RenderPipeline IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_irradiated_shell"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated_shell"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.ADDITIVE))
+                    .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> IRRADIATED_SHELL = Util.memoize(
+            texture -> RenderType.create("alexscaves_irradiated_shell",
+                    RenderSetup.builder(IRRADIATED_SHELL_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
+    private static final RenderPipeline BLUE_IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_blue_irradiated_shell"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated_shell"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.ADDITIVE))
+                    .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> BLUE_IRRADIATED_SHELL = Util.memoize(
+            texture -> RenderType.create("alexscaves_blue_irradiated_shell",
+                    RenderSetup.builder(BLUE_IRRADIATED_SHELL_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
+    public static RenderType getRadiationGlowShell(Identifier locationIn) {
+        return IRRADIATED_SHELL.apply(locationIn);
+    }
+
+    public static RenderType getBlueRadiationGlowShell(Identifier locationIn) {
+        return BLUE_IRRADIATED_SHELL.apply(locationIn);
+    }
+
     private ACRenderTypes() {
     }
 

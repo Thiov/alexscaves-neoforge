@@ -95,6 +95,17 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
             // coplanar overlay wins the depth test instead of z-fighting under the skin.
             collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
                     LivingEntityRenderer.getOverlayCoords(state, 0.0F), tint, null, state.outlineColor, null);
+            // Radiating glow: a second ADDITIVE emissive pass over the model so the green reads as EMITTED light
+            // (bright, self-lit, glowing in the dark) instead of a flat tint. Upstream's soft outward bloom used
+            // a separate blurred render target that 26.1's pipeline can't reproduce; this additive brightening is
+            // the closest robust approximation (same additive-shell idea the raygun beam glow uses). Scaling the
+            // rigged model for an outward halo was tried and flings animated parts around, so it is not done.
+            RenderType shell = level >= IrradiatedEffect.BLUE_LEVEL
+                    ? ACRenderTypes.getBlueRadiationGlowShell(irradiatedTex)
+                    : ACRenderTypes.getRadiationGlowShell(irradiatedTex);
+            int shellTint = ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha * 0.7F);
+            collector.order(1).submitModel(this.getParentModel(), state, poseStack, shell, lightCoords,
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), shellTint, null, state.outlineColor, null);
         }
 
         if (effect.alexscaves$isBubbled()) {

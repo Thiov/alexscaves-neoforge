@@ -294,8 +294,25 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
+    public void calculateEntityAnimation(boolean flying) {
+        // Amplify the raw per-tick position delta before feeding the walk animation (every sibling AC ground
+        // mob does this) — vanilla's default x4 horizontal-only gain left limbSwingAmount near zero on the
+        // slightest movement stutter, freezing the leg cycle ("walks in place" / no walk animation).
+        float f1 = (float) Mth.length(this.getX() - this.xo, this.getY() - this.yo, this.getZ() - this.zo);
+        float f2 = Math.min(f1 * 6.0F, 1.0F);
+        com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat.updateWalkAnimation(this.walkAnimation, f2, 0.4F);
+    }
+
     public void tick() {
         super.tick();
+        // Face the body along the actual travel direction on the wild path — vanilla BodyRotationControl only
+        // turns the body once the per-tick delta clears a threshold, so on low-delta ticks the body tracked the
+        // (look-goal-driven) head instead and the candicorn "walked without facing" its direction of travel.
+        if (!this.isVehicle() && !this.isCharging() && this.getDeltaMovement().horizontalDistanceSqr() > 2.5e-7D) {
+            float moveYaw = (float) (Mth.atan2(this.getZ() - this.zo, this.getX() - this.xo) * (180.0D / Math.PI)) - 90.0F;
+            this.yBodyRot = Mth.approachDegrees(this.yBodyRot, moveYaw, 10.0F);
+        }
         prevLeapProgress = leapProgress;
         prevRunProgress = runProgress;
         prevChargeProgress = chargeProgress;
