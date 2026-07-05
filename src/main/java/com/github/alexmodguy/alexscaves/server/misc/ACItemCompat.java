@@ -14,8 +14,10 @@ public final class ACItemCompat {
     }
 
     public static ItemStack getCraftingRemainingItem(ItemStack stack) {
-        // 26.1: Item#getCraftingRemainder() now returns an ItemStackTemplate; create() materializes it.
-        return stack.getItem().getCraftingRemainder().create();
+        // 26.1: Item#getCraftingRemainder() now returns a @Nullable ItemStackTemplate (null when the item has
+        // NO remainder, e.g. Serene Salad). Guard it — calling create() on null crashed feeding the Atlatitan.
+        net.minecraft.world.item.ItemStackTemplate remainder = stack.getItem().getCraftingRemainder();
+        return remainder == null ? ItemStack.EMPTY : remainder.create();
     }
 
     public static boolean canPerformAction(ItemStack stack, ItemAbility action) {

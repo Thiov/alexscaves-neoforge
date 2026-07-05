@@ -633,6 +633,7 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
     public void aiStep() {
         super.aiStep();
         if (!this.level().isClientSide()) {
+            this.calculateEntityAnimation(false);
             if ((this.level() instanceof net.minecraft.server.level.ServerLevel acServerLevel && net.neoforged.neoforge.event.EventHooks.canEntityGrief(acServerLevel, this)) && blockBreakCounter <= 0) {
                 this.breakBlocksInBoundingBox(0.1F);
                 blockBreakCounter = 10;
@@ -1207,30 +1208,43 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
         return new Vec3(EntityCompat.getRiddenStrafe(player) * 0.35F, 0.0D, EntityCompat.getRiddenForward(player) * 0.8F * f);
     }
 
+    private net.minecraft.world.phys.Vec3 acRidingPos(Entity passenger) {
+        float swimAmount = this.getSwimAmount(1.0F);
+        float walkSwing = (float) (Math.cos(this.walkAnimation.position() * 0.25F + 1F) * 0.75F * this.walkAnimation.speed() - 1.5F * this.walkAnimation.speed()) * (1F - swimAmount);
+        float animationExtraBack = 0;
+        if (this.getAnimation() == ANIMATION_ROAR_2) {
+            animationExtraBack = 4 * ACMath.cullAnimationTick(this.getAnimationTick(), 1, this.getAnimation(), 1.0F, 10, 60);
+        }
+        if (this.getAnimation() == ANIMATION_PREPARE_BREATH) {
+            animationExtraBack = 4 * ACMath.cullAnimationTick(this.getAnimationTick(), 1, this.getAnimation(), 1.0F, 0, 20);
+        }
+        Vec3 seatOffset = new Vec3(0F, 2F - 6.5D * swimAmount, 1.0F + 6 * swimAmount - walkSwing - animationExtraBack).yRot((float) Math.toRadians(-this.yBodyRot));
+        float heightBackLeft = legSolver.legs[0].getHeight(1.0F);
+        float heightBackRight = legSolver.legs[1].getHeight(1.0F);
+        float maxLegSolverHeight = (1F - ACMath.smin(1F - heightBackLeft, 1F - heightBackRight, 0.1F)) * 0.8F * (1F - swimAmount);
+        return new Vec3(this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - maxLegSolverHeight, this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
-            float swimAmount = this.getSwimAmount(1.0F);
-            float walkSwing = (float) (Math.cos(this.walkAnimation.position() * 0.25F + 1F) * 0.75F * this.walkAnimation.speed() - 1.5F * this.walkAnimation.speed()) * (1F - swimAmount);
-            float animationExtraBack = 0;
-            if (this.getAnimation() == ANIMATION_ROAR_2) {
-                animationExtraBack = 4 * ACMath.cullAnimationTick(this.getAnimationTick(), 1, this.getAnimation(), 1.0F, 10, 60);
-            }
-            if (this.getAnimation() == ANIMATION_PREPARE_BREATH) {
-                animationExtraBack = 4 * ACMath.cullAnimationTick(this.getAnimationTick(), 1, this.getAnimation(), 1.0F, 0, 20);
-            }
-            Vec3 seatOffset = new Vec3(0F, 2F - 6.5D * swimAmount, 1.0F + 6 * swimAmount - walkSwing - animationExtraBack).yRot((float) Math.toRadians(-this.yBodyRot));
             passenger.setYBodyRot(this.yBodyRot);
             passenger.fallDistance = 0.0F;
             if (!this.isFiring()) {
                 clampRotation(living, 105);
             }
-            float heightBackLeft = legSolver.legs[0].getHeight(1.0F);
-            float heightBackRight = legSolver.legs[1].getHeight(1.0F);
-            float maxLegSolverHeight = (1F - ACMath.smin(1F - heightBackLeft, 1F - heightBackRight, 0.1F)) * 0.8F * (1F - swimAmount);
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - maxLegSolverHeight, this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) {
+            return acRidingPos(passenger);
+        }
+        return super.getPassengerRidingPosition(passenger);
     }
 
     public double getPassengersRidingOffset() {

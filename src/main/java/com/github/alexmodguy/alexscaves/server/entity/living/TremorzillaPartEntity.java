@@ -46,7 +46,8 @@ public class TremorzillaPartEntity extends PartEntity<TremorzillaEntity> {
     }
 
     
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 acHitVec) {
         TremorzillaEntity parent = this.getParent();
         if (parent == null) {
             return InteractionResult.PASS;

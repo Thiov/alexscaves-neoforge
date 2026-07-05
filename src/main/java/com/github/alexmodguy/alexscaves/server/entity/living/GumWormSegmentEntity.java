@@ -543,11 +543,21 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
             if (passenger instanceof Player && this.getHeadEntity() instanceof GumWormEntity gumWorm) {
                 gumWorm.tickController((Player) passenger);
             }
-            Vec3 riderPosition = getRiderPosition(passenger);
-            moveFunction.accept(passenger, riderPosition.x, riderPosition.y, riderPosition.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    private net.minecraft.world.phys.Vec3 acRidingPos(Entity passenger) {
+        return getRiderPosition(passenger);
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) return acRidingPos(passenger);
+        return super.getPassengerRidingPosition(passenger);
     }
 
     

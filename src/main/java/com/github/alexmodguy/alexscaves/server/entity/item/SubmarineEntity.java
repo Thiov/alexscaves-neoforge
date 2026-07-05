@@ -377,14 +377,19 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
         return prev || this.isVehicle() && this.getFirstPassenger() != null && this.getFirstPassenger().shouldRender(x, y, z);
     }
 
+    private net.minecraft.world.phys.Vec3 acRidingPos(Entity passenger) {
+        float f1 = -(this.getXRot() / 40F);
+        Vec3 seatOffset = new Vec3(0F, -0.2F, 0.8F + f1).xRot((float) Math.toRadians(this.getXRot())).yRot((float) Math.toRadians(-this.getYRot()));
+        Vec3 attachPoint = passenger.getVehicleAttachmentPoint(this);
+        double d0 = this.getY() + this.getBbHeight() * 0.5F + seatOffset.y - attachPoint.y;
+        return new Vec3(this.getX() + seatOffset.x, d0, this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
             clampRotation(living);
-            float f1 = -(this.getXRot() / 40F);
-            Vec3 seatOffset = new Vec3(0F, -0.2F, 0.8F + f1).xRot((float) Math.toRadians(this.getXRot())).yRot((float) Math.toRadians(-this.getYRot()));
-            Vec3 attachPoint = passenger.getVehicleAttachmentPoint(this);
-            double d0 = this.getY() + this.getBbHeight() * 0.5F + seatOffset.y - attachPoint.y;
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, d0, this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
             living.setAirSupply(Math.min(living.getAirSupply() + 2, living.getMaxAirSupply()));
         } else {
             super.positionRider(passenger, moveFunction);
@@ -392,6 +397,12 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
         if (this.getDamageLevel() >= 4) {
             passenger.stopRiding();
         }
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) return acRidingPos(passenger);
+        return super.getPassengerRidingPosition(passenger);
     }
 
     public void handleEntityEvent(byte b) {
@@ -449,7 +460,8 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
     }
 
     
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 acHitVec) {
         if (player.isSecondaryUseActive()) {
             return InteractionResult.PASS;
         } else {

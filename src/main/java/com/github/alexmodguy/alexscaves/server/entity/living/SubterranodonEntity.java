@@ -554,18 +554,31 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
         return false;
     }
 
+    private Vec3 acRidingPos(Entity passenger) {
+        float flight = this.getFlyProgress(1.0F) - this.getHoverProgress(1.0F);
+        Vec3 seatOffset = new Vec3(0F, 0.0F, 0.2F - 1.5F * flight).xRot((float) Math.toRadians(this.getXRot())).yRot((float) Math.toRadians(-this.yBodyRot));
+        double targetY = this.getY() - passenger.getBbHeight() - 0.5F + 0.25F * flight;
+        return new Vec3(this.getX() + seatOffset.x, targetY, this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
-            float flight = this.getFlyProgress(1.0F) - this.getHoverProgress(1.0F);
-            Vec3 seatOffset = new Vec3(0F, 0.0F, 0.2F - 1.5F * flight).xRot((float) Math.toRadians(this.getXRot())).yRot((float) Math.toRadians(-this.yBodyRot));
-            double targetY = this.getY() - passenger.getBbHeight() - 0.5F + 0.25F * flight;
             passenger.setYBodyRot(this.yBodyRot);
             passenger.fallDistance = 0.0F;
             clampRotation(living, 105);
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, targetY, this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    @Override
+    public Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) {
+            return acRidingPos(passenger);
+        }
+        return super.getPassengerRidingPosition(passenger);
     }
 
     
