@@ -51,7 +51,7 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
 
     public void render(SubmarineEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn) {
         if (!isFirstPersonFloodlightsMode(entity)) {
-            renderSubmarine(entity, partialTicks, poseStack, source, lightIn, true);
+            renderSubmarine(entity, partialTicks, poseStack, source, lightIn, true, false);
             super.render(entity, entityYaw, partialTicks, poseStack, source, lightIn);
         }
     }
@@ -62,10 +62,10 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
     }
 
     public static void renderSubFirstPerson(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source) {
-        renderSubmarine(entity, partialTicks, poseStack, source, LevelRenderer.getLightCoords(entity.level(), entity.blockPosition()), false);
+        renderSubmarine(entity, partialTicks, poseStack, source, LevelRenderer.getLightCoords(entity.level(), entity.blockPosition()), false, true);
     }
 
-    public static void renderSubmarine(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn, boolean maskWater) {
+    public static void renderSubmarine(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn, boolean maskWater, boolean firstPerson) {
         Player player = Minecraft.getInstance().player;
         float ageInTicks = entity.tickCount + partialTicks;
         float submarineYaw = entity.getViewYRot(partialTicks);
@@ -112,7 +112,7 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
             MODEL.setupWaterMask(entity, partialTicks);
             MODEL.getWaterMask().render(poseStack, waterMask, lightIn, OverlayTexture.NO_OVERLAY, -1);
         }
-        if (!isFirstPersonFloodlightsMode(entity) && entity.areLightsOn() && entity.isVehicle()) {
+        if ((firstPerson || !isFirstPersonFloodlightsMode(entity)) && entity.areLightsOn() && entity.isVehicle()) {
             Entity first = entity.getFirstPassenger();
             float xRot = 0;
             float yRot = 0;

@@ -32,9 +32,21 @@ public class SubmitNodeBufferSource implements MultiBufferSource {
     private SubmitNodeCollector liveCollector;
     private PoseStack basePose;
 
+    // The camera render state for the current frame, needed to submit nested entities (e.g. a perched
+    // player rider) through EntityRenderDispatcher.submit(...) from inside a captured layer pass.
+    private net.minecraft.client.renderer.state.level.CameraRenderState cameraState;
+
     public void bindLive(SubmitNodeCollector collector, PoseStack basePose) {
         this.liveCollector = collector;
         this.basePose = basePose;
+    }
+
+    public void setCameraState(net.minecraft.client.renderer.state.level.CameraRenderState cs) {
+        this.cameraState = cs;
+    }
+
+    public net.minecraft.client.renderer.state.level.CameraRenderState cameraState() {
+        return cameraState;
     }
 
     public SubmitNodeCollector liveCollector() {
