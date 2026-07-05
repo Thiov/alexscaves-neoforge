@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.item;
 
+import com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider;
 import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
@@ -36,7 +37,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
 
-public class SubmarineEntity extends Entity implements KeybindUsingMount {
+public class SubmarineEntity extends Entity implements KeybindUsingMount, RendersOwnRider {
     private static final EntityDataAccessor<Float> RIGHT_PROPELLER_ROT = SynchedEntityData.defineId(SubmarineEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> LEFT_PROPELLER_ROT = SynchedEntityData.defineId(SubmarineEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> BACK_PROPELLER_ROT = SynchedEntityData.defineId(SubmarineEntity.class, EntityDataSerializers.FLOAT);

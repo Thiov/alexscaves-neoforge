@@ -46,31 +46,21 @@ public class TremorzillaRiderLayer extends RenderLayer121X<TremorzillaEntity, Tr
     }
 
     public static <E extends Entity> void renderPassenger(E entityIn, double x, double y, double z, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
-        EntityRenderer121X<? super E> render = null;
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-        try {
-            net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw121x = manager.getRenderer(entityIn);
-            if (!(raw121x instanceof EntityRenderer121X)) {
-                return;
+        net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw = manager.getRenderer(entityIn);
+        // AC mobs use the legacy immediate bridge (draws straight into the captured buffer at the perch pose).
+        if (raw instanceof EntityRenderer121X r121) {
+            r121.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
+            return;
+        }
+        // Players / vanilla entities go through the real 26.1 extract-submit pipeline. matrixStack is already
+        // at the perch, so submit with a zero offset; the dispatcher looks up the renderer + render offset.
+        if (bufferIn instanceof com.github.alexmodguy.alexscaves.client.render.compat.SubmitNodeBufferSource cap && cap.cameraState() != null) {
+            try {
+                manager.submit(manager.extractEntity(entityIn, partialTicks), cap.cameraState(), 0.0D, 0.0D, 0.0D, matrixStack, cap.liveCollector());
+            } catch (Throwable t) {
+                // Better a missing perch than a crash mid-world-render.
             }
-            render = (EntityRenderer121X<? super E>) raw121x;
-
-            if (render != null) {
-                try {
-                    render.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
-                } catch (Throwable throwable1) {
-                    throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
-                }
-            }
-        } catch (Throwable throwable3) {
-            CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
-            CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");
-            entityIn.fillCrashReportCategory(crashreportcategory);
-            CrashReportCategory crashreportcategory1 = crashreport.addCategory("Renderer details");
-            crashreportcategory1.setDetail("Assigned renderer", render);
-            crashreportcategory1.setDetail("Rotation", Float.valueOf(yaw));
-            crashreportcategory1.setDetail("Delta", Float.valueOf(partialTicks));
-            throw new ReportedException(crashreport);
         }
     }
 

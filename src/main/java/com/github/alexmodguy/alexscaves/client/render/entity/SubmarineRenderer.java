@@ -51,7 +51,7 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
 
     public void render(SubmarineEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn) {
         if (!isFirstPersonFloodlightsMode(entity)) {
-            renderSubmarine(entity, partialTicks, poseStack, source, lightIn, true, false);
+            renderSubmarine(entity, partialTicks, poseStack, source, lightIn, true);
             super.render(entity, entityYaw, partialTicks, poseStack, source, lightIn);
         }
     }
@@ -62,10 +62,10 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
     }
 
     public static void renderSubFirstPerson(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source) {
-        renderSubmarine(entity, partialTicks, poseStack, source, LevelRenderer.getLightCoords(entity.level(), entity.blockPosition()), false, true);
+        renderSubmarine(entity, partialTicks, poseStack, source, LevelRenderer.getLightCoords(entity.level(), entity.blockPosition()), false);
     }
 
-    public static void renderSubmarine(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn, boolean maskWater, boolean firstPerson) {
+    public static void renderSubmarine(SubmarineEntity entity, float partialTicks, PoseStack poseStack, MultiBufferSource source, int lightIn, boolean maskWater) {
         Player player = Minecraft.getInstance().player;
         float ageInTicks = entity.tickCount + partialTicks;
         float submarineYaw = entity.getViewYRot(partialTicks);
@@ -112,7 +112,7 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
             MODEL.setupWaterMask(entity, partialTicks);
             MODEL.getWaterMask().render(poseStack, waterMask, lightIn, OverlayTexture.NO_OVERLAY, -1);
         }
-        if ((firstPerson || !isFirstPersonFloodlightsMode(entity)) && entity.areLightsOn() && entity.isVehicle()) {
+        if (!isFirstPersonFloodlightsMode(entity) && entity.areLightsOn() && entity.isVehicle()) {
             Entity first = entity.getFirstPassenger();
             float xRot = 0;
             float yRot = 0;
@@ -161,31 +161,18 @@ public class SubmarineRenderer extends EntityRenderer121X<SubmarineEntity> {
     }
 
     public static <E extends Entity> void renderPassenger(E entityIn, double x, double y, double z, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
-        EntityRenderer121X<? super E> render = null;
         EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
-        try {
-            net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw121x = manager.getRenderer(entityIn);
-            if (!(raw121x instanceof EntityRenderer121X)) {
-                return;
+        net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw = manager.getRenderer(entityIn);
+        if (raw instanceof EntityRenderer121X r121) {
+            r121.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
+            return;
+        }
+        if (bufferIn instanceof com.github.alexmodguy.alexscaves.client.render.compat.SubmitNodeBufferSource cap && cap.cameraState() != null) {
+            try {
+                manager.submit(manager.extractEntity(entityIn, partialTicks), cap.cameraState(), 0.0D, 0.0D, 0.0D, matrixStack, cap.liveCollector());
+            } catch (Throwable t) {
+                // Better a missing perch than a crash mid-world-render.
             }
-            render = (EntityRenderer121X<? super E>) raw121x;
-
-            if (render != null) {
-                try {
-                    render.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
-                } catch (Throwable throwable1) {
-                    throw new ReportedException(CrashReport.forThrowable(throwable1, "Rendering entity in world"));
-                }
-            }
-        } catch (Throwable throwable3) {
-            CrashReport crashreport = CrashReport.forThrowable(throwable3, "Rendering entity in world");
-            CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being rendered");
-            entityIn.fillCrashReportCategory(crashreportcategory);
-            CrashReportCategory crashreportcategory1 = crashreport.addCategory("Renderer details");
-            crashreportcategory1.setDetail("Assigned renderer", render);
-            crashreportcategory1.setDetail("Rotation", Float.valueOf(yaw));
-            crashreportcategory1.setDetail("Delta", Float.valueOf(partialTicks));
-            throw new ReportedException(crashreport);
         }
     }
 

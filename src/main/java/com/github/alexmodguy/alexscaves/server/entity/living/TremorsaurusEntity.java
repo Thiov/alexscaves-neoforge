@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider;
 import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
@@ -63,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMount, IAnimatedEntity, ShakesScreen, ITallWalker {
+public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMount, IAnimatedEntity, ShakesScreen, ITallWalker, RendersOwnRider {
 
     private static final EntityDataAccessor<Boolean> RUNNING = SynchedEntityData.defineId(TremorsaurusEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> HELD_MOB_ID = SynchedEntityData.defineId(TremorsaurusEntity.class, EntityDataSerializers.INT);
