@@ -26,7 +26,12 @@ public class MagnetBlockRenderer<T extends MagnetBlockEntity> implements com.git
             BlockState copy = state.setValue(MagnetBlock.POWERED, false);
             stack.pushPose();
             stack.translate(Math.sin(ageInTicks) * twitch, Math.cos(ageInTicks - Math.PI / 2) * twitch, -Math.cos(ageInTicks) * twitch);
-            com.github.alexmodguy.alexscaves.client.render.compat.BlockRenderCompat.renderSingleBlock(copy, stack, bufferIn, combinedLightIn, OverlayTexture.NO_OVERLAY);
+            // Route the powered magnet through the vanilla block-model submit primitive (correct block
+            // depth setup) so its faces don't z-fight with the coplanar terrain block model. Fall back to
+            // the custom-geometry capture only if the live submit collector is unavailable.
+            if (!com.github.alexmodguy.alexscaves.client.render.compat.BlockRenderCompat.submitBlockModel(copy, stack, bufferIn, combinedLightIn, OverlayTexture.NO_OVERLAY)) {
+                com.github.alexmodguy.alexscaves.client.render.compat.BlockRenderCompat.renderSingleBlock(copy, stack, bufferIn, combinedLightIn, OverlayTexture.NO_OVERLAY);
+            }
             stack.popPose();
         }
         if (magnet.getRangeVisuality(partialTicks) > 0.0F) {

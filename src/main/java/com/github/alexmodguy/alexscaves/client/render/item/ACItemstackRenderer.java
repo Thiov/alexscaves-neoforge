@@ -460,23 +460,38 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             spriteItem.applyComponents(itemStackIn.getComponents());
             if (heldIn3d) {
                 poseStack.pushPose();
-                // TRIDENT use animation (= the original's 1.21.1 UseAnim.SPEAR, which 26.1 renamed to TRIDENT).
-                // 3rd-person windup uses the raw (un-flipped) model so the TRIDENT arm-cock points the spearhead
-                // up-and-back over the shoulder (correct tip direction); every other case takes the XP(-180) flip
-                // path. 1st person uses the upstream 0.5 and lets the vanilla TRIDENT windup animate on top.
-                if (isWindingUp(itemStackIn) && !transformType.firstPerson()) {
-                    poseStack.translate(0, -0.7F, 0.1F);
+                // During windup the item model swaps to item/frostmint_spear_throwing.json in the original; the
+                // vanilla TRIDENT use animation (= the original's 1.21.1 UseAnim.SPEAR, renamed to TRIDENT in 26.1)
+                // provides the arm-cock over the shoulder, and this branch reproduces that model's own display
+                // transforms exactly (translation values are /16 blocks; apply order translate -> Xrot -> Yrot ->
+                // Zrot -> scale, matching vanilla ItemTransform.apply). The XP(-180) flip is kept because it IS the
+                // throwing model's thirdperson rotation [-180,0,0]. Non-windup keeps the upstream held pose.
+                if (isWindingUp(itemStackIn)) {
+                    if (transformType.firstPerson()) {
+                        // frostmint_spear_throwing.json firstperson_*hand: no XP(-180) flip; the display rotation is
+                        // [-20, +-10, 15] with translation [2,-5,-7] (right) / [3.5,-4,-8] (left), in /16 blocks.
+                        if (left) {
+                            poseStack.translate(3.5F / 16F, -4F / 16F, -8F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(-10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        } else {
+                            poseStack.translate(2F / 16F, -5F / 16F, -7F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        }
+                    } else {
+                        // frostmint_spear_throwing.json thirdperson_*hand: rotation [-180,0,0], translation [0,-4,2]
+                        // (/16 blocks). Order is translate then rotate, matching vanilla ItemTransform.apply.
+                        poseStack.translate(0F, -4F / 16F, 2F / 16F);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-180F));
+                    }
                 } else {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-180));
                     poseStack.translate(0, -0.85F, -0.1F);
                     if (transformType.firstPerson()) {
-                        if (isWindingUp(itemStackIn)) {
-                            // While charging, push the spear DOWN (larger +Y after the XP-180 flip) and AWAY from
-                            // the camera (+Z after the flip) so it isn't too high or too close to the face.
-                            poseStack.translate(0, 1.7F, 0.5F);
-                        } else {
-                            poseStack.translate(0, 0.5F, 0F);
-                        }
+                        poseStack.translate(0, 0.5F, 0F);
                         poseStack.scale(0.75F, 0.75F, 0.75F);
                     }
                 }
