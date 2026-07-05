@@ -81,6 +81,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityTravelToDimensionEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -370,6 +371,22 @@ public class CommonEvents {
     public void travelToDimension(EntityTravelToDimensionEvent event) {
         if (event.getEntity() instanceof Player player && player.hasEffect(ACEffectRegistry.SUGAR_RUSH)) {
             SugarRushEffect.leaveSlowMotion(player, player.level());
+        }
+    }
+
+    // How often (in ticks) the ongoing cave-creature spawn pass runs per level.
+    private static final int AC_CAVE_CREATURE_SPAWN_INTERVAL = 256;
+
+    @SubscribeEvent
+    public void onServerTick(ServerTickEvent.Post event) {
+        // Ongoing cave-creature respawn pass: dinos live in vanilla CREATURE (aliased CAVE_CREATURE),
+        // so vanilla's ongoing spawner never refills them underground. Run a cheap periodic pass per
+        // level that reuses the chunk-gen placement logic. The spawn logic itself is identical to the
+        // Fabric port; only this tick-hook registration differs.
+        for (ServerLevel level : event.getServer().getAllLevels()) {
+            if (level.getGameTime() % AC_CAVE_CREATURE_SPAWN_INTERVAL == 0) {
+                com.github.alexmodguy.alexscaves.mixin.NaturalSpawnerMixin.ac_ongoingCaveCreatureSpawnPass(level);
+            }
         }
     }
 
