@@ -251,6 +251,13 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
         lastStompZ = this.getZ();
     }
 
+    public void aiStep() {
+        super.aiStep();
+        if (!this.level().isClientSide()) {
+            this.calculateEntityAnimation(false);
+        }
+    }
+
     private void playRoarSound() {
         if(this.isBaby()){
             this.playSound(ACSoundRegistry.TREMORSAURUS_ROAR.get(), 1.0F, 1.5F);
@@ -513,19 +520,30 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
         return true;
     }
 
+    private net.minecraft.world.phys.Vec3 acRidingPos(Entity passenger) {
+        Vec3 seatOffset = new Vec3(0F, 0.1F, 0.6F).yRot((float) Math.toRadians(-this.yBodyRot));
+        float heightBackLeft = legSolver.legs[0].getHeight(1.0F);
+        float heightBackRight = legSolver.legs[1].getHeight(1.0F);
+        float maxLegSolverHeight = (1F - ACMath.smin(1F - heightBackLeft, 1F - heightBackRight, 0.1F)) * 0.8F;
+        return new Vec3(this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - maxLegSolverHeight, this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
-            Vec3 seatOffset = new Vec3(0F, 0.1F, 0.6F).yRot((float) Math.toRadians(-this.yBodyRot));
             passenger.setYBodyRot(this.yBodyRot);
             passenger.fallDistance = 0.0F;
             clampRotation(living, 105);
-            float heightBackLeft = legSolver.legs[0].getHeight(1.0F);
-            float heightBackRight = legSolver.legs[1].getHeight(1.0F);
-            float maxLegSolverHeight = (1F - ACMath.smin(1F - heightBackLeft, 1F - heightBackRight, 0.1F)) * 0.8F;
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - maxLegSolverHeight, this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) return acRidingPos(passenger);
+        return super.getPassengerRidingPosition(passenger);
     }
 
     public double getPassengersRidingOffset() {

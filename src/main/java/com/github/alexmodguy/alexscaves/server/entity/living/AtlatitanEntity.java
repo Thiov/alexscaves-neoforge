@@ -329,23 +329,36 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
         }
     }
 
+    private Vec3 acRidingPos(Entity passenger) {
+        float seatY = 0.5F;
+        float seatZ = 0.5F;
+        if(this.getAnimation() == ANIMATION_STOMP){
+            float animationIntensity = ACMath.cullAnimationTick(this.getAnimationTick(), 1F, ANIMATION_STOMP, 1.0F, 0, 30);
+            seatY += animationIntensity * 1.5F;
+            seatZ += animationIntensity * -4.5F;
+        }
+        Vec3 seatOffset = new Vec3(0F, seatY, seatZ).yRot((float) Math.toRadians(-this.yBodyRot));
+        return new Vec3(this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - this.getLegSolverBodyOffset(), this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
-            float seatY = 0.5F;
-            float seatZ = 0.5F;
-            if(this.getAnimation() == ANIMATION_STOMP){
-                float animationIntensity = ACMath.cullAnimationTick(this.getAnimationTick(), 1F, ANIMATION_STOMP, 1.0F, 0, 30);
-                seatY += animationIntensity * 1.5F;
-                seatZ += animationIntensity * -4.5F;
-            }
-            Vec3 seatOffset = new Vec3(0F, seatY, seatZ).yRot((float) Math.toRadians(-this.yBodyRot));
             passenger.setYBodyRot(this.yBodyRot);
             passenger.fallDistance = 0.0F;
             clampRotation(living, 105);
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset() - this.getLegSolverBodyOffset(), this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    @Override
+    public Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) {
+            return acRidingPos(passenger);
+        }
+        return super.getPassengerRidingPosition(passenger);
     }
 
     

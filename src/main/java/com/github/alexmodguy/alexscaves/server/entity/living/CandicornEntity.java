@@ -760,27 +760,38 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
         return ACSoundRegistry.CANDICORN_DEATH.get();
     }
 
+    private net.minecraft.world.phys.Vec3 acRidingPos(Entity passenger) {
+        float animationUp = 0;
+        float animationBack = 0;
+        if (this.getAnimation() == ANIMATION_BUCK) {
+            float f = ACMath.cullAnimationTick(this.getAnimationTick(), 2.5F, this.getAnimation(), 1.0F, 0, 25);
+            animationUp = 0.25F * f;
+            animationBack = f;
+        }
+        if (this.getAnimation() == ANIMATION_STAB) {
+            float f = ACMath.cullAnimationTick(this.getAnimationTick(), 2.0F, this.getAnimation(), 1.0F, 0, 11);
+            animationUp = 0.15F * f;
+            animationBack = 1.5F * f;
+        }
+        Vec3 seatOffset = new Vec3(0F, -0.4F + animationUp, -0.2F - animationBack).yRot((float) Math.toRadians(-this.yBodyRot));
+        return new Vec3(this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset(), this.getZ() + seatOffset.z);
+    }
+
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
-            float animationUp = 0;
-            float animationBack = 0;
-            if (this.getAnimation() == ANIMATION_BUCK) {
-                float f = ACMath.cullAnimationTick(this.getAnimationTick(), 2.5F, this.getAnimation(), 1.0F, 0, 25);
-                animationUp = 0.25F * f;
-                animationBack = f;
-            }
-            if (this.getAnimation() == ANIMATION_STAB) {
-                float f = ACMath.cullAnimationTick(this.getAnimationTick(), 2.0F, this.getAnimation(), 1.0F, 0, 11);
-                animationUp = 0.15F * f;
-                animationBack = 1.5F * f;
-            }
-            Vec3 seatOffset = new Vec3(0F, -0.4F + animationUp, -0.2F - animationBack).yRot((float) Math.toRadians(-this.yBodyRot));
             passenger.setYBodyRot(this.yBodyRot);
             passenger.fallDistance = 0.0F;
-            moveFunction.accept(passenger, this.getX() + seatOffset.x, this.getY() + seatOffset.y + this.getPassengersRidingOffset(), this.getZ() + seatOffset.z);
+            Vec3 seat = acRidingPos(passenger);
+            moveFunction.accept(passenger, seat.x, seat.y, seat.z);
         } else {
             super.positionRider(passenger, moveFunction);
         }
+    }
+
+    @Override
+    public net.minecraft.world.phys.Vec3 getPassengerRidingPosition(Entity passenger) {
+        if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity && !this.touchingUnloadedChunk()) return acRidingPos(passenger);
+        return super.getPassengerRidingPosition(passenger);
     }
 
     

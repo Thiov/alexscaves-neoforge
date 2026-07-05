@@ -45,7 +45,8 @@ public class SauropodPartEntity extends PartEntity<SauropodBaseEntity> {
     }
 
     
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 acHitVec) {
         SauropodBaseEntity parent = this.getParent();
         if (parent == null) {
             return InteractionResult.PASS;

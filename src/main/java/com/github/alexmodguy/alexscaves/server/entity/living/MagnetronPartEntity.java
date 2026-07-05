@@ -57,7 +57,8 @@ public class MagnetronPartEntity extends PartEntity<MagnetronEntity> {
     }
 
     
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 acHitVec) {
         MagnetronEntity parent = this.getParent();
         if (parent == null) {
             return InteractionResult.PASS;

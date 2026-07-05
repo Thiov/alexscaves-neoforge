@@ -140,7 +140,8 @@ public class NuclearBombEntity extends Entity {
     }
 
     
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand, net.minecraft.world.phys.Vec3 acHitVec) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (itemStack.is(Items.SHEARS)) {
             player.swing(hand);
