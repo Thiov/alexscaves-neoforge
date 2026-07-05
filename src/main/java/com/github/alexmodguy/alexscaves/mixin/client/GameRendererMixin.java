@@ -97,30 +97,8 @@ public abstract class GameRendererMixin {
     }
 
 
-    // 26.1: renderItemInHand(PoseStack, Camera, F)V -> renderItemInHand(CameraRenderState, F, Matrix4fc)V
-    @Inject(
-            method = {"Lnet/minecraft/client/renderer/GameRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;)V"},
-            remap = true,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/GameRenderer;renderItemInHand(Lnet/minecraft/client/renderer/state/level/CameraRenderState;FLorg/joml/Matrix4fc;)V",
-                    shift = At.Shift.BEFORE
-            )
-    )
-    public void ac_renderLevel(DeltaTracker deltaTracker, CallbackInfo ci) {
-        float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(true);
-        Entity player = Minecraft.getInstance().getCameraEntity();
-        if (player != null && player.isPassenger() && player.getVehicle() instanceof SubmarineEntity submarine && SubmarineRenderer.isFirstPersonFloodlightsMode(submarine)) {
-            Vec3 offset = submarine.getPosition(partialTicks).subtract(player.getEyePosition(partialTicks));
-            PoseStack poseStack = new PoseStack();
-            Quaternionf cameraRotation = mainCamera.rotation().conjugate(new Quaternionf());
-            poseStack.mulPose(cameraRotation);
-            poseStack.pushPose();
-            poseStack.translate(offset.x, offset.y, offset.z);
-            SubmarineRenderer.renderSubFirstPerson(submarine, partialTicks, poseStack, renderBuffers.bufferSource());
-            poseStack.popPose();
-        }
-    }
+    // Submarine first-person floodlights moved to LevelRendererMixin (submitEntities TAIL) so the cone flushes
+    // through the 26.1 submit pipeline; the old draw here went into an unflushed buffer and never appeared.
 
     @Inject(
             method = {"Lnet/minecraft/client/renderer/GameRenderer;renderLevel(Lnet/minecraft/client/DeltaTracker;)V"},
