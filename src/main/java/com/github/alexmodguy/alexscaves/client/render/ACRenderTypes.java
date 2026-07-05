@@ -216,6 +216,80 @@ public final class ACRenderTypes {
         return BLUE_IRRADIATED_SHELL.apply(locationIn);
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // Holocoder / Notor hologram — faithful port of upstream's rendertype_hologram core shader. The 1.21.1 mod
+    // drew a translucent duplicate of the scanned entity/player into a Citadel post target that a shader then
+    // washed cyan-blue with scanlines; 26.1 has no post target here, so the core shader
+    // (assets/alexscaves/shaders/core/rendertype_hologram.{vsh,fsh}) bakes that holographic-blue look — cool
+    // palette + moving scanlines + flicker driven by GameTime — straight into the sampled model, exactly the
+    // way rendertype_irradiated bakes the radiation green. Same pipeline recipe as IRRADIATED_PIPELINE
+    // (ENTITY_EMISSIVE_SNIPPET + Globals UBO for GameTime, overlay LEQUAL no-write depth, translucent blend).
+    private static final RenderPipeline HOLOGRAM_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_hologram"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_hologram"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_hologram"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withCull(false)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> HOLOGRAM = Util.memoize(
+            texture -> RenderType.create("alexscaves_hologram",
+                    RenderSetup.builder(HOLOGRAM_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
+    // ---------------------------------------------------------------------------------------------
+    // Licowitch teleport "double" pink/purple glow — mirrors the irradiated pattern (core shader
+    // rendertype_purple_witch bakes a pulsing-magenta skin mix; rendertype_purple_witch_shell is the pure
+    // additive halo). The 1.21.1 mod drew a duplicate of the witch with a custom program that forced a pulsing
+    // pink/purple driven by GameTime + a Citadel post-target glow; this restores the real recolor + the cheap
+    // additive-shell stand-in for the lost screen bloom.
+    private static final RenderPipeline PURPLE_WITCH_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_purple_witch"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_purple_witch"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_purple_witch"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withCull(true)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> PURPLE_WITCH = Util.memoize(
+            texture -> RenderType.create("alexscaves_purple_witch",
+                    RenderSetup.builder(PURPLE_WITCH_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .createRenderSetup()));
+
+    // Isolated pink/purple glow "shell" — the FAITHFUL bloom, same mechanism as IRRADIATED_SHELL: the pure
+    // pulsing-magenta duplicate is rendered into the shared OFF-SCREEN glow target via setOutputTarget, which
+    // ACPostEffectRegistry radius-blurs and composites back as a soft purple aura. ADDITIVE blend so the halo
+    // brightens the scene; cull on, LEQUAL no-write depth.
+    private static final RenderPipeline PURPLE_WITCH_SHELL_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
+                    .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_purple_witch_shell"))
+                    .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_purple_witch"))
+                    .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_purple_witch_shell"))
+                    .withUniform("Globals", UniformType.UNIFORM_BUFFER)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withCull(true)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+                    .build());
+
+    private static final Function<Identifier, RenderType> PURPLE_WITCH_SHELL = Util.memoize(
+            texture -> RenderType.create("alexscaves_purple_witch_shell",
+                    RenderSetup.builder(PURPLE_WITCH_SHELL_PIPELINE)
+                            .withTexture("Sampler0", texture)
+                            .setOutputTarget(IRRADIATED_OUT)
+                            .createRenderSetup()));
+
+    public static RenderType getPurpleWitchGlowShell(Identifier locationIn) {
+        return PURPLE_WITCH_SHELL.apply(locationIn);
+    }
+
     private ACRenderTypes() {
     }
 
@@ -311,10 +385,11 @@ public final class ACRenderTypes {
         return RenderTypes.entityTranslucent(resourceLocation);
     }
 
-    // Originally translucent entity writing to the hologram post target; the post effect is
-    // disabled so plain translucent entity remains.
+    // Faithful restore: custom hologram core shader bakes the cyan-blue holographic look (cool palette +
+    // scanlines + flicker driven by GameTime) into the sampled model, standing in for upstream's disabled
+    // hologram post target. See HOLOGRAM_PIPELINE above.
     public static RenderType getHologram(Identifier locationIn) {
-        return RenderTypes.entityTranslucent(locationIn);
+        return HOLOGRAM.apply(locationIn);
     }
 
     // Red ghost program (brightening blend) is disabled; emissive translucent is the closest
@@ -364,10 +439,11 @@ public final class ACRenderTypes {
         return irradiated ? RenderTypes.entityTranslucentEmissive(locationIn) : RenderTypes.entityTranslucent(locationIn);
     }
 
-    // Purple witch program + post target are disabled; callers emit full entity-format
-    // vertices, so translucent entity is safe and keeps the ghostly overlay look.
+    // Faithful restore: custom purple-witch core shader forces the pulsing pink/purple recolor of the
+    // teleport double, driven by GameTime (the skin is baked in so it survives 26.1 compositing). See
+    // PURPLE_WITCH_PIPELINE above; the additive glow halo is getPurpleWitchGlowShell.
     public static RenderType getPurpleWitch(Identifier locationIn) {
-        return RenderTypes.entityTranslucent(locationIn);
+        return PURPLE_WITCH.apply(locationIn);
     }
 
     // Originally translucent-cull program with no lightmap; plain translucent entity is the

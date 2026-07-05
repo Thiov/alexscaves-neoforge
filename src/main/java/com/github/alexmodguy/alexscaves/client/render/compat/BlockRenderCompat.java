@@ -30,6 +30,57 @@ public final class BlockRenderCompat {
     private BlockRenderCompat() {
     }
 
+    /**
+     * Routes a block state's baked model through 26.1's {@code SubmitNodeCollector#submitBlockModel} —
+     * the same submit primitive vanilla terrain / block-entity block rendering uses. Unlike
+     * {@link #renderSingleBlock}, which captures the model into a custom-geometry mesh (whose faces end
+     * up coplanar with the terrain block model and z-fight), this applies the correct block depth setup,
+     * so a block drawn on top of its own terrain footprint (e.g. the powered magnet) does not z-fight.
+     *
+     * <p>Only usable while inside the {@link SubmitNodeBufferSource} capture (the BER submit path); the
+     * caller passes the same {@code bufferSource} handed to the renderer. Returns {@code false} if the
+     * live collector is unavailable so the caller can fall back to {@link #renderSingleBlock}.
+     */
+    public static boolean submitBlockModel(BlockState blockState, PoseStack poseStack, MultiBufferSource bufferSource,
+            int packedLight, int packedOverlay) {
+        if (blockState.getRenderShape() != RenderShape.MODEL) {
+            return false;
+        }
+        if (!(bufferSource instanceof SubmitNodeBufferSource capture) || capture.liveCollector() == null) {
+            return false;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.getModelManager() == null || minecraft.getModelManager().getBlockStateModelSet() == null) {
+            return false;
+        }
+        BlockStateModel model = minecraft.getModelManager().getBlockStateModelSet().get(blockState);
+        if (model == null) {
+            return false;
+        }
+        RandomSource random = RandomSource.create();
+        random.setSeed(42L);
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        model.collectParts(random, parts);
+        if (parts.isEmpty()) {
+            return false;
+        }
+        // Mirror vanilla BlockModelRenderState: a single render type for the whole model, chosen by
+        // whether any part is translucent, plus empty tint layers and no outline. This is what makes the
+        // submit go through the proper block sheet (correct depth), eliminating the coplanar z-fight.
+        boolean hasTranslucency = false;
+        for (BlockStateModelPart part : parts) {
+            if ((part.materialFlags() & BakedQuad.FLAG_TRANSLUCENT) != 0) {
+                hasTranslucency = true;
+                break;
+            }
+        }
+        RenderType renderType = hasTranslucency ? Sheets.translucentBlockSheet() : Sheets.cutoutBlockSheet();
+        capture.liveCollector().submitBlockModel(poseStack, renderType, parts, EMPTY_TINTS, packedLight, packedOverlay, 0);
+        return true;
+    }
+
+    private static final int[] EMPTY_TINTS = new int[0];
+
     public static void renderSingleBlock(BlockState blockState, PoseStack poseStack, MultiBufferSource bufferSource,
             int packedLight, int packedOverlay) {
         if (blockState.getRenderShape() != RenderShape.MODEL) {
