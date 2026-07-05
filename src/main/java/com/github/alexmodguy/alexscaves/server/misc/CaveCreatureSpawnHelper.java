@@ -71,7 +71,6 @@ public final class CaveCreatureSpawnHelper {
                 if (weightedrandomlist.isEmpty()) {
                     continue;
                 }
-                AlexsCaves.LOGGER.info("[AC dino] pass running: player in AC cave biome, {} cave-creature entries, {} attempts", weightedrandomlist.unwrap().size(), AC_ONGOING_ATTEMPTS_PER_PLAYER);
 
                 AABB capBox = player.getBoundingBox().inflate(AC_ONGOING_CAP_RADIUS, level.getMaxY() - level.getMinY(), AC_ONGOING_CAP_RADIUS);
                 for (int attempt = 0; attempt < AC_ONGOING_ATTEMPTS_PER_PLAYER; attempt++) {
@@ -107,7 +106,6 @@ public final class CaveCreatureSpawnHelper {
                     // Reuse the exact chunk-gen downward column scan to find a cave floor Y.
                     BlockPos blockpos = getCaveCreatureSpawnPos(level, randomSource, columnBiome, type, px, pz);
                     if (blockpos.getY() <= level.getMinY()) {
-                        AlexsCaves.LOGGER.info("[AC dino] {}: no cave floor found near {},{}", BuiltInRegistries.ENTITY_TYPE.getKey(type), px, pz);
                         continue;
                     }
                     // Don't spawn right on top of the player.
@@ -115,11 +113,9 @@ public final class CaveCreatureSpawnHelper {
                         continue;
                     }
                     if (!SpawnPlacements.getPlacementType(type).isSpawnPositionOk(level, blockpos, type)) {
-                        AlexsCaves.LOGGER.info("[AC dino] {}: placement NOT ok at {} (floor={})", BuiltInRegistries.ENTITY_TYPE.getKey(type), blockpos, BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockpos.below()).getBlock()));
                         continue;
                     }
                     if (!SpawnPlacements.checkSpawnRules(type, level, EntitySpawnReason.NATURAL, blockpos, randomSource)) {
-                        AlexsCaves.LOGGER.info("[AC dino] {}: spawn-rules FAIL at {} (floor={} needs dirt/sand)", BuiltInRegistries.ENTITY_TYPE.getKey(type), blockpos, BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockpos.below()).getBlock()));
                         continue;
                     }
 

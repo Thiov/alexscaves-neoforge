@@ -86,12 +86,17 @@ public class NbtCompat {
     }
 
     public static boolean contains(ValueInput input, String key) {
-        return input.child(key).isPresent()
-            || input.getString(key).isPresent()
+        // child(key) is the ONLY probe that reports a ProblemReporter error when the field exists but
+        // isn't a compound ("Expected field 'X' to contain value of type COMPOUND, but got STRING") —
+        // which spams the log for every string/scalar field (e.g. AmberMonolith's "EntityType"). Check
+        // all scalar types FIRST so a present scalar short-circuits before child() is ever called;
+        // child() is then only reached when the field is absent (quiet) or genuinely a compound (quiet).
+        return input.getString(key).isPresent()
             || input.getInt(key).isPresent()
             || input.getLong(key).isPresent()
             || input.getIntArray(key).isPresent()
-            || input.read(key, UUIDUtil.CODEC).isPresent();
+            || input.read(key, UUIDUtil.CODEC).isPresent()
+            || input.child(key).isPresent();
     }
 
     public static boolean contains(ValueInput input, String key, int tagType) {
