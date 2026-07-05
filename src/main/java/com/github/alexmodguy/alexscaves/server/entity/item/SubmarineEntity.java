@@ -196,6 +196,16 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
                 this.setDeltaMovement(this.getDeltaMovement().add(vec3));
             }
             if (this.isInWater()) {
+                // Gentle settling bias toward the target waterline when no manual up/down is held,
+                // so the sub sits with rotors submerged / deck at the surface instead of riding high (26.1).
+                if (controlUpTicks <= 0 && controlDownTicks <= 0) {
+                    final float targetSubmersion = 2.0F;
+                    if (this.getWaterHeight() < targetSubmersion) {
+                        this.setDeltaMovement(this.getDeltaMovement().add(0, -0.04, 0));
+                    } else {
+                        this.setDeltaMovement(this.getDeltaMovement().add(0, 0.02, 0));
+                    }
+                }
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.8F, 0.8F, 0.8F));
             } else {

@@ -41,10 +41,12 @@ public abstract class MinecraftMixin {
             cir.setReturnValue(false);
             return;
         }
-        // Mounted-mob attack: left-click while riding an AC mount fires the mount's own attack (Tremorzilla
-        // bite/stomp, etc.), NOT a player swing. startAttack() is invoked exactly on the click, so routing it
-        // here catches a quick click the entity-tick keyAttack.isDown() poll can miss. Cancel the vanilla swing.
-        if (this.player != null && this.player.getVehicle() instanceof KeybindUsingMount && this.player.isPassenger()) {
+        // Mounted-mob attack: left-click while riding an AC mount fires the mount's own attack (Tremorsaurus
+        // bite, Tremorzilla bite/stomp/scratch), NOT a player swing. startAttack() is invoked exactly on the
+        // click, so routing it here catches a quick click the entity-tick keyAttack.isDown() poll can miss.
+        // Gate on acceptsMountedAttack() so only mounts with a type==3 handler swallow the click; other mounts
+        // (Atlatitan, Subterranodon, Submarine, ...) keep their normal left-click behaviour.
+        if (this.player != null && this.player.getVehicle() instanceof KeybindUsingMount k && k.acceptsMountedAttack() && this.player.isPassenger()) {
             AlexsCaves.sendMSGToServer(new MountedEntityKeyMessage(this.player.getVehicle().getId(), this.player.getId(), 3));
             cir.setReturnValue(false);
         }

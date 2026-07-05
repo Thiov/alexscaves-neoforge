@@ -6,6 +6,7 @@ import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.util.FlyingMount;
 import com.github.alexmodguy.alexscaves.server.entity.util.KaijuMob;
 import com.github.alexmodguy.alexscaves.server.entity.util.KeybindUsingMount;
+import com.github.alexmodguy.alexscaves.server.entity.util.NoSitRider;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import com.github.alexmodguy.alexscaves.server.item.CandyCaneHookItem;
 import com.github.alexmodguy.alexscaves.server.message.MountedEntityKeyMessage;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class GumWormSegmentEntity extends Entity implements ICustomCollisions, KeybindUsingMount, PlayerRideableJumping, FlyingMount {
+public class GumWormSegmentEntity extends Entity implements ICustomCollisions, KeybindUsingMount, PlayerRideableJumping, FlyingMount, NoSitRider {
 
     private static final EntityDataAccessor<Optional<UUID>> HEAD_ENTITY_UUID = SynchedEntityData.defineId(GumWormSegmentEntity.class, com.github.alexmodguy.alexscaves.server.entity.ACEntityDataRegistry.OPTIONAL_UUID.get());
     private static final EntityDataAccessor<Integer> HEAD_ENTITY_ID = SynchedEntityData.defineId(GumWormSegmentEntity.class, EntityDataSerializers.INT);

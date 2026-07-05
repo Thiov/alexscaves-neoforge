@@ -97,6 +97,19 @@ public abstract class CameraMixin {
             }
         }
 
+        // Push the third-person camera back when riding big AC mounts (faithful to upstream
+        // ClientEvents.computeCameraAngles). Independent of the magnetic block above.
+        net.minecraft.world.entity.Entity vehicle = this.entity == null ? null : this.entity.getVehicle();
+        if (this.detached && vehicle != null && net.minecraft.client.Minecraft.getInstance().getCameraEntity() == this.entity) {
+            float zoomBack = 0F;
+            if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.item.SubmarineEntity) zoomBack = 4F;
+            else if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.living.TremorsaurusEntity) zoomBack = 2F;
+            else if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.living.AtlatitanEntity) zoomBack = 4F;
+            else if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.living.TremorzillaEntity) zoomBack = 10F;
+            else if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.living.GumWormSegmentEntity) zoomBack = 12F;
+            if (zoomBack > 0F) this.move(-this.getMaxZoom(zoomBack), 0F, 0F);
+        }
+
         // Handle screen shake - must be done at TAIL after the camera is positioned
         Entity player = Minecraft.getInstance().getCameraEntity();
         if (player != null && AlexsCaves.CLIENT_CONFIG.screenShaking.get()) {

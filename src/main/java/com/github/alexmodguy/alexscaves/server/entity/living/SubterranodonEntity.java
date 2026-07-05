@@ -9,6 +9,7 @@ import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.ai.*;
 import com.github.alexmodguy.alexscaves.server.entity.util.FlyingMount;
 import com.github.alexmodguy.alexscaves.server.entity.util.KeybindUsingMount;
+import com.github.alexmodguy.alexscaves.server.entity.util.NoSitRider;
 import com.github.alexmodguy.alexscaves.server.entity.util.PackAnimal;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import com.github.alexmodguy.alexscaves.server.message.MountedEntityKeyMessage;
@@ -55,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, FlyingAnimal, KeybindUsingMount, FlyingMount {
+public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, FlyingAnimal, KeybindUsingMount, FlyingMount, NoSitRider {
 
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(SubterranodonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HOVERING = SynchedEntityData.defineId(SubterranodonEntity.class, EntityDataSerializers.BOOLEAN);
