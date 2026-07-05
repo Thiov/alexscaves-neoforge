@@ -1,5 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry;
 import com.github.alexmodguy.alexscaves.server.block.MultipleDinosaurEggsBlock;
@@ -331,15 +333,15 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     protected Vec3 getRiddenInput(Player player, Vec3 deltaIn) {
-        float f = player.zza < 0.0F ? 0.5F : 1.0F;
-        return new Vec3(player.xxa * 0.25F, controlUpTicks > 0 ? 1 : controlDownTicks > 0 ? -1 : 0.0D, player.zza * 0.5F * f);
+        float f = EntityCompat.getRiddenForward(player) < 0.0F ? 0.5F : 1.0F;
+        return new Vec3(EntityCompat.getRiddenStrafe(player) * 0.25F, controlUpTicks > 0 ? 1 : controlDownTicks > 0 ? -1 : 0.0D, EntityCompat.getRiddenForward(player) * 0.5F * f);
 
     }
 
     protected void tickRidden(Player player, Vec3 vec3) {
         super.tickRidden(player, vec3);
-        slowRidden = player.zza < 0.3F || timeVehicle < 10 || this.onGround();
-        if (player.zza != 0 || player.xxa != 0) {
+        slowRidden = EntityCompat.getRiddenForward(player) < 0.3F || timeVehicle < 10 || this.onGround();
+        if (EntityCompat.getRiddenForward(player) != 0 || EntityCompat.getRiddenStrafe(player) != 0) {
             this.setRot(player.getYRot(), player.getXRot() * 0.25F);
             this.setTarget(null);
         }

@@ -1,5 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.entity.item;
 
+import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.entity.ACEntityRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.util.KeybindUsingMount;
@@ -427,8 +429,8 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
 
 
     private void tickController(Player passenger) {
-        if (passenger.xxa != 0) {
-            float turn = -Math.signum(passenger.xxa);
+        if (EntityCompat.getRiddenStrafe(passenger) != 0) {
+            float turn = -Math.signum(EntityCompat.getRiddenStrafe(passenger));
             if (turn > 0.0F) {
                 turnLeftTicks = 5;
             } else {
@@ -436,8 +438,8 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount {
             }
             this.setYRot(this.getYRot() + turn * 2.5f);
         }
-        if (passenger.zza != 0) {
-            float back = -Math.signum(passenger.zza);
+        if (EntityCompat.getRiddenForward(passenger) != 0) {
+            float back = -Math.signum(EntityCompat.getRiddenForward(passenger));
             if (back < 0.0F) {
                 this.setAcceleration(Mth.approach(this.getAcceleration(), 1.0F, 0.02F));
             } else {

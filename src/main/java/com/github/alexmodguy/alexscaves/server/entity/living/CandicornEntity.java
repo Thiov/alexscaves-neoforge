@@ -1,4 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
+
+import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
 import com.github.alexmodguy.alexscaves.mcshim.Saddleable;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
@@ -648,8 +650,8 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     protected Vec3 getRiddenInput(Player player, Vec3 deltaIn) {
-        float f = player.zza < 0.0F ? 0.5F : 1.0F;
-        return new Vec3(player.xxa * 0.35F, 0.0D, player.zza * 0.8F * f);
+        float f = EntityCompat.getRiddenForward(player) < 0.0F ? 0.5F : 1.0F;
+        return new Vec3(EntityCompat.getRiddenStrafe(player) * 0.35F, 0.0D, EntityCompat.getRiddenForward(player) * 0.8F * f);
     }
 
     protected int calculateFallDamage(float f1, float f2) {
@@ -693,7 +695,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
 
     protected void tickRidden(Player player, Vec3 vec3) {
         super.tickRidden(player, vec3);
-        if (player.zza != 0 || player.xxa != 0) {
+        if (EntityCompat.getRiddenForward(player) != 0 || EntityCompat.getRiddenStrafe(player) != 0) {
             this.setRot(player.getYRot(), player.getXRot() * 0.25F);
             this.setYHeadRot(player.getYHeadRot());
             this.setTarget(null);
@@ -701,7 +703,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
         if (vec3.z <= 0.0D) {
             this.gallopSoundCounter = 0;
         }
-        if(player.zza > 0){
+        if(EntityCompat.getRiddenForward(player) > 0){
             controllerForwardsTicks++;
         }else{
             controllerForwardsTicks = 0;

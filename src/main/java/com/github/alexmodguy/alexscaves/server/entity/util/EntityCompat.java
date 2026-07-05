@@ -91,6 +91,27 @@ public class EntityCompat {
         return entity.isEffectiveAi();
     }
 
+    // 26.1 stopped syncing a mounted rider's movement onto Player.zza/xxa server-side (they stay 0), so every
+    // AC mount that read player.zza/xxa for steering became dead in the water. The live input now travels in the
+    // ServerboundPlayerInputPacket and lands on ServerPlayer#lastClientInput; convert it back to the old
+    // forward/strafe convention (forward = +z, left = +x). On the client the local rider still has zza/xxa set,
+    // so fall through to those for smooth client-side prediction.
+    public static float getRiddenForward(Player player) {
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            net.minecraft.world.entity.player.Input input = serverPlayer.getLastClientInput();
+            return input.forward() == input.backward() ? 0.0F : (input.forward() ? 1.0F : -1.0F);
+        }
+        return player.zza;
+    }
+
+    public static float getRiddenStrafe(Player player) {
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            net.minecraft.world.entity.player.Input input = serverPlayer.getLastClientInput();
+            return input.left() == input.right() ? 0.0F : (input.left() ? 1.0F : -1.0F);
+        }
+        return player.xxa;
+    }
+
     public static boolean isInvulnerableTo(Entity entity, net.minecraft.world.damagesource.DamageSource damageSource) {
         if (entity instanceof LivingEntity livingEntity && entity.level() instanceof ServerLevel serverLevel) {
             return ((LivingEntity) livingEntity).isInvulnerableTo(serverLevel, damageSource);
