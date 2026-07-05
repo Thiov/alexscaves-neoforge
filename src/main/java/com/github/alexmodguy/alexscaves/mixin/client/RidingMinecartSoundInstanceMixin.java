@@ -12,8 +12,19 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * Mutes the minecart riding sound while the cart hovers on a Magnetic Levitation Rail.
+ *
+ * <p>26.1 moved {@code tick()} up into the new {@code RidingEntitySoundInstance} superclass, so the old
+ * {@code @Inject} on {@code RidingMinecartSoundInstance#tick()} had NO target and threw an
+ * InvalidInjectionException the instant a player mounted ANY minecart: the class failed to transform, the
+ * {@code ClientboundSetPassengersPacket} handler crashed ("network protocol error"), and because the rider
+ * is saved as a passenger the world became permanently un-rejoinable. Instead inject the class's OWN
+ * {@code shoudlPlaySound()} (still declared here) — returning false drops the volume to {@code volumeMin}
+ * (muted), which is exactly the branch {@code tick()} gates on ({@code speed >= 0.01 && shoudlPlaySound()}).</p>
+ */
 @Mixin(RidingMinecartSoundInstance.class)
 public abstract class RidingMinecartSoundInstanceMixin extends AbstractTickableSoundInstance {
 
@@ -25,16 +36,10 @@ public abstract class RidingMinecartSoundInstanceMixin extends AbstractTickableS
         super(soundEvent, soundSource, randomSource);
     }
 
-    @Inject(
-            method = {"Lnet/minecraft/client/resources/sounds/RidingMinecartSoundInstance;tick()V"},
-            remap = true,
-            at = @At(value = "HEAD"),
-            cancellable = true
-    )
-    public void ac_tick(CallbackInfo ci) {
-        if (minecart instanceof MinecartAccessor ac_mc && ac_mc.isOnMagLevRail()) {
-            volume = 0.0F;
-            ci.cancel();
+    @Inject(method = "shoudlPlaySound()Z", at = @At("HEAD"), cancellable = true, remap = true)
+    private void ac_muteOnMagLev(CallbackInfoReturnable<Boolean> cir) {
+        if (((MinecartAccessor) minecart).isOnMagLevRail()) {
+            cir.setReturnValue(false);
         }
     }
 }
