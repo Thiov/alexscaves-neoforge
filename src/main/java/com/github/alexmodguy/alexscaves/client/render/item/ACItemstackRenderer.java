@@ -234,31 +234,19 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 // 3rd-person windup uses the raw (un-flipped) model so the TRIDENT arm-cock points the spearhead
                 // up-and-back over the shoulder (correct tip direction); every other case takes the XP(-180) flip
                 // path. 1st person uses the upstream 0.5 and lets the vanilla TRIDENT windup animate on top.
-                // Same throwing-windup pose as the frostmint spear (faithful to frostmint_spear_throwing.json's
-                // display transforms), with the end-for-end flip so the spearhead points the right way.
-                if (isWindingUp(itemStackIn)) {
-                    poseStack.mulPose(Axis.YP.rotationDegrees(180F));
-                    if (transformType.firstPerson()) {
-                        if (left) {
-                            poseStack.translate(3.5F / 16F, -4F / 16F, -8F / 16F);
-                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
-                            poseStack.mulPose(Axis.YP.rotationDegrees(-10F));
-                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
-                        } else {
-                            poseStack.translate(2F / 16F, -5F / 16F, -7F / 16F);
-                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
-                            poseStack.mulPose(Axis.YP.rotationDegrees(10F));
-                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
-                        }
-                    } else {
-                        poseStack.translate(0F, -4F / 16F, 2F / 16F);
-                        poseStack.mulPose(Axis.XP.rotationDegrees(-180F));
-                    }
+                if (isWindingUp(itemStackIn) && !transformType.firstPerson()) {
+                    poseStack.translate(0, -0.7F, 0.1F);
                 } else {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-180));
                     poseStack.translate(0, -0.85F, -0.1F);
                     if (transformType.firstPerson()) {
-                        poseStack.translate(0, 0.5F, 0F);
+                        if (isWindingUp(itemStackIn)) {
+                            // While charging, push the spear DOWN (larger +Y after the XP-180 flip) and AWAY from
+                            // the camera (+Z after the flip) so it isn't too high or too close to the face.
+                            poseStack.translate(0, 1.7F, 0.5F);
+                        } else {
+                            poseStack.translate(0, 0.5F, 0F);
+                        }
                         poseStack.scale(0.75F, 0.75F, 0.75F);
                     }
                 }
@@ -479,9 +467,6 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 // Zrot -> scale, matching vanilla ItemTransform.apply). The XP(-180) flip is kept because it IS the
                 // throwing model's thirdperson rotation [-180,0,0]. Non-windup keeps the upstream held pose.
                 if (isWindingUp(itemStackIn)) {
-                    // Flip end-for-end: the port reuses the held sprite model for the throw, so the spearhead came
-                    // out pointing the wrong way vs the original's dedicated throwing model. 180° reverses it.
-                    poseStack.mulPose(Axis.YP.rotationDegrees(180F));
                     if (transformType.firstPerson()) {
                         // frostmint_spear_throwing.json firstperson_*hand: no XP(-180) flip; the display rotation is
                         // [-20, +-10, 15] with translation [2,-5,-7] (right) / [3.5,-4,-8] (left), in /16 blocks.
@@ -502,6 +487,10 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                         poseStack.translate(0F, -4F / 16F, 2F / 16F);
                         poseStack.mulPose(Axis.XP.rotationDegrees(-180F));
                     }
+                    // Reverse the spearhead: the port renders the plain handheld sprite, which lacks the original
+                    // throwing model's built-in geometry flip, so the tip came out the wrong way. An in-plane 180
+                    // spin at the end fixes the direction while keeping the pose position (stays visible).
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(180F));
                 } else {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-180));
                     poseStack.translate(0, -0.85F, -0.1F);
