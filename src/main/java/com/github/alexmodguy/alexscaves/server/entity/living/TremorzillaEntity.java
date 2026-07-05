@@ -1,5 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry;
 import com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry;
@@ -1154,7 +1156,7 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
     protected void tickRidden(Player player, Vec3 vec3) {
         super.tickRidden(player, vec3);
         this.setTarget(null);
-        if (player.zza != 0 || player.xxa != 0) {
+        if (EntityCompat.getRiddenForward(player) != 0 || EntityCompat.getRiddenStrafe(player) != 0) {
             if (this.getAnimation() != ANIMATION_LEFT_TAIL && this.getAnimation() != ANIMATION_RIGHT_TAIL) {
                 this.setRot(player.getYRot(), player.getXRot() * 0.25F);
                 this.setYHeadRot(player.getYHeadRot());
@@ -1196,13 +1198,13 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
     }
 
     protected Vec3 getRiddenInput(Player player, Vec3 deltaIn) {
-        float f = player.zza < 0.0F ? 0.5F : 1.0F;
+        float f = EntityCompat.getRiddenForward(player) < 0.0F ? 0.5F : 1.0F;
         if (ACFluidHelper.isInAnyFluid(this)) {
             Vec3 lookVec = player.getLookAngle();
             float y = (float) lookVec.y;
-            return new Vec3(player.xxa * 0.25F, y, player.zza * 0.8F * f);
+            return new Vec3(EntityCompat.getRiddenStrafe(player) * 0.25F, y, EntityCompat.getRiddenForward(player) * 0.8F * f);
         }
-        return new Vec3(player.xxa * 0.35F, 0.0D, player.zza * 0.8F * f);
+        return new Vec3(EntityCompat.getRiddenStrafe(player) * 0.35F, 0.0D, EntityCompat.getRiddenForward(player) * 0.8F * f);
     }
 
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
