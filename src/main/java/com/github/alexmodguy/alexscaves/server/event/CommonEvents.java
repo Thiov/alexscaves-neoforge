@@ -385,7 +385,7 @@ public class CommonEvents {
         // Fabric port; only this tick-hook registration differs.
         for (ServerLevel level : event.getServer().getAllLevels()) {
             if (level.getGameTime() % AC_CAVE_CREATURE_SPAWN_INTERVAL == 0) {
-                com.github.alexmodguy.alexscaves.mixin.NaturalSpawnerMixin.ac_ongoingCaveCreatureSpawnPass(level);
+                com.github.alexmodguy.alexscaves.server.misc.CaveCreatureSpawnHelper.ongoingPass(level);
             }
         }
     }
