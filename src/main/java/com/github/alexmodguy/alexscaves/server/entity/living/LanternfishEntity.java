@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
@@ -165,7 +166,8 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
         return (prevFishPitch + (fishPitch - prevFishPitch) * partialTick);
     }
 
-    protected void handleAirSupply(int prevAir) {
+    @Override
+    protected void handleAirSupply(ServerLevel level, int prevAir) {
         if (this.isAlive() && !isInWater()) {
             this.setAirSupply(prevAir - 1);
             if (this.getAirSupply() == -20) {

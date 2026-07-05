@@ -1,7 +1,8 @@
 {
     "targets": {
         "swap": {},
-        "blurred": {}
+        "blurred": {},
+        "composited": {}
     },
     "passes": [
         {
@@ -18,7 +19,7 @@
             "uniforms": {
                 "BlurConfig": [
                     { "name": "BlurDir", "type": "vec2", "value": [ 1.0, 0.0 ] },
-                    { "name": "Radius", "type": "float", "value": 15.0 }
+                    { "name": "Radius", "type": "float", "value": 10.0 }
                 ]
             }
         },
@@ -36,7 +37,29 @@
             "uniforms": {
                 "BlurConfig": [
                     { "name": "BlurDir", "type": "vec2", "value": [ 0.0, 1.0 ] },
-                    { "name": "Radius", "type": "float", "value": 15.0 }
+                    { "name": "Radius", "type": "float", "value": 10.0 }
+                ]
+            }
+        },
+        {
+            "vertex_shader": "minecraft:core/screenquad",
+            "fragment_shader": "alexscaves:post/watcher_blur",
+            "inputs": [
+                {
+                    "sampler_name": "In",
+                    "target": "minecraft:main",
+                    "bilinear": false
+                },
+                {
+                    "sampler_name": "Blur",
+                    "target": "blurred",
+                    "bilinear": false
+                }
+            ],
+            "output": "composited",
+            "uniforms": {
+                "WatcherConfig": [
+                    { "name": "FOV", "type": "float", "value": 70.0 }
                 ]
             }
         },
@@ -46,13 +69,13 @@
             "inputs": [
                 {
                     "sampler_name": "In",
-                    "target": "blurred"
+                    "target": "composited"
                 }
             ],
             "output": "minecraft:main",
             "uniforms": {
                 "BlitConfig": [
-                    { "name": "ColorModulate", "type": "vec4", "value": [ 1.0, 0.6, 0.4, 1.0 ] }
+                    { "name": "ColorModulate", "type": "vec4", "value": [ 1.0, 1.0, 1.0, 1.0 ] }
                 ]
             }
         }

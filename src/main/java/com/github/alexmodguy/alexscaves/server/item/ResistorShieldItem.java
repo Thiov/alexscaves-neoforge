@@ -1,6 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.item;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
+import com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry;
 import com.github.alexmodguy.alexscaves.server.enchantment.ACEnchantmentHelper;
 import com.github.alexmodguy.alexscaves.server.enchantment.ACEnchantmentRegistry;
 import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
@@ -102,6 +103,24 @@ public class ResistorShieldItem extends ShieldItem {
         }
         if (i == 10 && !level.isClientSide()) {
             stack.hurtAndBreak(1, living, EquipmentSlot.MAINHAND);
+        }
+        if (level.isClientSide()) {
+            // Client-side push/pull feedback (dropped in the port, which left the shield dealing silent,
+            // invisible damage so it read as "just changes mode"): the slam sound, the looping push/pull sound
+            // (byte 9/10 drives ResistorShieldSound in ClientProxy) and the radiating shield-lightning arcs.
+            if (i == 10) {
+                living.playSound(ACSoundRegistry.RESITOR_SHIELD_SLAM.get(), 1.0F, 1.0F);
+            }
+            if (i >= 10 && i % 5 == 0) {
+                AlexsCaves.PROXY.playWorldSound(living, (byte) (scarlet ? 9 : 10));
+                Vec3 base = living.position().add(0.0D, 0.2D, 0.0D);
+                int count = 5 + living.getRandom().nextInt(5);
+                for (int p = 0; p < count; p++) {
+                    Vec3 offset = new Vec3(0.0D, 0.0D, range).yRot(living.getRandom().nextFloat() * ((float) Math.PI * 2F));
+                    level.addParticle(scarlet ? ACParticleRegistry.SCARLET_SHIELD_LIGHTNING.get() : ACParticleRegistry.AZURE_SHIELD_LIGHTNING.get(),
+                            base.x, base.y, base.z, base.x + offset.x, base.y + offset.y, base.z + offset.z);
+                }
+            }
         }
         setUseTime(stack, i);
     }

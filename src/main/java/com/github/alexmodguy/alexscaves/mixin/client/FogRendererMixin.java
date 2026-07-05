@@ -161,8 +161,14 @@ public abstract class FogRendererMixin {
                 nearness *= 1.0F - primordialBossAmount * 0.75F;
             }
             if (Math.abs(nearness - 1.0F) > 0.01F || primordialBossAmount > 0.0F) {
-                fogData.environmentalStart = defaultNearPlaneDistance * nearness;
-                fogData.renderDistanceStart = defaultNearPlaneDistance * nearness;
+                // 26.1's atmospheric fog far plane is a fixed 1024, so scaling only the start plane (as 1.21.1
+                // did, where the far plane was already the render distance) left the biome fog band ~ -17->1024
+                // = invisible. Pull the END in to the render-distance far plane too so the biome's green/blue
+                // ambient atmosphere actually reaches opacity within view (start stays negative via nearness<1).
+                fogData.environmentalStart = defaultFarPlaneDistance * nearness;
+                fogData.environmentalEnd = defaultFarPlaneDistance;
+                fogData.renderDistanceStart = defaultFarPlaneDistance * nearness;
+                fogData.renderDistanceEnd = defaultFarPlaneDistance;
             }
         }
     }

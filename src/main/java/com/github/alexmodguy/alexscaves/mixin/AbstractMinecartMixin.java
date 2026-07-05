@@ -179,7 +179,11 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Min
             dirZ = -dirZ;
         }
 
-        double speed = Math.min(0.7D, delta.horizontalDistance());
+        // Maglev rails are self-propelling (upstream added a constant per-tick push): accelerate toward the
+        // rail's max speed each tick so a freshly-placed cart starts moving and a shoved cart ramps up and
+        // holds top speed, instead of the old no-acceleration min() that let an unpushed cart sit at 0 (it
+        // only bobbed vertically = "doesn't levitate and go fast") and a pushed cart decay to a stop.
+        double speed = Math.min(0.7D, delta.horizontalDistance() + 0.06D);
         double glideX = speed * dirX / dirLen;
         double glideZ = speed * dirZ / dirLen;
 
