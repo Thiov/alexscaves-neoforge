@@ -1,7 +1,12 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:saddle"
+      "id": "citadel:icon_item",
+      "components": {
+        "citadel:icon_item_display": {
+          "icon_location": "alexscaves:textures/misc/advancement/icon/ride_gum_worm.png"
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.ride_gum_worm.title"
