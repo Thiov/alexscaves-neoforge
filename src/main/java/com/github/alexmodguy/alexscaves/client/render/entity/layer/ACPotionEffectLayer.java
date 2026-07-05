@@ -77,35 +77,20 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
 
         if (effect.alexscaves$isIrradiated() && glowConfig) {
             int level = effect.alexscaves$getIrradiatedLevel();
-            // Sample the entity's OWN texture (not a flat-white coat) so the forced-green shader keeps per-texel
-            // alpha: transparent skin regions are discarded and the glow follows the model shape, as upstream did.
+            // FAITHFUL bloom (upstream's separate-target mechanism, now native in 26.1 via setOutputTarget):
+            // draw the pulsing-green duplicate (pure light, model-shaped alpha) into the OFF-SCREEN glow target —
+            // the glow render type's setOutputTarget routes it there instead of onto the screen. Then
+            // ACPostEffectRegistry radius-32 blurs that ISOLATED green and additively composites the soft aura
+            // over the scene. The blur of the isolated green IS the radiating aura.
             Identifier irradiatedTex = alexscaves$textureFor(state);
             RenderType glow = level >= IrradiatedEffect.BLUE_LEVEL
-                    ? ACRenderTypes.getBlueRadiationGlow(irradiatedTex)
-                    : ACRenderTypes.getRadiationGlow(irradiatedTex);
-            // Cap the overlay alpha well below 1 so the green reads as a TRANSLUCENT glow with the skin visible
-            // underneath (as upstream) rather than a solid opaque green coat — the level 0.33 ramp reached ~1.0
-            // at higher amplifiers and fully hid the model.
-            float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.6F : Math.min(level * 0.2F, 0.55F);
-            // The custom irradiated shader forces the pulsing green/blue itself and only reads the
-            // vertexColor alpha (through the flat-white Sampler0) as the effect fade — so the tint is
-            // plain white carrying just the alpha, not a baked color.
-            int tint = ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha);
-            // order(1): draw the overlay pass after the base model (same trick as vanilla EyesLayer) so the
-            // coplanar overlay wins the depth test instead of z-fighting under the skin.
-            collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
-                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), tint, null, state.outlineColor, null);
-            // Radiating glow: a second ADDITIVE emissive pass over the model so the green reads as EMITTED light
-            // (bright, self-lit, glowing in the dark) instead of a flat tint. Upstream's soft outward bloom used
-            // a separate blurred render target that 26.1's pipeline can't reproduce; this additive brightening is
-            // the closest robust approximation (same additive-shell idea the raygun beam glow uses). Scaling the
-            // rigged model for an outward halo was tried and flings animated parts around, so it is not done.
-            RenderType shell = level >= IrradiatedEffect.BLUE_LEVEL
                     ? ACRenderTypes.getBlueRadiationGlowShell(irradiatedTex)
                     : ACRenderTypes.getRadiationGlowShell(irradiatedTex);
-            int shellTint = ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha * 0.7F);
-            collector.order(1).submitModel(this.getParentModel(), state, poseStack, shell, lightCoords,
-                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), shellTint, null, state.outlineColor, null);
+            float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.75F : Math.min(level * 0.3F, 0.7F);
+            int tint = ColorUtil.packColor(1.0F, 1.0F, 1.0F, alpha);
+            collector.order(1).submitModel(this.getParentModel(), state, poseStack, glow, lightCoords,
+                    LivingEntityRenderer.getOverlayCoords(state, 0.0F), tint, null, state.outlineColor, null);
+            com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry.markIrradiatedOnScreen();
         }
 
         if (effect.alexscaves$isBubbled()) {
