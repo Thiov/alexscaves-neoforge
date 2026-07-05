@@ -200,19 +200,30 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 // 3rd-person windup uses the raw (un-flipped) model so the TRIDENT arm-cock points the spearhead
                 // up-and-back over the shoulder (correct tip direction); every other case takes the XP(-180) flip
                 // path. 1st person uses the upstream 0.5 and lets the vanilla TRIDENT windup animate on top.
-                if (isWindingUp(itemStackIn) && !transformType.firstPerson()) {
-                    poseStack.translate(0, -0.7F, 0.1F);
+                // Same throwing-windup pose as the frostmint spear (throwing display transforms + end-for-end flip).
+                if (isWindingUp(itemStackIn)) {
+                    if (transformType.firstPerson()) {
+                        if (left) {
+                            poseStack.translate(3.5F / 16F, -4F / 16F, -8F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(-10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        } else {
+                            poseStack.translate(2F / 16F, -5F / 16F, -7F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        }
+                    } else {
+                        poseStack.translate(0F, -4F / 16F, 2F / 16F);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-180F));
+                    }
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(180F));
                 } else {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-180));
                     poseStack.translate(0, -0.85F, -0.1F);
                     if (transformType.firstPerson()) {
-                        if (isWindingUp(itemStackIn)) {
-                            // While charging, push the spear DOWN (larger +Y after the XP-180 flip) and AWAY from
-                            // the camera (+Z after the flip) so it isn't too high or too close to the face.
-                            poseStack.translate(0, 1.7F, 0.5F);
-                        } else {
-                            poseStack.translate(0, 0.5F, 0F);
-                        }
+                        poseStack.translate(0, 0.5F, 0F);
                         poseStack.scale(0.75F, 0.75F, 0.75F);
                     }
                 }
@@ -234,19 +245,30 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 // 3rd-person windup uses the raw (un-flipped) model so the TRIDENT arm-cock points the spearhead
                 // up-and-back over the shoulder (correct tip direction); every other case takes the XP(-180) flip
                 // path. 1st person uses the upstream 0.5 and lets the vanilla TRIDENT windup animate on top.
-                if (isWindingUp(itemStackIn) && !transformType.firstPerson()) {
-                    poseStack.translate(0, -0.7F, 0.1F);
+                // Same throwing-windup pose as the frostmint spear (throwing display transforms + end-for-end flip).
+                if (isWindingUp(itemStackIn)) {
+                    if (transformType.firstPerson()) {
+                        if (left) {
+                            poseStack.translate(3.5F / 16F, -4F / 16F, -8F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(-10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        } else {
+                            poseStack.translate(2F / 16F, -5F / 16F, -7F / 16F);
+                            poseStack.mulPose(Axis.XP.rotationDegrees(-20F));
+                            poseStack.mulPose(Axis.YP.rotationDegrees(10F));
+                            poseStack.mulPose(Axis.ZP.rotationDegrees(15F));
+                        }
+                    } else {
+                        poseStack.translate(0F, -4F / 16F, 2F / 16F);
+                        poseStack.mulPose(Axis.XP.rotationDegrees(-180F));
+                    }
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(180F));
                 } else {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-180));
                     poseStack.translate(0, -0.85F, -0.1F);
                     if (transformType.firstPerson()) {
-                        if (isWindingUp(itemStackIn)) {
-                            // While charging, push the spear DOWN (larger +Y after the XP-180 flip) and AWAY from
-                            // the camera (+Z after the flip) so it isn't too high or too close to the face.
-                            poseStack.translate(0, 1.7F, 0.5F);
-                        } else {
-                            poseStack.translate(0, 0.5F, 0F);
-                        }
+                        poseStack.translate(0, 0.5F, 0F);
                         poseStack.scale(0.75F, 0.75F, 0.75F);
                     }
                 }
