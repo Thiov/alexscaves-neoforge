@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.alexmodguy.alexscaves.server.block.fluid.ACFluidRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.ACEntityDataRegistry;
 import com.github.alexmodguy.alexscaves.server.entity.ai.NotLavaSwimNodeEvaluator;
@@ -150,7 +151,8 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
         return ACFluidHelper.getPurpleSodaHeight(this) > 0;
     }
 
-    protected void handleAirSupply(int prevAir) {
+    @Override
+    protected void handleAirSupply(ServerLevel level, int prevAir) {
         if (this.isAlive() && !isInLiquidInternal()) {
             this.setAirSupply(prevAir - 1);
             if (this.getAirSupply() == -20) {

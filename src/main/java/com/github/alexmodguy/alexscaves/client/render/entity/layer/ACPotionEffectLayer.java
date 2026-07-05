@@ -77,9 +77,12 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
 
         if (effect.alexscaves$isIrradiated() && glowConfig) {
             int level = effect.alexscaves$getIrradiatedLevel();
+            // Sample the entity's OWN texture (not a flat-white coat) so the forced-green shader keeps per-texel
+            // alpha: transparent skin regions are discarded and the glow follows the model shape, as upstream did.
+            Identifier irradiatedTex = alexscaves$textureFor(state);
             RenderType glow = level >= IrradiatedEffect.BLUE_LEVEL
-                    ? ACRenderTypes.getBlueRadiationGlow(TEXTURE_FLAT_WHITE)
-                    : ACRenderTypes.getRadiationGlow(TEXTURE_FLAT_WHITE);
+                    ? ACRenderTypes.getBlueRadiationGlow(irradiatedTex)
+                    : ACRenderTypes.getRadiationGlow(irradiatedTex);
             float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.9F : Math.min(level * 0.33F, 1.0F);
             // The custom irradiated shader forces the pulsing green/blue itself and only reads the
             // vertexColor alpha (through the flat-white Sampler0) as the effect fade — so the tint is

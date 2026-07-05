@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
@@ -179,7 +180,8 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         return this.isInWater() || this.isInAcid();
     }
 
-    protected void handleAirSupply(int prevAir) {
+    @Override
+    protected void handleAirSupply(ServerLevel level, int prevAir) {
         if (this.isAlive() && !checkInLiquid()) {
             this.setAirSupply(prevAir - 1);
             if (this.getAirSupply() == -20) {

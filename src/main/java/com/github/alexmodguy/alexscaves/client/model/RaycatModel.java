@@ -133,6 +133,16 @@ public class RaycatModel extends ACAdvancedEntityModel<RaycatEntity> {
         this.faceTarget(netHeadYaw, headPitch, 1, head);
     }
 
+    // Citadel's standalone API only calls the 5-arg renderToBuffer; delegate to the model's own 8-arg
+    // override (which holds the baby-scaling) so bred/baby dinos render at their reduced size instead of
+    // inheriting AdvancedEntityModel's plain 5-arg that ignores 'young'.
+    @Override
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, int packedColor) {
+        this.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn,
+                ColorUtil.unpackRed(packedColor), ColorUtil.unpackGreen(packedColor),
+                ColorUtil.unpackBlue(packedColor), ColorUtil.unpackAlpha(packedColor));
+    }
+
     public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if (this.young) {
             float f = 1.5F;

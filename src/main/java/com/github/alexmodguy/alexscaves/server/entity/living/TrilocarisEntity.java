@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
+import net.minecraft.server.level.ServerLevel;
 import com.github.alexmodguy.alexscaves.server.entity.ai.SemiAquaticPathNavigator;
 import com.github.alexmodguy.alexscaves.server.item.ACItemRegistry;
 import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
@@ -100,7 +101,8 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
         return worldIn.getFluidState(pos.below()).isEmpty() && worldIn.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : super.getWalkTargetValue(pos, worldIn);
     }
 
-    protected void handleAirSupply(int air) {
+    @Override
+    protected void handleAirSupply(ServerLevel level, int air) {
 
     }
 
