@@ -1084,6 +1084,10 @@ public class TremorzillaEntity extends DinosaurEntity implements KeybindUsingMou
     }
 
     
+    public boolean acceptsMountedAttack() {
+        return true;
+    }
+
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 2) {
