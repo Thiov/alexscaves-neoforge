@@ -51,6 +51,18 @@ public abstract class LevelRendererMixin {
             // render stages; one injection point here renders them together — close enough for the beam).
             RaygunRenderHelper.renderRaysFor(minecraft.player, cameraPos, poseStack, capture, partialTick, true, 0);
         }
+        // Submarine first-person floodlights: the driver's forward flood cone + the sub drawn around the camera.
+        // Upstream drew this before renderItemInHand into an UNFLUSHED buffer (dead on 26.1); route it through the
+        // same capture bridge. SubmarineRenderer.render already skips the world-pass sub in this mode (no double).
+        if (firstPerson && minecraft.player != null
+                && minecraft.player.getVehicle() instanceof com.github.alexmodguy.alexscaves.server.entity.item.SubmarineEntity sub
+                && com.github.alexmodguy.alexscaves.client.render.entity.SubmarineRenderer.isFirstPersonFloodlightsMode(sub)) {
+            Vec3 subOffset = sub.getPosition(partialTick).subtract(cameraPos);
+            poseStack.pushPose();
+            poseStack.translate(subOffset.x, subOffset.y, subOffset.z);
+            com.github.alexmodguy.alexscaves.client.render.entity.SubmarineRenderer.renderSubFirstPerson(sub, partialTick, poseStack, capture);
+            poseStack.popPose();
+        }
         // Everyone else (and the local player in third person): the pose is camera-relative, so shift to the
         // entity's world position before rendering its beam.
         for (Entity entity : level.entitiesForRendering()) {
