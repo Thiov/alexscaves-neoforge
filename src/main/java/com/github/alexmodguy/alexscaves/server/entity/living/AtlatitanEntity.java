@@ -1,6 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
 import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+import com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.client.particle.ACParticleRegistry;
@@ -46,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingMount {
+public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingMount, RendersOwnRider {
 
     private static final EntityDataAccessor<Optional<BlockPos>> EATING_POS = SynchedEntityData.defineId(AtlatitanEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     private static final EntityDataAccessor<Optional<BlockState>> LAST_EATEN_BLOCK = SynchedEntityData.defineId(AtlatitanEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_STATE);

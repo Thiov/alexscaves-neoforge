@@ -7,18 +7,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import com.github.alexmodguy.alexscaves.client.render.entity.compat.EntityRenderer121X;
 import com.github.alexmodguy.alexscaves.client.render.entity.compat.RenderLayer121X;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * 26.1 DEGRADATION: EntityRenderDispatcher's immediate-mode render(entity, x,y,z, yaw, poseStack,
- * buffer, light) was removed in favor of the extract/submit render-state pipeline, which cannot be
- * driven from inside a captured layer pass without a CameraRenderState. The passenger render is
- * therefore a no-op: riders are not drawn perched on a flying Subterranodon (they still render at
- * their own world position via the normal entity pass). All positioning math is preserved so this
- * can be restored once a submit-pipeline bridge for nested entities exists.
- */
 public class SubterranodonRiderLayer extends RenderLayer121X<SubterranodonEntity, SubterranodonModel> {
 
     public SubterranodonRiderLayer(SubterranodonRenderer render) {
@@ -49,6 +43,21 @@ public class SubterranodonRiderLayer extends RenderLayer121X<SubterranodonEntity
     }
 
     public static <E extends Entity> void renderPassenger(E entityIn, double x, double y, double z, float yaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int packedLight) {
-        // No-op: immediate-mode nested entity rendering was removed in 26.1 (see class doc).
+        EntityRenderDispatcher manager = Minecraft.getInstance().getEntityRenderDispatcher();
+        net.minecraft.client.renderer.entity.EntityRenderer<? super E, ?> raw = manager.getRenderer(entityIn);
+        // AC mobs use the legacy immediate bridge (draws straight into the captured buffer at the perch pose).
+        if (raw instanceof EntityRenderer121X r121) {
+            r121.render(entityIn, yaw, partialTicks, matrixStack, bufferIn, packedLight);
+            return;
+        }
+        // Players / vanilla entities go through the real 26.1 extract→submit pipeline. matrixStack is already
+        // at the perch, so submit with a zero offset; the dispatcher looks up the renderer + render offset.
+        if (bufferIn instanceof com.github.alexmodguy.alexscaves.client.render.compat.SubmitNodeBufferSource cap && cap.cameraState() != null) {
+            try {
+                manager.submit(manager.extractEntity(entityIn, partialTicks), cap.cameraState(), 0.0D, 0.0D, 0.0D, matrixStack, cap.liveCollector());
+            } catch (Throwable t) {
+                // Better a missing perch than a crash mid-world-render.
+            }
+        }
     }
 }

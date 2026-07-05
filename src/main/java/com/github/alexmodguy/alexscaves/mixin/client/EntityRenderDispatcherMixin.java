@@ -56,6 +56,22 @@ public abstract class EntityRenderDispatcherMixin {
         }
     }
 
+    /**
+     * Suppress the normal world-pass render of a passenger whose mount draws it itself at a perch
+     * (see {@link com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider}). Without this the
+     * rider is drawn twice: once perched by the mount's rider layer, once floating at its raw positionRider anchor.
+     */
+    @Inject(
+            method = "shouldRender(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/culling/Frustum;DDD)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private <E extends net.minecraft.world.entity.Entity> void ac_suppressPerchedRider(E entity, net.minecraft.client.renderer.culling.Frustum culler, double camX, double camY, double camZ, org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<Boolean> cir) {
+        if (entity.isPassenger() && entity.getVehicle() instanceof com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @Inject(
             method = "extractEntity(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
             at = @At("HEAD"),

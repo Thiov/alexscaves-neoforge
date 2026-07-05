@@ -1,6 +1,7 @@
 package com.github.alexmodguy.alexscaves.server.entity.living;
 
 import com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat;
+import com.github.alexmodguy.alexscaves.server.entity.util.RendersOwnRider;
 
 import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry;
@@ -56,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, FlyingAnimal, KeybindUsingMount, FlyingMount, NoSitRider {
+public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, FlyingAnimal, KeybindUsingMount, FlyingMount, NoSitRider, RendersOwnRider {
 
     private static final EntityDataAccessor<Boolean> FLYING = SynchedEntityData.defineId(SubterranodonEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> HOVERING = SynchedEntityData.defineId(SubterranodonEntity.class, EntityDataSerializers.BOOLEAN);
