@@ -125,6 +125,8 @@ public class ClientProxy extends CommonProxy {
             "sugar_rush");
     public static final Identifier WATCHER_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
             "watcher_perspective");
+    public static final Identifier SUBMARINE_SHADER = Identifier.fromNamespaceAndPath(AlexsCaves.MODID,
+            "submarine_light");
     public static final RandomSource random = RandomSource.create();
     public static int lastTremorTick = -1;
     public static float[] randomTremorOffsets = new float[3];
@@ -431,6 +433,7 @@ public class ClientProxy extends CommonProxy {
         // gets a targeted geometry glow in RaygunRenderHelper instead.
         ACPostEffectRegistry.registerEffect(SUGAR_RUSH_SHADER);
         ACPostEffectRegistry.registerEffect(WATCHER_SHADER);
+        ACPostEffectRegistry.registerEffect(SUBMARINE_SHADER);
         ACBlockRenderLayerRegistry.register();
         hasACSplashText = random.nextInt(300) == 0;
         // NOTE: the two Fabric BlockRenderLayerMap.INSTANCE.putFluids(...) calls were removed. On NeoForge the

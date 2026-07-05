@@ -83,6 +83,15 @@ public abstract class GameRendererMixin {
             }
             Entity cameraEntity = minecraft.getCameraEntity();
             boolean firstPerson = minecraft.options.getCameraType().isFirstPerson();
+            // Submarine first-person floodlight: upstream (ClientEvents.postRenderStage) loads the
+            // submarine_light post effect while the driver rides in first person with the lights on. That
+            // depth-based radial brighten IS the forward flood beam lighting the water ahead — the cone quad
+            // in SubmarineRenderer is a hull-shine detail that upstream deliberately skips in this mode.
+            if (firstPerson && cameraEntity != null && cameraEntity.isPassenger()
+                    && cameraEntity.getVehicle() instanceof SubmarineEntity submarine
+                    && SubmarineRenderer.isFirstPersonFloodlightsMode(submarine)) {
+                ACPostEffectRegistry.renderEffectForNextTick(ClientProxy.SUBMARINE_SHADER);
+            }
             if (firstPerson && (cameraEntity instanceof com.github.alexmodguy.alexscaves.server.entity.util.PossessesCamera
                     || (cameraEntity instanceof LivingEntity afflicted && afflicted.hasEffect(ACEffectRegistry.DARKNESS_INCARNATE)))) {
                 ACPostEffectRegistry.renderEffectForNextTick(ClientProxy.WATCHER_SHADER);
