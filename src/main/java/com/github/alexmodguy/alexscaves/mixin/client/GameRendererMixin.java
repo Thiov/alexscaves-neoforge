@@ -88,6 +88,10 @@ public abstract class GameRendererMixin {
                 ACPostEffectRegistry.renderEffectForNextTick(ClientProxy.WATCHER_SHADER);
             }
             ACPostEffectRegistry.process(minecraft.getMainRenderTarget());
+            // Faithful irradiated bloom: blur the isolated green (drawn off-screen this frame via the glow
+            // render type's output target) and composite the soft aura over the scene. No-op when no irradiated
+            // entity was on screen.
+            ACPostEffectRegistry.processIrradiatedGlow(minecraft.getMainRenderTarget());
         }
         ((ClientProxy) AlexsCaves.PROXY).preScreenRender(partialTick);
     }
