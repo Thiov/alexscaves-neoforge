@@ -136,7 +136,7 @@ public final class ACRenderTypes {
                     .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated"))
                     .withUniform("Globals", UniformType.UNIFORM_BUFFER)
                     .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-                    .withCull(false)
+                    .withCull(true)
                     .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                     .build());
 
@@ -153,7 +153,7 @@ public final class ACRenderTypes {
                     .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated"))
                     .withUniform("Globals", UniformType.UNIFORM_BUFFER)
                     .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-                    .withCull(false)
+                    .withCull(true)
                     .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                     .build());
 

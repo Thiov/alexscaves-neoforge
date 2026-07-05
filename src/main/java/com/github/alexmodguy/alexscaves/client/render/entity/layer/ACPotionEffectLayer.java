@@ -83,7 +83,10 @@ public class ACPotionEffectLayer<S extends LivingEntityRenderState, M extends En
             RenderType glow = level >= IrradiatedEffect.BLUE_LEVEL
                     ? ACRenderTypes.getBlueRadiationGlow(irradiatedTex)
                     : ACRenderTypes.getRadiationGlow(irradiatedTex);
-            float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.9F : Math.min(level * 0.33F, 1.0F);
+            // Cap the overlay alpha well below 1 so the green reads as a TRANSLUCENT glow with the skin visible
+            // underneath (as upstream) rather than a solid opaque green coat — the level 0.33 ramp reached ~1.0
+            // at higher amplifiers and fully hid the model.
+            float alpha = level >= IrradiatedEffect.BLUE_LEVEL ? 0.6F : Math.min(level * 0.2F, 0.55F);
             // The custom irradiated shader forces the pulsing green/blue itself and only reads the
             // vertexColor alpha (through the flat-white Sampler0) as the effect fade — so the tint is
             // plain white carrying just the alpha, not a baked color.
