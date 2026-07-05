@@ -124,6 +124,8 @@ public class NaturalSpawnerMixin {
     private static final int AC_ONGOING_CAP_RADIUS = 40;
     // Upstream's soft per-area cap so we don't overpopulate.
     private static final int AC_ONGOING_CAP = 10;
+    // Per-TYPE cap: at most this many of a given dinosaur near a player (keeps variety; Subterranodon can't hog it).
+    private static final int AC_ONGOING_PER_TYPE_CAP = 3;
     // Random spawn attempts made per eligible player per pass (kept small to stay cheap).
     private static final int AC_ONGOING_ATTEMPTS_PER_PLAYER = 4;
 
@@ -150,19 +152,8 @@ public class NaturalSpawnerMixin {
                     continue;
                 }
 
-                // Count existing cave-creature-type mobs near the player to respect the per-area cap.
-                Set<EntityType<?>> caveTypes = new HashSet<>();
-                for (MobSpawnSettings.SpawnerData data : weightedrandomlist.unwrap()) {
-                    caveTypes.add(data.type());
-                }
                 AABB capBox = player.getBoundingBox().inflate(AC_ONGOING_CAP_RADIUS, level.getMaxY() - level.getMinY(), AC_ONGOING_CAP_RADIUS);
-                int nearby = level.getEntitiesOfClass(Mob.class, capBox, mob -> caveTypes.contains(mob.getType())).size();
-                if (nearby >= AC_ONGOING_CAP) {
-                    continue;
-                }
-
-                int budget = AC_ONGOING_CAP - nearby;
-                for (int attempt = 0; attempt < AC_ONGOING_ATTEMPTS_PER_PLAYER && budget > 0; attempt++) {
+                for (int attempt = 0; attempt < AC_ONGOING_ATTEMPTS_PER_PLAYER; attempt++) {
                     Optional<MobSpawnSettings.SpawnerData> optional = weightedrandomlist.getRandom(randomSource);
                     if (optional.isEmpty()) {
                         continue;
@@ -170,6 +161,12 @@ public class NaturalSpawnerMixin {
                     MobSpawnSettings.SpawnerData spawnerData = optional.get();
                     EntityType<?> type = spawnerData.type();
                     if (!type.canSummon()) {
+                        continue;
+                    }
+                    // Cap PER TYPE, not across all cave creatures: otherwise an abundant roost species
+                    // (Subterranodon spawns from its own worldgen feature) saturates a shared cap and starves
+                    // every other dinosaur — which is exactly why only Subterranodons were appearing.
+                    if (level.getEntitiesOfClass(Mob.class, capBox, mob -> mob.getType() == type).size() >= AC_ONGOING_PER_TYPE_CAP) {
                         continue;
                     }
 
@@ -226,7 +223,7 @@ public class NaturalSpawnerMixin {
                     if (mob.checkSpawnRules(level, EntitySpawnReason.NATURAL) && mob.checkSpawnObstruction(level)) {
                         mob.finalizeSpawn(level, level.getCurrentDifficultyAt(mob.blockPosition()), EntitySpawnReason.NATURAL, null);
                         level.addFreshEntityWithPassengers(mob);
-                        budget--;
+                        AlexsCaves.LOGGER.info("[AlexsCaves] cave-creature spawn: {} at {}", net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(type), blockpos);
                     } else {
                         mob.discard();
                     }
