@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:cookie"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "candy_cavity"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.discover_candy_cavity.title"

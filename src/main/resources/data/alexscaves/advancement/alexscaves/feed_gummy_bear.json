@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:honey_bottle"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "feed_gummy_bear"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.feed_gummy_bear.title"

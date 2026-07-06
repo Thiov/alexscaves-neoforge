@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:heart_of_the_sea"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "deep_one_3"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.deep_ones_become_helpful.title"
