@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/defeat_brainiac"
-        }
-      }
+      "id": "minecraft:iron_sword"
     },
     "title": {
       "translate": "advancements.alexscaves.defeat_brainiac.title"

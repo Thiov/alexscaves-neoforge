@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/tame_candicorn"
-        }
-      }
+      "id": "minecraft:lead"
     },
     "title": {
       "translate": "advancements.alexscaves.tame_candicorn.title"

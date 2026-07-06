@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/discover_dinosaur"
-        }
-      }
+      "id": "minecraft:sniffer_egg"
     },
     "title": {
       "translate": "advancements.alexscaves.discover_dinosaur.title"
