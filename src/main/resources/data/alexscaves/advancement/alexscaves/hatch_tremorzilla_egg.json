@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/hatch_tremorzilla"
-        }
-      }
+      "id": "minecraft:dragon_egg"
     },
     "title": {
       "translate": "advancements.alexscaves.hatch_tremorzilla_egg.title"

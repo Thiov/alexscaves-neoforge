@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/underzealot_sacrifice"
-        }
-      }
+      "id": "minecraft:gold_ingot"
     },
     "title": {
       "translate": "advancements.alexscaves.underzealot_sacrifice.title"

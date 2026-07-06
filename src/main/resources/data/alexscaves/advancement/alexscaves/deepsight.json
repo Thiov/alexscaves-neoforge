@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/deepsight"
-        }
-      }
+      "id": "minecraft:potion"
     },
     "title": {
       "translate": "advancements.alexscaves.deepsight.title"

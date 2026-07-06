@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/summon_luxtructosaurus"
-        }
-      }
+      "id": "minecraft:nether_star"
     },
     "title": {
       "translate": "advancements.alexscaves.summon_luxtructosaurus.title"

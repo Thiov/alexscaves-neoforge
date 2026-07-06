@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/discover_underzealot"
-        }
-      }
+      "id": "minecraft:golden_pickaxe"
     },
     "title": {
       "translate": "advancements.alexscaves.discover_underzealot.title"

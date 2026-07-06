@@ -1,12 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "citadel:icon_item",
-      "components": {
-        "citadel:icon_item_display": {
-          "icon_location": "alexscaves:item/advancement/icon/convert_biome"
-        }
-      }
+      "id": "minecraft:grass_block"
     },
     "title": {
       "translate": "advancements.alexscaves.convert_biome.title"
