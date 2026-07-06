@@ -1,4 +1,22 @@
 {
+  "attributes": {
+    "minecraft:visual/fog_color": 2103829,
+    "minecraft:visual/sky_color": 2629914,
+    "minecraft:visual/water_fog_color": 27552,
+    "minecraft:audio/ambient_sounds": {
+      "loop": "alexscaves:forlorn_hollows_ambience",
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "alexscaves:forlorn_hollows_ambience_mood",
+        "tick_delay": 6000
+      },
+      "additions": {
+        "sound": "alexscaves:forlorn_hollows_ambience_additions",
+        "tick_chance": 0.0111
+      }
+    }
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",
@@ -166,10 +184,5 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 0.7,
-  "attributes": {
-    "minecraft:visual/fog_color": 2103829,
-    "minecraft:visual/sky_color": 2629914,
-    "minecraft:visual/water_fog_color": 27552
-  }
+  "temperature": 0.7
 }

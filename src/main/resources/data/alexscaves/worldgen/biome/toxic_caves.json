@@ -1,4 +1,22 @@
 {
+  "attributes": {
+    "minecraft:visual/fog_color": 8781312,
+    "minecraft:visual/sky_color": 582913,
+    "minecraft:visual/water_fog_color": 4944498,
+    "minecraft:audio/ambient_sounds": {
+      "loop": "alexscaves:toxic_caves_ambience",
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "alexscaves:toxic_caves_ambience_mood",
+        "tick_delay": 6000
+      },
+      "additions": {
+        "sound": "alexscaves:toxic_caves_ambience_additions",
+        "tick_chance": 0.0111
+      }
+    }
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",
@@ -212,10 +230,5 @@
     ],
     "water_creature": []
   },
-  "temperature": 0.5,
-  "attributes": {
-    "minecraft:visual/fog_color": 8781312,
-    "minecraft:visual/sky_color": 582913,
-    "minecraft:visual/water_fog_color": 4944498
-  }
+  "temperature": 0.5
 }

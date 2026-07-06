@@ -63,12 +63,17 @@ public class LightmapRenderStateExtractorMixin {
                     tg = Mth.lerp((double) partialTicks, ClientProxy.lastBiomeLightColorPrev.y, ClientProxy.lastBiomeLightColor.y);
                     tb = Mth.lerp((double) partialTicks, ClientProxy.lastBiomeLightColorPrev.z, ClientProxy.lastBiomeLightColor.z);
                 }
-                // 1) Raise the tinted light FLOOR (ambientColor is max'd per-pixel before sky/block light is added).
+                // 1) Raise the tinted ambient FLOOR ADDITIVELY. Upstream's LightTexture added biomeAmbientLight to
+                //    getBrightness for BOTH the sky AND the block light channel; the 26.1 lightmap shader adds
+                //    ambientColor only once (before the sky+block terms), so a single +amt under-lifts (the sky
+                //    floor is lost underground where sky_brightness=0). Add ~2x (block floor + sky floor) so the
+                //    notGamma pass lifts it to the same brightness as the original (verified against lightmap.fsh).
+                float boost = 2.0F * amt;
                 Vector3fc a = renderState.ambientColor;
                 renderState.ambientColor = new Vector3f(
-                        Math.max(a.x(), Mth.clamp((float) (amt * tr), 0.0F, 1.0F)),
-                        Math.max(a.y(), Mth.clamp((float) (amt * tg), 0.0F, 1.0F)),
-                        Math.max(a.z(), Mth.clamp((float) (amt * tb), 0.0F, 1.0F)));
+                        Mth.clamp(a.x() + (float) (boost * tr), 0.0F, 1.0F),
+                        Mth.clamp(a.y() + (float) (boost * tg), 0.0F, 1.0F),
+                        Mth.clamp(a.z() + (float) (boost * tb), 0.0F, 1.0F));
                 // 2) Gamma lift (brightness == the shader's notGamma lerp strength = upstream gamma + biomeAmbientLight).
                 renderState.brightness = Mth.clamp(renderState.brightness + amt, 0.0F, 1.0F);
             }
