@@ -70,7 +70,10 @@ public abstract class MinecraftMixin {
             sound = ACSoundRegistry.CANDY_CAVITY_MUSIC.get();
         }
         if (sound != null) {
-            cir.setReturnValue(new Music(Holder.direct(sound), 12000, 24000, true));
+            // minDelay=0 so it starts promptly — MusicManager derives the switch delay from minDelay, and a large
+            // minDelay meant cave music waited minutes before playing. maxDelay keeps some variety between repeats;
+            // replaceCurrentMusic=true interrupts any overworld track so cave music actually kicks in on entry.
+            cir.setReturnValue(new Music(Holder.direct(sound), 0, 24000, true));
         }
     }
 

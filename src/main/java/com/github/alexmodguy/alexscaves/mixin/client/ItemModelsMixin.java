@@ -30,5 +30,15 @@ public class ItemModelsMixin {
     @Inject(method = "bootstrap", at = @At("TAIL"))
     private static void alexscaves$registerBewlr(CallbackInfo ci) {
         ID_MAPPER.put(Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "bewlr"), ACBewlrItemModel.Unbaked.MAP_CODEC);
+        // Citadel 26.1 never registers its own citadel:custom_item_model type — registerItemModels() is an empty
+        // stub — so citadel:icon_item (every AC advancement icon) fails to parse its model ("Unknown element id:
+        // citadel:custom_item_model") and renders the missing-model black/pink. Register it here, exactly like the
+        // bewlr type above, so Citadel's icon renderer works. (try/catch in case this loader's Citadel already did.)
+        try {
+            ID_MAPPER.put(Identifier.fromNamespaceAndPath("citadel", "custom_item_model"),
+                    com.github.alexthe666.citadel.client.CitadelItemstackRenderer.Unbaked.MAP_CODEC);
+        } catch (Exception e) {
+            AlexsCaves.LOGGER.debug("citadel:custom_item_model already registered", e);
+        }
     }
 }
