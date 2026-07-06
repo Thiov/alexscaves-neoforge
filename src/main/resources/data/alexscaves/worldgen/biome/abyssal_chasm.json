@@ -1,4 +1,22 @@
 {
+  "attributes": {
+    "minecraft:visual/fog_color": 3884,
+    "minecraft:visual/sky_color": 8103167,
+    "minecraft:visual/water_fog_color": 3623,
+    "minecraft:audio/ambient_sounds": {
+      "loop": "alexscaves:abyssal_chasm_ambience",
+      "mood": {
+        "block_search_extent": 8,
+        "offset": 2.0,
+        "sound": "alexscaves:abyssal_chasm_ambience_mood",
+        "tick_delay": 6000
+      },
+      "additions": {
+        "sound": "alexscaves:abyssal_chasm_ambience_additions",
+        "tick_chance": 0.01
+      }
+    }
+  },
   "carvers": [],
   "downfall": 0.5,
   "effects": {
@@ -204,10 +222,5 @@
       }
     ]
   },
-  "temperature": 0.5,
-  "attributes": {
-    "minecraft:visual/fog_color": 3884,
-    "minecraft:visual/sky_color": 8103167,
-    "minecraft:visual/water_fog_color": 3623
-  }
+  "temperature": 0.5
 }
