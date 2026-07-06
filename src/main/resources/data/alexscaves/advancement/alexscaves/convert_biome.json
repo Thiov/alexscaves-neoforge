@@ -4,7 +4,7 @@
       "id": "citadel:icon_item",
       "components": {
         "citadel:icon_item_display": {
-          "icon_location": "alexscaves:textures/misc/advancement/icon/convert_biome.png"
+          "icon_location": "alexscaves:item/advancement/icon/convert_biome"
         }
       }
     },

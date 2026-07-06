@@ -5,17 +5,15 @@ import com.github.alexmodguy.alexscaves.client.ClientProxy;
 import com.github.alexmodguy.alexscaves.client.sound.ACMusics;
 import com.github.alexmodguy.alexscaves.server.entity.util.KeybindUsingMount;
 import com.github.alexmodguy.alexscaves.server.entity.util.PossessesCamera;
+import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
 import com.github.alexmodguy.alexscaves.server.message.MountedEntityKeyMessage;
-import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
+import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.Music;
-import net.minecraft.sounds.Musics;
-import net.minecraft.world.attribute.BackgroundMusic;
-import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
@@ -43,13 +41,10 @@ public abstract class MinecraftMixin {
     @Final
     public Gui gui;
 
-    @Shadow
-    @Final
-    public GameRenderer gameRenderer;
-
     // Force AC cave-biome music (and the Luxtructosaurus boss theme), overriding vanilla's situational picks —
-    // upstream's getSituationalMusic override. 26.1 removed Biome.getBackgroundMusic(); the biome's effects.music
-    // is now read from the camera's environment-attribute probe (the same source vanilla getSituationalMusic uses).
+    // upstream's getSituationalMusic override. 26.1 removed Biome.getBackgroundMusic(), so resolve each cave
+    // biome's music directly from its registered sound event; replaceCurrentMusic=true so it starts promptly
+    // instead of waiting out whatever overworld track was already playing.
     @Inject(method = "getSituationalMusic()Lnet/minecraft/sounds/Music;", at = @At("HEAD"), cancellable = true)
     private void ac_getSituationalMusic(CallbackInfoReturnable<Music> cir) {
         if (this.player == null) {
@@ -60,14 +55,22 @@ public abstract class MinecraftMixin {
             return;
         }
         Holder<Biome> holder = this.player.level().getBiome(this.player.blockPosition());
-        if (holder.is(ACTagRegistry.OVERRIDE_ALL_VANILLA_MUSIC_IN)) {
-            BackgroundMusic bg = this.gameRenderer.getMainCamera().attributeProbe().getValue(EnvironmentAttributes.BACKGROUND_MUSIC, 1.0F);
-            Music biomeMusic = null;
-            if (bg != null) {
-                boolean creative = this.player.getAbilities().instabuild && this.player.getAbilities().mayfly;
-                biomeMusic = bg.select(creative, this.player.isUnderWater()).orElse(null);
-            }
-            cir.setReturnValue(biomeMusic != null ? biomeMusic : Musics.GAME);
+        SoundEvent sound = null;
+        if (holder.is(ACBiomeRegistry.PRIMORDIAL_CAVES)) {
+            sound = ACSoundRegistry.PRIMORDIAL_CAVES_MUSIC.get();
+        } else if (holder.is(ACBiomeRegistry.MAGNETIC_CAVES)) {
+            sound = ACSoundRegistry.MAGNETIC_CAVES_MUSIC.get();
+        } else if (holder.is(ACBiomeRegistry.TOXIC_CAVES)) {
+            sound = ACSoundRegistry.TOXIC_CAVES_MUSIC.get();
+        } else if (holder.is(ACBiomeRegistry.ABYSSAL_CHASM)) {
+            sound = ACSoundRegistry.ABYSSAL_CHASM_MUSIC.get();
+        } else if (holder.is(ACBiomeRegistry.FORLORN_HOLLOWS)) {
+            sound = ACSoundRegistry.FORLORN_HOLLOWS_MUSIC.get();
+        } else if (holder.is(ACBiomeRegistry.CANDY_CAVITY)) {
+            sound = ACSoundRegistry.CANDY_CAVITY_MUSIC.get();
+        }
+        if (sound != null) {
+            cir.setReturnValue(new Music(Holder.direct(sound), 12000, 24000, true));
         }
     }
 
