@@ -4,7 +4,7 @@
       "id": "citadel:icon_item",
       "components": {
         "citadel:icon_item_display": {
-          "icon_location": "alexscaves:textures/misc/advancement/icon/ride_gum_worm.png"
+          "icon_location": "alexscaves:item/advancement/icon/ride_gum_worm"
         }
       }
     },
