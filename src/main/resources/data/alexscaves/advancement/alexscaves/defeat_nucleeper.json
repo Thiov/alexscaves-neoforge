@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:iron_sword"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "defeat_nucleeper"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.defeat_nucleeper.title"

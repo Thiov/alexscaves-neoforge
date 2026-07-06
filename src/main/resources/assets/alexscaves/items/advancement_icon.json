@@ -1,0 +1,223 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "alexscaves:item/advancement/icon/primordial_caves"
+    },
+    "cases": [
+      {
+        "when": "abyssal_chasm",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/abyssal_chasm"
+        }
+      },
+      {
+        "when": "atlatitan_stomp",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/atlatitan_stomp"
+        }
+      },
+      {
+        "when": "candy_cavity",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/candy_cavity"
+        }
+      },
+      {
+        "when": "convert_biome",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/convert_biome"
+        }
+      },
+      {
+        "when": "convert_nether_biome",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/convert_nether_biome"
+        }
+      },
+      {
+        "when": "deep_one_0",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/deep_one_0"
+        }
+      },
+      {
+        "when": "deep_one_1",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/deep_one_1"
+        }
+      },
+      {
+        "when": "deep_one_2",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/deep_one_2"
+        }
+      },
+      {
+        "when": "deep_one_3",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/deep_one_3"
+        }
+      },
+      {
+        "when": "deepsight",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/deepsight"
+        }
+      },
+      {
+        "when": "defeat_brainiac",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_brainiac"
+        }
+      },
+      {
+        "when": "defeat_forsaken",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_forsaken"
+        }
+      },
+      {
+        "when": "defeat_gloomoth",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_gloomoth"
+        }
+      },
+      {
+        "when": "defeat_luxtructosaurus",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_luxtructosaurus"
+        }
+      },
+      {
+        "when": "defeat_nucleeper",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_nucleeper"
+        }
+      },
+      {
+        "when": "defeat_watcher",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/defeat_watcher"
+        }
+      },
+      {
+        "when": "discover_dinosaur",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/discover_dinosaur"
+        }
+      },
+      {
+        "when": "discover_underzealot",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/discover_underzealot"
+        }
+      },
+      {
+        "when": "feed_gummy_bear",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/feed_gummy_bear"
+        }
+      },
+      {
+        "when": "forlorn_hollows",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/forlorn_hollows"
+        }
+      },
+      {
+        "when": "gingerbread_town",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/gingerbread_town"
+        }
+      },
+      {
+        "when": "hatch_tremorzilla",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/hatch_tremorzilla"
+        }
+      },
+      {
+        "when": "magnetic_caves",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/magnetic_caves"
+        }
+      },
+      {
+        "when": "primordial_caves",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/primordial_caves"
+        }
+      },
+      {
+        "when": "ride_gum_worm",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/ride_gum_worm"
+        }
+      },
+      {
+        "when": "summon_luxtructosaurus",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/summon_luxtructosaurus"
+        }
+      },
+      {
+        "when": "tame_candicorn",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/tame_candicorn"
+        }
+      },
+      {
+        "when": "toxic_caves",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/toxic_caves"
+        }
+      },
+      {
+        "when": "tremorzilla_beam",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/tremorzilla_beam"
+        }
+      },
+      {
+        "when": "underzealot_sacrifice",
+        "model": {
+          "type": "minecraft:model",
+          "model": "alexscaves:item/advancement/icon/underzealot_sacrifice"
+        }
+      }
+    ]
+  }
+}

@@ -151,6 +151,10 @@ public class ACItemRegistry {
     public static final ACArmorMaterial GINGERBREAD_ARMOR_MATERIAL = new ACArmorMaterial("gingerbread", 10, new int[]{2, 4, 5, 2}, 25, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F);
     public static final DeferredRegister<Item> DEF_REG = com.github.alexmodguy.alexscaves.server.misc.IdStampingDeferredRegister.create(Registries.ITEM, AlexsCaves.MODID);
     public static final DeferredHolder<Item, Item> ADVANCEMENT_TAB_ICON = DEF_REG.register("advancement_tab_icon", () -> new Item(new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)));
+    // Holder item for the hand-painted advancement icons. Its item-model (items/advancement_icon.json) is a
+    // minecraft:select on custom_model_data string[0], dispatching to a flat item/generated model per icon —
+    // faithful painted icons via vanilla item rendering, replacing Citadel's crashing icon_item renderer.
+    public static final DeferredHolder<Item, Item> ADVANCEMENT_ICON = DEF_REG.register("advancement_icon", () -> new Item(new Item.Properties().stacksTo(1)));
     public static final DeferredHolder<Item, Item> CAVE_TABLET = DEF_REG.register("cave_tablet", () -> new CaveInfoItem(new Item.Properties(), true));
     public static final DeferredHolder<Item, Item> CAVE_CODEX = DEF_REG.register("cave_codex", () -> new CaveInfoItem(new Item.Properties(), false));
     public static final DeferredHolder<Item, Item> CAVE_BOOK = DEF_REG.register("cave_book", () -> new CaveBookItem());

@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:saddle"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "ride_gum_worm"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.ride_gum_worm.title"

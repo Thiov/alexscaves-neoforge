@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:netherrack"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "convert_nether_biome"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.convert_nether_biome.title"

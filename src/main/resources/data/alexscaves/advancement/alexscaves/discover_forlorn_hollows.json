@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:echo_shard"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "forlorn_hollows"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.discover_forlorn_hollows.title"

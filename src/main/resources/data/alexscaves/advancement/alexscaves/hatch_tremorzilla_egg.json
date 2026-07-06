@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:dragon_egg"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "hatch_tremorzilla"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.hatch_tremorzilla_egg.title"

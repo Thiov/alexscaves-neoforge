@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "alexscaves:tectonic_shard"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "defeat_luxtructosaurus"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.defeat_luxtructosaurus.title"

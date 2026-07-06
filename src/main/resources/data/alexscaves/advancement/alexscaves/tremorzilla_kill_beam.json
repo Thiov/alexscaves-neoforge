@@ -1,7 +1,14 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:beacon"
+      "id": "alexscaves:advancement_icon",
+      "components": {
+        "minecraft:custom_model_data": {
+          "strings": [
+            "tremorzilla_beam"
+          ]
+        }
+      }
     },
     "title": {
       "translate": "advancements.alexscaves.tremorzilla_kill_beam.title"
