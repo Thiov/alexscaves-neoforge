@@ -7,13 +7,11 @@ import com.github.alexmodguy.alexscaves.server.entity.util.KeybindUsingMount;
 import com.github.alexmodguy.alexscaves.server.entity.util.PossessesCamera;
 import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
 import com.github.alexmodguy.alexscaves.server.message.MountedEntityKeyMessage;
-import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.Music;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
@@ -55,25 +53,33 @@ public abstract class MinecraftMixin {
             return;
         }
         Holder<Biome> holder = this.player.level().getBiome(this.player.blockPosition());
-        SoundEvent sound = null;
+        Music caveMusic = null;
         if (holder.is(ACBiomeRegistry.PRIMORDIAL_CAVES)) {
-            sound = ACSoundRegistry.PRIMORDIAL_CAVES_MUSIC.get();
+            caveMusic = ACMusics.PRIMORDIAL_CAVES_MUSIC;
         } else if (holder.is(ACBiomeRegistry.MAGNETIC_CAVES)) {
-            sound = ACSoundRegistry.MAGNETIC_CAVES_MUSIC.get();
+            caveMusic = ACMusics.MAGNETIC_CAVES_MUSIC;
         } else if (holder.is(ACBiomeRegistry.TOXIC_CAVES)) {
-            sound = ACSoundRegistry.TOXIC_CAVES_MUSIC.get();
+            caveMusic = ACMusics.TOXIC_CAVES_MUSIC;
         } else if (holder.is(ACBiomeRegistry.ABYSSAL_CHASM)) {
-            sound = ACSoundRegistry.ABYSSAL_CHASM_MUSIC.get();
+            caveMusic = ACMusics.ABYSSAL_CHASM_MUSIC;
         } else if (holder.is(ACBiomeRegistry.FORLORN_HOLLOWS)) {
-            sound = ACSoundRegistry.FORLORN_HOLLOWS_MUSIC.get();
+            caveMusic = ACMusics.FORLORN_HOLLOWS_MUSIC;
         } else if (holder.is(ACBiomeRegistry.CANDY_CAVITY)) {
-            sound = ACSoundRegistry.CANDY_CAVITY_MUSIC.get();
+            caveMusic = ACMusics.CANDY_CAVITY_MUSIC;
         }
-        if (sound != null) {
-            // minDelay=0 so it starts promptly — MusicManager derives the switch delay from minDelay, and a large
-            // minDelay meant cave music waited minutes before playing. maxDelay keeps some variety between repeats;
-            // replaceCurrentMusic=true interrupts any overworld track so cave music actually kicks in on entry.
-            cir.setReturnValue(new Music(Holder.direct(sound), 0, 24000, true));
+        if (caveMusic != null) {
+            cir.setReturnValue(caveMusic);
+        } else {
+            // Player is NOT in an AC cave anymore (teleported out, died and respawned elsewhere, changed
+            // dimension). Vanilla's next pick has replaceCurrentMusic=false, so it never stops a lingering
+            // AC track on its own — stop any of ours that is still playing so cave/boss music doesn't keep
+            // going on the surface.
+            net.minecraft.client.sounds.MusicManager musicManager = ((Minecraft) (Object) this).getMusicManager();
+            for (Music forcedMusic : ACMusics.ALL_FORCED_MUSICS) {
+                if (musicManager.isPlayingMusic(forcedMusic)) {
+                    musicManager.stopPlaying(forcedMusic);
+                }
+            }
         }
     }
 
