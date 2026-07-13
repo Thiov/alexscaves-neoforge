@@ -110,6 +110,24 @@ public abstract class AbstractCaveGenerationStructurePiece extends StructurePiec
         }
     }
 
+    /**
+     * Chamber carves are purely geometric (inCircle) and can overshoot the fill-time biome blob's rim; the
+     * overshoot is only relabeled to the cave biome AFTER the surface stage ran, so its walls stay raw
+     * stone/deepslate (the "stone and deepslate walls in candy cavity" report — present upstream too).
+     * Repair the skin at carve time: any BASE_STONE_OVERWORLD neighbor of a carved cell becomes the biome's
+     * wall block. Interior walls are already themed, so this is a no-op away from the rim.
+     */
+    protected void repairRimWalls(WorldGenLevel level, BlockPos.MutableBlockPos center, BlockState skin) {
+        BlockPos.MutableBlockPos offset = new BlockPos.MutableBlockPos();
+        for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.values()) {
+            offset.set(center);
+            offset.move(dir);
+            if (checkedGetBlock(level, offset).is(net.minecraft.tags.BlockTags.BASE_STONE_OVERWORLD)) {
+                checkedSetBlock(level, offset, skin);
+            }
+        }
+    }
+
     public BlockState checkedGetBlock(WorldGenLevel level, BlockPos position) {
         if (this.getBoundingBox().isInside(position)) {
             return level.getBlockState(position);

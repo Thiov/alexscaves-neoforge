@@ -79,6 +79,7 @@ public class CakeCaveStructurePiece extends AbstractCaveGenerationStructurePiece
                         checkedSetBlock(level, carve, Blocks.CAVE_AIR.defaultBlockState());
                         flag = true;
                         surroundCornerOfLiquid(level, carve);
+                        repairRimWalls(level, carve, com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.CAKE_LAYER.get().defaultBlockState());
                         carveBelow.set(carve.getX(), carve.getY() - 1, carve.getZ());
                         doFloor.setTrue();
                     }

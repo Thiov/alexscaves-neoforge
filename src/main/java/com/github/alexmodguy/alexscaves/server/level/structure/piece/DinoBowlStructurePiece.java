@@ -54,6 +54,7 @@ public class DinoBowlStructurePiece extends AbstractCaveGenerationStructurePiece
                         flag = true;
                         checkedSetBlock(level, carve, Blocks.CAVE_AIR.defaultBlockState());
                         surroundCornerOfLiquid(level, carve);
+                        repairRimWalls(level, carve, com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.LIMESTONE.get().defaultBlockState());
                         carveBelow.set(carve.getX(), carve.getY() - 1, carve.getZ());
                         doFloor.setTrue();
                     }
