@@ -47,6 +47,8 @@ public class BiomeGenerationConfig {
         BIOMES.put(ACBiomeRegistry.ABYSSAL_CHASM, getConfigData("abyssal_chasm", ABYSSAL_CHASM_CONDITION));
         BIOMES.put(ACBiomeRegistry.FORLORN_HOLLOWS, getConfigData("forlorn_hollows", FORLORN_HOLLOWS_CONDITION));
         BIOMES.put(ACBiomeRegistry.CANDY_CAVITY, getConfigData("candy_cavity", CANDY_CAVITY_CONDITION));
+        BIOMES.forEach((biome, condition) ->
+                Citadel.LOGGER.info("[AlexsCaves] biome generation config {}: {}", biome.identifier(), condition.describe()));
     }
 
     public static int getBiomeCount() {

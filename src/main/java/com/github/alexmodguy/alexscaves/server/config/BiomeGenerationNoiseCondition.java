@@ -91,7 +91,25 @@ public class BiomeGenerationNoiseCondition {
     }
 
     public boolean isInvalid() {
-        return dimensions == null && !disabledCompletely;
+        if (disabledCompletely) {
+            return false;
+        }
+        // A stale/old-format config missing the underground gates makes test() treat them as "no constraint",
+        // so the cave biome can generate at ANY height — including poking out of the surface, torn/incomplete
+        // (the "primordial caves generate high/on the surface" report). Every shipped default has dimensions +
+        // continentalness + depth; regenerate the file from defaults when any of them is missing.
+        return dimensions == null
+                || depth == null || depth.length < 2
+                || continentalness == null || continentalness.length < 2;
+    }
+
+    public String describe() {
+        if (disabledCompletely) {
+            return "disabled";
+        }
+        return "depth[" + (depth == null ? "ANY" : depth[0] + ".." + depth[1])
+                + "] continentalness[" + (continentalness == null ? "ANY" : continentalness[0] + ".." + continentalness[1])
+                + "] rarityOffset=" + alexscavesRarityOffset;
     }
 
     public int getRarityOffset(){
