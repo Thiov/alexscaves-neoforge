@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.level.feature;
 
+import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
 import com.github.alexmodguy.alexscaves.server.level.feature.config.CoveredBlockBlobConfiguration;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ public class CoveredBlockBlobFeature extends Feature<CoveredBlockBlobConfigurati
 
     // 26.1 removed the static Feature.isDirt / Feature.isStone helpers; reproduce them via tags.
     private static boolean isDirt(BlockState state) {
-        return state.is(BlockTags.DIRT) && !state.is(Blocks.GRASS_BLOCK) && !state.is(Blocks.MYCELIUM);
+        return state.is(ACTagRegistry.LEGACY_DIRT) && !state.is(Blocks.GRASS_BLOCK) && !state.is(Blocks.MYCELIUM);
     }
 
     private static boolean isStone(BlockState state) {

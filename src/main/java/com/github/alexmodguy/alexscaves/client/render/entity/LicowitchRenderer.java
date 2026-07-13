@@ -86,6 +86,9 @@ public class LicowitchRenderer extends MobRenderer121X<LicowitchEntity, Licowitc
                 // Additive pink/purple halo shell into the off-screen glow target (mirrors the irradiated shell bloom).
                 VertexConsumer witchGlowBuffer = bufferSource.getBuffer(ACRenderTypes.getPurpleWitchGlowShell(LicowitchRenderer.TEXTURE));
                 TELEPORTING_MODEL.renderToBuffer(posestack, witchGlowBuffer, 240, LivingEntityRenderer121X.getOverlayCoords(licowitch, 0.0F), ColorUtil.packColor(1.0F, 0.0F, 1.0F, progress));
+                // The glow target is only blurred+composited on frames that are marked; without this the
+                // pink halo shell above is drawn into the off-screen target and silently discarded.
+                ACPostEffectRegistry.markIrradiatedOnScreen();
                 posestack.popPose();
             }
         }
@@ -199,6 +202,7 @@ public class LicowitchRenderer extends MobRenderer121X<LicowitchEntity, Licowitc
                         this.getParentModel().renderToBuffer(poseStack, witchEffectBuffer2, packedLightIn, LivingEntityRenderer121X.getOverlayCoords(witch, 0.0F), ColorUtil.packColor(1.0F, 0.0F, 1.0F, progress));
                         VertexConsumer witchGlowBuffer2 = bufferIn.getBuffer(ACRenderTypes.getPurpleWitchGlowShell(LicowitchRenderer.this.getTextureLocation(witch)));
                         this.getParentModel().renderToBuffer(poseStack, witchGlowBuffer2, packedLightIn, LivingEntityRenderer121X.getOverlayCoords(witch, 0.0F), ColorUtil.packColor(1.0F, 0.0F, 1.0F, progress));
+                        ACPostEffectRegistry.markIrradiatedOnScreen();
                     }
                 }
             }

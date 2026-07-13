@@ -79,11 +79,19 @@ public class NotorFlightGoal extends Goal {
         } else {
             Vec3 ground = groundPosition(heightAdjusted);
             BlockPos ceiling = BlockPos.containing(ground).above(2);
-            while (ceiling.getY() < entity.level().getMaxY() && !entity.level().getBlockState(ceiling).isSolid()) {
+            // Bound the ceiling scan: with no solid ceiling (superflat, open sky behind an overhang, roof
+            // edges) the unbounded climb reached world max (~319), sending the notor rocketing straight up
+            // until removeWhenFarAway despawned it. Caves always have a ceiling well within 32 blocks.
+            int ceilingScanLimit = ceiling.getY() + 32;
+            while (ceiling.getY() < entity.level().getMaxY() && ceiling.getY() < ceilingScanLimit && !entity.level().getBlockState(ceiling).isSolid()) {
                 ceiling = ceiling.above();
             }
-            float randCeilVal = 0.3F + entity.getRandom().nextFloat() * 0.5F;
-            heightAdjusted = new Vec3(heightAdjusted.x, ground.y + (ceiling.getY() - ground.y) * randCeilVal, heightAdjusted.z);
+            if (entity.level().getBlockState(ceiling).isSolid()) {
+                float randCeilVal = 0.3F + entity.getRandom().nextFloat() * 0.5F;
+                heightAdjusted = new Vec3(heightAdjusted.x, ground.y + (ceiling.getY() - ground.y) * randCeilVal, heightAdjusted.z);
+            } else {
+                heightAdjusted = new Vec3(heightAdjusted.x, ground.y + 4 + entity.getRandom().nextInt(3), heightAdjusted.z);
+            }
         }
 
         BlockHitResult result = entity.level().clip(new ClipContext(entity.getEyePosition(), heightAdjusted, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));

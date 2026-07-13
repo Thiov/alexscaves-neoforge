@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.level.structure.piece;
 
+import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
 import com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry;
 import com.github.alexmodguy.alexscaves.server.block.PrimalMagmaBlock;
 import com.github.alexmodguy.alexscaves.server.misc.ACMath;
@@ -134,7 +135,7 @@ public class VolcanoStructurePiece extends StructurePiece {
     }
 
     private boolean volcanoReplacesBeneath(BlockState state) {
-        return state.is(Blocks.AIR) || state.is(BlockTags.DIRT);
+        return state.is(Blocks.AIR) || state.is(ACTagRegistry.LEGACY_DIRT);
     }
 
     private double calcVolcanoCurve(double dist) {

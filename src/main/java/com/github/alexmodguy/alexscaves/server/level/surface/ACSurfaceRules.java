@@ -2,7 +2,6 @@ package com.github.alexmodguy.alexscaves.server.level.surface;
 
 import com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry;
 import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRegistry;
-import com.github.alexthe666.citadel.server.generation.SurfaceRulesManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Noises;
@@ -11,13 +10,38 @@ import net.minecraft.world.level.levelgen.VerticalAnchor;
 
 public class ACSurfaceRules {
 
+    // AC owns the merge (rules kept OUT of Citadel's SurfaceRulesManager): the published Citadel 26.1 jars
+    // reversed mergeRules() to vanilla-first AND double-merge via their own NoiseGeneratorSettingsMixin, so
+    // vanilla's unconditional verticalGradient("deepslate", y0..8) catch-all ran BEFORE the AC biome rules and
+    // overwrote every AC cave's themed rock below y~0 (the "deepslate walls" in candy cavity etc.). Keeping our
+    // own list makes Citadel's server-start initializer a no-op and lets us put AC rules FIRST, vanilla LAST.
+    private static final java.util.List<SurfaceRules.RuleSource> OVERWORLD_RULES = new java.util.ArrayList<>();
+    private static volatile SurfaceRules.RuleSource lastVanilla;
+    private static volatile SurfaceRules.RuleSource lastMerged;
+
     public static void setup() {
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.MAGNETIC_CAVES), createMagneticCavesRules());
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.PRIMORDIAL_CAVES), createPrimordialCavesRules());
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.TOXIC_CAVES), createToxicCavesRules());
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.ABYSSAL_CHASM), createAbyssalChasmRules());
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.FORLORN_HOLLOWS), createForlornHollowsRules());
-        SurfaceRulesManager.registerOverworldSurfaceRule(SurfaceRules.isBiome(ACBiomeRegistry.CANDY_CAVITY), createCandyCavityRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.MAGNETIC_CAVES), createMagneticCavesRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.PRIMORDIAL_CAVES), createPrimordialCavesRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.TOXIC_CAVES), createToxicCavesRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.ABYSSAL_CHASM), createAbyssalChasmRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.FORLORN_HOLLOWS), createForlornHollowsRules());
+        register(SurfaceRules.isBiome(ACBiomeRegistry.CANDY_CAVITY), createCandyCavityRules());
+    }
+
+    private static void register(SurfaceRules.ConditionSource condition, SurfaceRules.RuleSource rule) {
+        OVERWORLD_RULES.add(SurfaceRules.ifTrue(condition, rule));
+    }
+
+    public static SurfaceRules.RuleSource mergeWithVanilla(SurfaceRules.RuleSource vanilla) {
+        if (lastMerged != null && lastVanilla == vanilla) {
+            return lastMerged;
+        }
+        java.util.List<SurfaceRules.RuleSource> list = new java.util.ArrayList<>(OVERWORLD_RULES);
+        list.add(vanilla);
+        SurfaceRules.RuleSource merged = SurfaceRules.sequence(list.toArray(new SurfaceRules.RuleSource[0]));
+        lastVanilla = vanilla;
+        lastMerged = merged;
+        return merged;
     }
 
     public static SurfaceRules.RuleSource createMagneticCavesRules() {

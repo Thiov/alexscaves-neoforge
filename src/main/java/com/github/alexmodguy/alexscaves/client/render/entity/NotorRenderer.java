@@ -118,6 +118,8 @@ public class NotorRenderer extends MobRenderer121X<NotorEntity, NotorModel> {
         }
     }
 
+    private static boolean loggedVanillaHologramError = false;
+
     public static <E extends Entity> void renderEntityInHologram(E entityIn, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn) {
         ACPostEffectRegistry.renderEffectForNextTick(ClientProxy.HOLOGRAM_SHADER);
 
@@ -167,6 +169,36 @@ public class NotorRenderer extends MobRenderer121X<NotorEntity, NotorModel> {
                     FerrouslimeRenderer.FERROUSLIME_MODEL.setupAnim(ferrouslime, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F);
                     FerrouslimeRenderer.FERROUSLIME_MODEL.renderToBuffer(matrixStack, ivertexbuilder, 240, OverlayTexture.NO_OVERLAY, -1);
                     matrixStack.popPose();
+                } else if (render instanceof net.minecraft.client.renderer.entity.LivingEntityRenderer vanillaRenderer) {
+                    // 26.1: vanilla renderers are render-state based; extract the state (rotations already zeroed
+                    // on the live entity above) and drive the model DIRECTLY into the forced hologram buffer —
+                    // dispatcher.submit would submit the renderer's own render types and lose the blue tint.
+                    // Covers players (AvatarRenderer) and every vanilla mob; AC mobs use the 121X branch above.
+                    try {
+                        net.minecraft.client.renderer.entity.state.LivingEntityRenderState state =
+                                (net.minecraft.client.renderer.entity.state.LivingEntityRenderState) vanillaRenderer.createRenderState(living, partialTicks);
+                        state.walkAnimationPos = 0.0F;
+                        state.walkAnimationSpeed = 0.0F;
+                        state.yRot = 0.0F;
+                        state.bodyRot = 0.0F;
+                        net.minecraft.client.model.EntityModel vanillaModel = vanillaRenderer.getModel();
+                        Identifier texture = vanillaRenderer.getTextureLocation(state);
+                        VertexConsumer consumer = bufferIn.getBuffer(ACRenderTypes.getHologram(texture));
+                        matrixStack.pushPose();
+                        matrixStack.scale(-living.getScale(), -living.getScale(), living.getScale());
+                        if (render instanceof net.minecraft.client.renderer.entity.player.AvatarRenderer) {
+                            matrixStack.scale(0.9375F, 0.9375F, 0.9375F);
+                        }
+                        vanillaModel.setupAnim(state);
+                        vanillaModel.renderToBuffer(matrixStack, consumer, 240, OverlayTexture.NO_OVERLAY, -1);
+                        matrixStack.popPose();
+                    } catch (Exception vanillaHologramException) {
+                        // A detached/exotic renderer state-extract can fail; skip the hologram rather than crash.
+                        if (!loggedVanillaHologramError) {
+                            loggedVanillaHologramError = true;
+                            com.github.alexmodguy.alexscaves.AlexsCaves.LOGGER.warn("Failed to render {} in hologram", entityIn.getType(), vanillaHologramException);
+                        }
+                    }
                 }
                 entityIn.setXRot(xRot);
                 entityIn.xRotO = xRotOld;

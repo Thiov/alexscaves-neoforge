@@ -1,0 +1,12 @@
+{
+  "__comment": "26.1 trimmed #minecraft:dirt to just dirt/coarse_dirt/rooted_dirt; this tag restores the old membership (grass, podzol, mycelium, moss, mud) that AC's tree features / egg laying / volcano growth were written against.",
+  "values": [
+    "#minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:podzol",
+    "minecraft:mycelium",
+    "minecraft:moss_block",
+    "minecraft:mud",
+    "minecraft:muddy_mangrove_roots"
+  ]
+}

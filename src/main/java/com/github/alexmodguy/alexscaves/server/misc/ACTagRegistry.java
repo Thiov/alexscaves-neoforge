@@ -17,6 +17,8 @@ public class ACTagRegistry {
     public static final TagKey<Block> MAGNETIC_ATTACHABLES = registerBlockTag("magnetic_attachables");
     public static final TagKey<Block> MAGNETIC_BLOCKS = registerBlockTag("ferromagnetic_blocks");
     public static final TagKey<Block> UNMOVEABLE = registerBlockTag("unmovable");
+    // The old (pre-26.1) #minecraft:dirt membership incl. grass/podzol/mycelium/moss/mud — 26.1 trimmed the vanilla tag.
+    public static final TagKey<Block> LEGACY_DIRT = registerBlockTag("legacy_dirt");
     public static final TagKey<Block> MAGNETIC_CAVES_BASE_BLOCKS = registerBlockTag("magnetic_caves_base_blocks");
     public static final TagKey<Block> MAGNET_REMOVES_LAST = registerBlockTag("magnet_removes_last");
     public static final TagKey<Block> TESLA_BULB_BASE_BLOCKS = registerBlockTag("tesla_bulb_base_blocks");

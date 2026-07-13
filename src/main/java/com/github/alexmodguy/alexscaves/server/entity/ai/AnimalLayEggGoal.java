@@ -1,5 +1,6 @@
 package com.github.alexmodguy.alexscaves.server.entity.ai;
 
+import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
 import com.github.alexmodguy.alexscaves.server.block.DinosaurEggBlock;
 import com.github.alexmodguy.alexscaves.server.entity.living.DinosaurEntity;
 import com.github.alexmodguy.alexscaves.server.entity.util.LaysEggs;
@@ -62,7 +63,7 @@ public class AnimalLayEggGoal extends MoveToBlockGoal {
                 this.laysEggs.setHasEgg(false);
                 this.mob.setInLoveTime(600);
                 this.mob.level().broadcastEntityEvent(this.mob, (byte) 78);
-                if (this.mob instanceof DinosaurEntity dinosaur && level.getBlockState(this.blockPos).is(BlockTags.DIRT)) {
+                if (this.mob instanceof DinosaurEntity dinosaur && level.getBlockState(this.blockPos).is(ACTagRegistry.LEGACY_DIRT)) {
                     level.setBlockAndUpdate(this.blockPos, dinosaur.createEggBeddingBlockState());
                 }
             }

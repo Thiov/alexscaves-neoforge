@@ -72,10 +72,17 @@ public class UpdateMagneticDataMessage implements CustomPacketPayload {
             Entity entity = player.level().getEntity(message.entityId);
             if (entity != null) {
                 MagneticEntityData data = ACAttachmentRegistry.getMagneticData(entity);
+                net.minecraft.core.Direction oldDirection = data.getAttachmentDirection();
                 data.setDeltaX(message.deltaX);
                 data.setDeltaY(message.deltaY);
                 data.setDeltaZ(message.deltaZ);
                 data.setAttachmentDirection(message.attachmentDirection);
+                // Restart the client-side attach transition on a face change (upstream's onSyncedDataUpdated
+                // reset) — otherwise the camera eye position/pitch offset jump instead of the 10-tick ease.
+                if (oldDirection != message.attachmentDirection
+                        && entity instanceof com.github.alexmodguy.alexscaves.server.entity.util.MagneticEntityAccessor magneticAccessor) {
+                    magneticAccessor.resetAttachmentProgress();
+                }
             }
         }
     }
