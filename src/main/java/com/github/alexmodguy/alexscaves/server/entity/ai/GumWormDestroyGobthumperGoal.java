@@ -54,7 +54,7 @@ public class GumWormDestroyGobthumperGoal extends Goal {
             double distance2 = entity.distanceToSqr(leapFromPos.getX() + 0.5F, leapFromPos.getY() + 0.5F, leapFromPos.getZ() + 0.5F);
             if(entity.isLeaping()){
                 entity.getNavigation().stop();
-                if(gobthumperPos.getY() + 2 > entity.getY()){
+                if(gobthumperPos.getY() + 2 > entity.getY() && entity.isInWall()){
                     Vec3 extraDeltaHelp = Vec3.atCenterOf(gobthumperPos).subtract(entity.position());
                     if(extraDeltaHelp.length() > 1.0F){
                         extraDeltaHelp = extraDeltaHelp.normalize();

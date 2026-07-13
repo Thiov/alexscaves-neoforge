@@ -46,6 +46,7 @@ public class FerrocaveStructurePiece extends AbstractCaveGenerationStructurePiec
                     if (inCircle(carve) && !checkedGetBlock(level, carve).is(Blocks.BEDROCK)) {
                         checkedSetBlock(level, carve, Blocks.CAVE_AIR.defaultBlockState());
                         surroundCornerOfLiquid(level, carve);
+                        repairRimWalls(level, carve, com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.GALENA.get().defaultBlockState());
                     }
                 }
             }

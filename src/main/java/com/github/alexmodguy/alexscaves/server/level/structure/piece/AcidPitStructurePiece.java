@@ -70,6 +70,7 @@ public class AcidPitStructurePiece extends AbstractCaveGenerationStructurePiece 
                                     checkedSetBlock(level, carve, Blocks.MUD.defaultBlockState());
                                 }
                                 checkedSetBlock(level, carve, Blocks.CAVE_AIR.defaultBlockState());
+                                repairRimWalls(level, carve, com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.RADROCK.get().defaultBlockState());
                             }
 
                         }

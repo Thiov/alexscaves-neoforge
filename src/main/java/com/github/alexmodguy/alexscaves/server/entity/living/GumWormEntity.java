@@ -107,16 +107,6 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     private boolean wasDiggingLastTick;
     private int outOfGroundTime = 0;
     private int postRidingDigDownTicks = 0; // Time after riding ends to force digging down
-    private int stuckAboveGobthumperTicks = 0; // Fallback counter when stuck above gobthumper position
-    private int stuckInAirTicks = 0; // Fallback counter when stuck motionless in air
-    private Vec3 lastTickPosition = null; // Track position to detect if stuck
-    // returningToGround is now synced via RETURNING_TO_GROUND EntityDataAccessor
-    private boolean returnNeedsInitialBurst = false; // Whether we need to give initial strong push
-    private double returnTargetX = 0; // Target X to return to (20+ blocks from gobthumper)
-    private double returnTargetY = 0; // Target Y level to return to
-    private double returnTargetZ = 0; // Target Z to return to (20+ blocks from gobthumper)
-    private Vec3 returnMoveDirection = null; // Fixed movement direction during return mode
-    private boolean detectedStuckState = false; // Once we detect stuck state, don't reset counter
 
     public GumWormEntity(EntityType type, Level level) {
         super(type, level);
@@ -217,15 +207,13 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
         this.yBodyRot = this.getYRot();
         this.yHeadRot = this.getYRot();
         Entity target = this.getTarget();
-        if(!level().isClientSide() && (!this.isLeaping() || (target == null || !target.isAlive())) && !this.isRidingMode() && !isReturningToGround()){
+        if(!level().isClientSide() && (!this.isLeaping() || (target == null || !target.isAlive())) && !this.isRidingMode()){
             this.setTargetDigPitch((float) (-(Mth.atan2(this.getDeltaMovement().y, this.getDeltaMovement().horizontalDistance()) * (180F / (float) Math.PI))));
         }
         if (screenShakeAmount > 0) {
             screenShakeAmount = Math.max(0, screenShakeAmount - 0.34F);
         }
-        // During return mode, rotate pitch faster (20 degrees/tick instead of 5)
-        float pitchSpeed = isReturningToGround() ? 20 : 5;
-        this.digPitch = Mth.approachDegrees(digPitch, getTargetDigPitch(), pitchSpeed);
+        this.digPitch = Mth.approachDegrees(digPitch, getTargetDigPitch(), 5);
         if (this.isMoving()) {
             this.zRot += (this.entityData.get(Z_ROT_DIRECTION) ? -10 : 10);
             if (random.nextInt(300) == 0 && !level().isClientSide()) {
@@ -259,219 +247,28 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
         boolean flag = false;
         BlockState centralState = level().getBlockState(this.blockPosition());
         BlockState centralStateBelow = level().getBlockState(this.blockPosition().below());
-        
-        // Fallback mechanism: detect if GumWorm is stuck and needs to return to ground
-        // When triggered, GumWorm will phase through all blocks until reaching target Y level
-        boolean forcingReturnToGobthumper = false;
-        
-        // Handle active "return to ground" mode - phase through blocks until reaching underground
-        // Head leads, body follows - like a diving worm
-        if (isReturningToGround()) {
-            forcingReturnToGobthumper = true;
-            // Enable phasing through blocks
-            this.noPhysics = true;
-            // Clear leaping state when returning to ground
-            this.setLeaping(false);
-            
-            // CLIENT SIDE: Force digPitch to match the synced targetDigPitch immediately
-            // Don't use local deltaMovement as it may not match server's direction
-            if (level().isClientSide()) {
-                // Directly set digPitch to targetDigPitch (synced from server)
-                this.digPitch = getTargetDigPitch();
-            }
-            
-            // SERVER SIDE: Handle the actual movement logic
-            if (!level().isClientSide()) {
-                // Target is FIXED at returnTargetX/Y/Z - calculated when return mode started
-                int targetWorldHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) returnTargetX, (int) returnTargetZ);
-                double horizontalDistance = Math.sqrt((returnTargetX - this.getX()) * (returnTargetX - this.getX()) + (returnTargetZ - this.getZ()) * (returnTargetZ - this.getZ()));
-                
-                // INITIAL BURST: Calculate and LOCK the movement direction at this moment
-                if (returnNeedsInitialBurst) {
-                    returnNeedsInitialBurst = false;
-                    
-                    // Calculate FIXED direction from current position to target - this will be used for entire return
-                    Vec3 targetPos = new Vec3(returnTargetX, returnTargetY, returnTargetZ);
-                    Vec3 directionToTarget = targetPos.subtract(this.position());
-                    double distanceToTarget = directionToTarget.length();
-                    returnMoveDirection = distanceToTarget > 0.1 ? directionToTarget.normalize() : new Vec3(0, -1, 0);
-                    
-                    // Calculate and LOCK target pitch and yaw based on fixed direction
-                    float targetPitch = (float) (-(Mth.atan2(returnMoveDirection.y, returnMoveDirection.horizontalDistance()) * (180F / (float) Math.PI)));
-                    float targetYaw = -((float) Mth.atan2(returnMoveDirection.x, returnMoveDirection.z)) * (180F / (float) Math.PI);
-                    
-                    // Strong initial velocity - directly SET the movement
-                    this.setDeltaMovement(returnMoveDirection.scale(1.8F));
-                    // Immediately face the target - SET directly, no gradual approach
-                    this.setYRot(targetYaw);
-                    // Directly set digPitch for instant head rotation
-                    this.digPitch = targetPitch;
-                    this.setTargetDigPitch(targetPitch);
-                }
-                
-                // CONTINUOUS MOVEMENT: Use the FIXED direction calculated at initial burst
-                // Don't recalculate direction - keep heading in the same direction
-                if (returnMoveDirection != null) {
-                    // DIRECT velocity set using FIXED direction
-                    double speed = 1.2; // Fast constant speed
-                    this.setDeltaMovement(returnMoveDirection.scale(speed));
-                    
-                    // FORCE the head pitch to stay locked - override the approachDegrees that ran earlier in tick()
-                    float lockedPitch = (float) (-(Mth.atan2(returnMoveDirection.y, returnMoveDirection.horizontalDistance()) * (180F / (float) Math.PI)));
-                    this.digPitch = lockedPitch;
-                    this.setTargetDigPitch(lockedPitch);
-                }
-                
-                // Check if we've reached the target (close enough horizontally AND underground)
-                if (horizontalDistance <= 5 && this.getY() <= targetWorldHeight - 5) {
-                    // Successfully reached target underground, exit return mode and let normal AI take over
-                    setReturningToGround(false);
-                    returnMoveDirection = null; // Clear fixed direction
-                    this.noPhysics = false;
-                    stuckAboveGobthumperTicks = 0;
-                    stuckInAirTicks = 0;
-                    forcingReturnToGobthumper = false;
-                    detectedStuckState = false;
-                    // Set postRidingDigDownTicks to ensure we stay underground initially
-                    postRidingDigDownTicks = 60; // 3 seconds of staying underground before AI can move
-                }
-            }
-            
-            flag = true;
-        } else if (!level().isClientSide() && !isRidingMode() && postRidingDigDownTicks <= 0 && !isLeaping()) {
-            // Only detect stuck state when NOT leaping - leaping worms are under Goal control and will naturally fall
-            // IMPORTANT: Don't detect stuck state during postRidingDigDownTicks - worm is intentionally staying underground
-            BlockPos gobthumperPos = getGobthumperPos();
-            
-            // Check if stuck motionless (position hasn't changed significantly)
-            Vec3 currentPos = this.position();
-            boolean isMotionless = false;
-            if (lastTickPosition != null) {
-                double movement = currentPos.distanceToSqr(lastTickPosition);
-                // Consider motionless if moved less than 0.01 blocks squared
-                isMotionless = movement < 0.01;
-            }
-            lastTickPosition = currentPos;
-            
-            // Check world surface height at current position
-            int worldHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) this.getX(), (int) this.getZ());
-            
-            // Determine if GumWorm is in an abnormal position
-            boolean isAboveSurface = this.getY() > worldHeight;
-            boolean isInUnsafePosition = !isSafeDig(level(), this.blockPosition());
-            
-            // Calculate target Y for return (gobthumper Y or 10 blocks below surface)
-            double targetY = gobthumperPos != null ? gobthumperPos.getY() : (worldHeight - 10);
-            
-            if (gobthumperPos != null) {
-                double heightAboveGobthumper = this.getY() - gobthumperPos.getY();
-                // Detect stuck state if above gobthumper AND either:
-                // 1. Above the world surface (in open air above ground)
-                // 2. Inside a solid block (stuck in ceiling in a cave)
-                // This ensures worms stuck on cave ceilings above the gobthumper are also detected
-                boolean isInsideSolidBlock = centralState.isSolid();
-                if (heightAboveGobthumper > 8.0 && (isAboveSurface || isInsideSolidBlock)) {
-                    detectedStuckState = true;
-                }
-                
-                // Keep counting if we've ever detected stuck state (don't reset when worm moves down)
-                if (detectedStuckState) {
-                    stuckAboveGobthumperTicks++;
-                    // After 3 seconds (60 ticks) of being in stuck state, activate return to ground mode
-                    if (stuckAboveGobthumperTicks > 60) {
-                        // Calculate return target: 20-25 blocks away from gobthumper in random direction
-                        double angle = random.nextDouble() * Math.PI * 2;
-                        double distance = 20 + random.nextDouble() * 5; // 20-25 blocks
-                        returnTargetX = gobthumperPos.getX() + Math.cos(angle) * distance;
-                        returnTargetZ = gobthumperPos.getZ() + Math.sin(angle) * distance;
-                        // Calculate target Y: 10 blocks below ground at target location
-                        int targetGroundHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) returnTargetX, (int) returnTargetZ);
-                        returnTargetY = targetGroundHeight - 10;
-                        
-                        setReturningToGround(true);
-                        returnNeedsInitialBurst = true; // Give strong initial push
-                        forcingReturnToGobthumper = true;
-                        this.setLeaping(false);
-                    }
-                }
-            } else {
-                // No gobthumper position - check if above surface
-                if (isAboveSurface) {
-                    detectedStuckState = true;
-                }
-                
-                if (detectedStuckState) {
-                    stuckAboveGobthumperTicks++;
-                    if (stuckAboveGobthumperTicks > 60) {
-                        // No gobthumper, just go straight down at current position
-                        returnTargetX = this.getX();
-                        returnTargetZ = this.getZ();
-                        // Target: 10 blocks below ground at current location
-                        returnTargetY = worldHeight - 10;
-                        
-                        setReturningToGround(true);
-                        returnNeedsInitialBurst = true; // Give strong initial push
-                        forcingReturnToGobthumper = true;
-                        this.setLeaping(false);
-                    }
-                }
-            }
-            
-            // Additional fallback: if stuck motionless anywhere for too long (regardless of position)
-            // This is the ultimate safety net
-            if (isMotionless && !forcingReturnToGobthumper) {
-                stuckInAirTicks++;
-                // After 3 seconds (60 ticks) of being completely stuck, activate return mode
-                if (stuckInAirTicks > 60) {
-                    if (gobthumperPos != null) {
-                        // Calculate return target: 20-25 blocks away from gobthumper
-                        double angle = random.nextDouble() * Math.PI * 2;
-                        double distance = 20 + random.nextDouble() * 5;
-                        returnTargetX = gobthumperPos.getX() + Math.cos(angle) * distance;
-                        returnTargetZ = gobthumperPos.getZ() + Math.sin(angle) * distance;
-                    } else {
-                        returnTargetX = this.getX();
-                        returnTargetZ = this.getZ();
-                    }
-                    // Target: 10 blocks below ground at target location
-                    int targetGroundHeight = level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) returnTargetX, (int) returnTargetZ);
-                    returnTargetY = targetGroundHeight - 10;
-                    
-                    setReturningToGround(true);
-                    returnNeedsInitialBurst = true; // Give strong initial push
-                    forcingReturnToGobthumper = true;
-                    detectedStuckState = true;
-                    // Also clear leaping state
-                    this.setLeaping(false);
-                }
-            } else if (!isMotionless) {
-                // Don't fully reset counter - reduce by half so occasional small movements don't prevent trigger
-                stuckInAirTicks = Math.max(0, stuckInAirTicks - 10);
-            }
-        } else {
-            stuckAboveGobthumperTicks = 0;
-            stuckInAirTicks = 0;
-            detectedStuckState = false;
-        }
-        
-        // After dismounting, force dig down into the ground instead of bouncing up
+        // Upstream movement chain: bounce up only when hovering over UNDIGGABLE ground (bedrock family);
+        // dive back underground when breaching/over air/in fluid. The port's former "stuck detection /
+        // return-to-ground" machinery was a band-aid for the inverted canDigBlock above — its
+        // heightmap-based Y targets (overworld surface - 10) pointed far above underground caves and
+        // caused the head-down spin-in-place churn. Removed; upstream's chain IS the ground-return.
         if (postRidingDigDownTicks > 0) {
+            // After dismounting, force dig down into the ground instead of bouncing up.
             postRidingDigDownTicks--;
-            if (canDigBlock(centralStateBelow) || centralStateBelow.isAir()) {
+            if (canDigBlock(centralStateBelow)) {
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.8).add(0, -0.6, 0));
                 flag = true;
             }
-        } else if (!forcingReturnToGobthumper && (!isSafeDig(level(), this.blockPosition())) && !this.isLeaping()) {
-            // Skip the bounce-up logic if we're forcing return to gobthumper
+        } else if ((!isSafeDig(level(), this.blockPosition())) && !this.isLeaping()) {
             if (!canDigBlock(centralStateBelow)) {
                 this.setDeltaMovement(random.nextFloat() - 0.5F, 0.8F, random.nextFloat() - 0.5F);
                 flag = true;
-            } else if((surfaceY < this.getEyeY() || centralStateBelow.isAir() || ACFluidHelper.isInAnyFluid(this)) && isSafeDig(level(), this.blockPosition().below()) && !isRidingMode()){
-                if(outOfGroundTime++ > 10){
-                    this.setDeltaMovement(this.getDeltaMovement().add(0, -0.5, 0));
-                }
             }
-        }else if (!forcingReturnToGobthumper) {
+        } else if ((surfaceY < this.getEyeY() || centralStateBelow.isAir() || ACFluidHelper.isInAnyFluid(this)) && isSafeDig(level(), this.blockPosition().below()) && !isRidingMode() && !this.isLeaping()) {
+            if (outOfGroundTime++ > 10) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0, -0.5, 0));
+            }
+        } else {
             outOfGroundTime = 0;
         }
         if(isRidingMode()){
@@ -503,10 +300,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
                 attemptPlayStopDiggingNoise();
             }
         }
-        // When forcing return to gobthumper or flag is set, always enable gravity to allow falling
-        // Also enable gravity if above the ground surface (in the air) to prevent floating after leap ends
-        boolean isAboveGroundLevel = this.getY() > surfaceY;
-        this.setNoGravity(!forcingReturnToGobthumper && !isAboveGroundLevel && !this.getNavigation().isDone() && !this.isLeaping() && !flag && !this.isInWall());
+        this.setNoGravity(!this.getNavigation().isDone() && !this.isLeaping() && !flag && !this.isInWall());
         if (timeBetweenAttacks > 0) {
             timeBetweenAttacks--;
         }
@@ -880,7 +674,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     public boolean isColliding(BlockPos pos, BlockState blockstate) {
-        return (!this.isDigging() || canDigBlock(blockstate)) && super.isColliding(pos, blockstate);
+        return canDigBlock(blockstate) && super.isColliding(pos, blockstate);
     }
 
     public Vec3 collide(Vec3 vec3) {
@@ -927,7 +721,10 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     public static boolean canDigBlock(BlockState state) {
-        return !state.is(ACTagRegistry.GUM_WORM_BLOCKS_DIGGING) && state.getFluidState().isEmpty() && state.canOcclude();
+        // Upstream formula: AIR IS DIGGABLE. The initial port pasted Corrodent's check here
+        // (fluid-empty && canOcclude), which made air "non-diggable" and inverted isSafeDig —
+        // a worm in open cave air bounced +0.8/tick to the ceiling and pinned there.
+        return state.isAir() || !state.is(ACTagRegistry.GUM_WORM_BLOCKS_DIGGING);
     }
 
     public boolean isInvulnerableTo(ServerLevel serverLevel, DamageSource damageSource) {

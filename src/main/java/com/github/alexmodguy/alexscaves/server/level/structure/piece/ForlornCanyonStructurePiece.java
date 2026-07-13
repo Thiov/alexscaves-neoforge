@@ -46,6 +46,7 @@ public class ForlornCanyonStructurePiece extends AbstractCaveGenerationStructure
                     if (inCircle(carve) && !checkedGetBlock(level, carve).is(Blocks.BEDROCK)) {
                         checkedSetBlock(level, carve, Blocks.CAVE_AIR.defaultBlockState());
                         surroundCornerOfLiquid(level, carve);
+                        repairRimWalls(level, carve, com.github.alexmodguy.alexscaves.server.block.ACBlockRegistry.GUANOSTONE.get().defaultBlockState());
                         carveBelow.set(carve.getX(), carve.getY() - 1, carve.getZ());
                         doFloor.setTrue();
                     } else if (doFloor.isTrue()) {
