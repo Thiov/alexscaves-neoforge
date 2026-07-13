@@ -11,7 +11,6 @@ import com.github.alexmodguy.alexscaves.server.misc.ACAdvancementTriggerRegistry
 import com.github.alexmodguy.alexscaves.server.misc.ACDummyBiomeSource;
 import com.github.alexmodguy.alexscaves.server.misc.ACSoundRegistry;
 import com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry;
-import com.github.alexthe666.citadel.server.generation.SurfaceRulesManager;
 import net.minecraft.util.Util;
 import net.minecraft.core.*;
 import net.minecraft.core.HolderLookup;
@@ -260,7 +259,7 @@ public class ConversionCrucibleBlockEntity extends BlockEntity {
                     return noiseBasedChunkGenerator.createNoiseChunk(chunkAccess, serverLevel.structureManager(), Blender.empty(), serverLevel.getChunkSource().randomState());
                 });
                 //should ideally be merged when we get it, for some reason isn't. Idk why
-                SurfaceRules.RuleSource ruleSource = SurfaceRulesManager.mergeOverworldRules(noiseBasedChunkGenerator.generatorSettings().value().surfaceRule());
+                SurfaceRules.RuleSource ruleSource = com.github.alexmodguy.alexscaves.server.level.surface.ACSurfaceRules.mergeWithVanilla(noiseBasedChunkGenerator.generatorSettings().value().surfaceRule());
                 WorldGenerationContext worldGenerationContext = new WorldGenerationContext(noiseBasedChunkGenerator, serverLevel);
                 Function<BlockPos, Holder<Biome>> biomeRef = (blockPos -> biomeHolder.get());
                 SurfaceRules.Context surfacerulesContext = new SurfaceRules.Context(serverLevel.getChunkSource().randomState().surfaceSystem(), serverLevel.getChunkSource().randomState(), chunkaccess, noisechunk, biomeRef, registry, worldGenerationContext);

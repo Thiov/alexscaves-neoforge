@@ -71,26 +71,26 @@ public abstract class CameraMixin {
     @Shadow
     private int matrixPropertiesDirty;
 
+    // Magnetic attachment: place the camera at the wall/ceiling-relative eye position. It MUST run inside
+    // alignWithEntity (which update() calls BEFORE building the cull frustum from the camera position), so the
+    // frustum is centered on the corrected magnet eye point. Doing it at update()'s TAIL (post-frustum) left
+    // the frustum on the pre-magnet position and made nearby geometry pop/clip when climbing a magnetic
+    // pillar. (Mirrors the Fabric CameraMixin.)
     @Inject(
-            method = {"Lnet/minecraft/client/Camera;update(Lnet/minecraft/client/DeltaTracker;)V"},
+            method = {"Lnet/minecraft/client/Camera;alignWithEntity(F)V"},
             remap = true,
             at = @At(value = "TAIL")
     )
-    public void ac_onSyncedDataUpdated(DeltaTracker deltaTracker, CallbackInfo ci) {
+    public void ac_magneticAttachment(float partialTicks, CallbackInfo ci) {
         Entity entity = this.entity;
         if (entity == null) {
             return;
         }
-        boolean detatched = this.detached;
-        boolean mirrored = Minecraft.getInstance().options.getCameraType().isMirrored();
-        float partialTicks = this.getCameraEntityPartialTicks(deltaTracker);
-
-        // Handle magnetic attachment
         Direction dir = MagnetUtil.getEntityMagneticDirection(entity);
         if (dir != Direction.DOWN && dir != Direction.UP) {
             this.setPosition(MagnetUtil.getEyePositionForAttachment(entity, dir, partialTicks));
-            if (detatched) {
-                if (mirrored) {
+            if (this.detached) {
+                if (Minecraft.getInstance().options.getCameraType().isMirrored()) {
                     this.setRotation(this.yRot + 180.0F, -this.xRot);
                 }
                 this.move(-this.getMaxZoom(4.0F), 0.0F, 0.0F);
@@ -109,6 +109,19 @@ public abstract class CameraMixin {
             else if (vehicle instanceof com.github.alexmodguy.alexscaves.server.entity.living.GumWormSegmentEntity) zoomBack = 12F;
             if (zoomBack > 0F) this.move(-this.getMaxZoom(zoomBack), 0F, 0F);
         }
+    }
+
+    @Inject(
+            method = {"Lnet/minecraft/client/Camera;update(Lnet/minecraft/client/DeltaTracker;)V"},
+            remap = true,
+            at = @At(value = "TAIL")
+    )
+    public void ac_onSyncedDataUpdated(DeltaTracker deltaTracker, CallbackInfo ci) {
+        Entity entity = this.entity;
+        if (entity == null) {
+            return;
+        }
+        float partialTicks = this.getCameraEntityPartialTicks(deltaTracker);
 
         // Handle screen shake - must be done at TAIL after the camera is positioned
         Entity player = Minecraft.getInstance().getCameraEntity();

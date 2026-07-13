@@ -90,7 +90,10 @@ public class SackOfSatingItem extends Item {
                 }
                 int wholeHunger = calculateWholeStackHungerValue(foodStack, player);
                 setHunger(sackStack, getHunger(sackStack) + wholeHunger);
-                ItemStack craftingRemainder = foodStack.getItem().getCraftingRemainder().create();
+                // 26.1: getCraftingRemainder() returns a @Nullable ItemStackTemplate (null for nearly all food) —
+                // calling .create() on it NPE'd inside AbstractContainerMenu.doClick, aborting the insert (the same
+                // trap as the Atlatitan feed crash). Use the null-safe compat helper.
+                ItemStack craftingRemainder = com.github.alexmodguy.alexscaves.server.misc.ACItemCompat.getCraftingRemainingItem(foodStack);
                 ItemStack containerItem = ItemStack.EMPTY;
                 if (!craftingRemainder.isEmpty()) {
                     containerItem = craftingRemainder.copy();

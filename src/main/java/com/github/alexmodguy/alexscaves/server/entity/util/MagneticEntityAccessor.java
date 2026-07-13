@@ -25,6 +25,8 @@ public interface MagneticEntityAccessor {
 
     void setMagneticAttachmentFace(Direction dir);
 
+    void resetAttachmentProgress();
+
     void postMagnetJump();
 
     boolean canChangeDirection();

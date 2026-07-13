@@ -77,6 +77,9 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     @Shadow
     public abstract double getY();
 
+    @Shadow
+    private float xRot;
+
     private float attachChangeProgress = 0F;
     private float prevAttachChangeProgress = 0F;
     private Direction prevAttachDir = Direction.DOWN;
@@ -266,6 +269,24 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
         }
     }
 
+    // 26.1 made Entity.setXRot clamp to [-90, 90] (1.20 was a plain assignment). MagnetUtil.turnEntityOnMagnet
+    // writes pitch into the attachment-offset range (wall: [-180, 0], ceiling: [-270, -90]) and applies its own
+    // offset clamp — the vanilla clamp pinned xRot at -90 while xRotO kept accumulating, so the rendered pitch
+    // lerp snapped every tick = the glitchy view when climbing a magnetic pillar. Restore plain-assignment
+    // semantics ONLY while magnetically attached; vanilla clamping resumes on detach.
+    @Inject(
+            method = {"Lnet/minecraft/world/entity/Entity;setXRot(F)V"},
+            remap = true,
+            cancellable = true,
+            at = @At(value = "HEAD")
+    )
+    private void ac_setXRot(float f, CallbackInfo ci) {
+        if (Float.isFinite(f) && getMagneticAttachmentFace() != Direction.DOWN) {
+            this.xRot = f % 360.0F;
+            ci.cancel();
+        }
+    }
+
     @Inject(
             method = {"Lnet/minecraft/world/entity/Entity;makeBoundingBox()Lnet/minecraft/world/phys/AABB;"},
             remap = true,
@@ -371,9 +392,21 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     public void setMagneticAttachmentFace(Direction dir) {
         MagneticEntityData data = getMagneticData();
         if (data != null) {
+            // Restart the 10-tick attach transition whenever the face actually changes (upstream did this in
+            // Entity#onSyncedDataUpdated, which the attachment+message sync replaced) — without it the eye
+            // position/pitch offset snap instantly instead of easing.
+            if (data.getAttachmentDirection() != dir) {
+                resetAttachmentProgress();
+            }
             data.setAttachmentDirection(dir);
             syncMagneticData();
         }
+    }
+
+    @Override
+    public void resetAttachmentProgress() {
+        this.prevAttachChangeProgress = 0F;
+        this.attachChangeProgress = 0F;
     }
 
 
