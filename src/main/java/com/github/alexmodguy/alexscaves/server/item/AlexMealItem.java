@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AlexMealItem extends ACBowlFoodItem {
     public AlexMealItem() {
-        super(new Item.Properties().food(ACFoods.ALEX_MEAL).rarity(ACItemRegistry.getRarityRainbow()).stacksTo(1));
+        super(new Item.Properties().food(ACFoods.ALEX_MEAL, ACFoods.foodEffect(net.minecraft.world.effect.MobEffects.NAUSEA, 200, 1.0F)).rarity(ACItemRegistry.getRarityRainbow()).stacksTo(1));
     }
 
     

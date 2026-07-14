@@ -10,12 +10,16 @@ import net.minecraft.world.item.Items;
 
 public class ACFoods {
     // 26.1 removed FoodProperties.Builder.effect(); food effects now live on the Consumable component. Rebuilds a
-    // default food consumable (eat animation, 1.6s, eat sound) that also has a chance to grant Sugar Rush — so
-    // eating chocolate/candy grants the effect again (Sundae is the highest at 0.2). Matches upstream's per-food
-    // probabilities. Attached at registration via Item.Properties.food(foodProperties, consumable).
-    public static Consumable sugarRush(int duration, float chance) {
+    // default food consumable (eat animation, 1.6s, eat sound) that also has a chance to apply a mob effect on
+    // eat, so ALL of upstream's edible effects work again (radgill->irradiated, seething stew->rage, slam->
+    // strength, the candy sugar rush, ...). Attached at registration via Item.Properties.food(props, consumable).
+    public static Consumable foodEffect(net.minecraft.core.Holder<net.minecraft.world.effect.MobEffect> effect, int duration, float chance) {
         return Consumable.builder().onConsume(
-                new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ACEffectRegistry.SUGAR_RUSH, duration), chance)).build();
+                new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(effect, duration), chance)).build();
+    }
+
+    public static Consumable sugarRush(int duration, float chance) {
+        return foodEffect(ACEffectRegistry.SUGAR_RUSH, duration, chance);
     }
 
     public static final FoodProperties TRILOCARIS_TAIL = (new FoodProperties.Builder()).nutrition(2).saturationModifier(0.3F).build();
@@ -83,46 +87,48 @@ public class ACFoods {
     public static final FoodProperties BIOME_TREAT = (new FoodProperties.Builder()).nutrition(20).saturationModifier(0.1F).build();
     public static final FoodProperties BIOME_TREAT_DONE = (new FoodProperties.Builder()).nutrition(1).saturationModifier(0.1F).build();
 
-    // Candy foods that also carry a chance of Sugar Rush. Item registrations wire this inline via
+    // Edible BLOCKS that carry an on-eat effect (candy -> Sugar Rush; licoroot -> Nausea). Item registrations
     // food(food, sugarRush(...)); candy *blocks* (chocolate blocks, cookies, gingerbread, all the rock-candy
     // and gummy colours, ...) all funnel their block-item through ACBlockRegistry.registerBlockAndItemEdible,
     // which looks the FoodProperties up here so every edible candy block grants the effect too. Keyed by
     // identity (IdentityHashMap) because many FoodProperties share nutrition/saturation and would otherwise
     // collide under value equality. Declared last so every FoodProperties above is already initialised.
-    public static final java.util.Map<FoodProperties, Consumable> SUGAR_RUSH_CONSUMABLES = new java.util.IdentityHashMap<>();
+    public static final java.util.Map<FoodProperties, Consumable> FOOD_EFFECT_CONSUMABLES = new java.util.IdentityHashMap<>();
     static {
-        SUGAR_RUSH_CONSUMABLES.put(BLOCK_OF_CHOCOLATE, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(BLOCK_OF_FROSTING, sugarRush(200, 0.02F));
-        SUGAR_RUSH_CONSUMABLES.put(SWEET_PUFF, sugarRush(200, 0.02F));
-        SUGAR_RUSH_CONSUMABLES.put(CAKE_LAYER, sugarRush(200, 0.02F));
-        SUGAR_RUSH_CONSUMABLES.put(COOKIE, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(COOKIE_HALF, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(DOUGH, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(SMALL_PEPPERMINT, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(LARGE_PEPPERMINT, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(VANILLA_ICE_CREAM, sugarRush(200, 0.03F));
-        SUGAR_RUSH_CONSUMABLES.put(CHOCOLATE_ICE_CREAM, sugarRush(200, 0.03F));
-        SUGAR_RUSH_CONSUMABLES.put(SWEETBERRY_ICE_CREAM, sugarRush(200, 0.03F));
-        SUGAR_RUSH_CONSUMABLES.put(SUNDAE, sugarRush(400, 0.2F));
-        SUGAR_RUSH_CONSUMABLES.put(SPRINKLES, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(CANDY_CANE, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(CANDY_CANE_POLE, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(LOLLIPOP_BUNCH, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(FROSTMINT, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(SUGAR_GLASS, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(SUNDROP, sugarRush(200, 0.05F));
-        SUGAR_RUSH_CONSUMABLES.put(GUMMY_RING, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(ROCK_CANDY, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(GINGERBREAD, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(GINGERBREAD_HALF, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(GINGERBREAD_CRUMBS, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(PURPLE_SODA_BOTTLE, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(SWEETISH_FISH, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(GELATIN, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(HOT_CHOCOLATE_BOTTLE, sugarRush(200, 0.02F));
-        SUGAR_RUSH_CONSUMABLES.put(PEPPERMINT_POWDER, sugarRush(200, 0.01F));
-        SUGAR_RUSH_CONSUMABLES.put(CARAMEL, sugarRush(200, 0.04F));
-        SUGAR_RUSH_CONSUMABLES.put(CARAMEL_APPLE, sugarRush(200, 0.02F));
-        SUGAR_RUSH_CONSUMABLES.put(GUMBALL_PILE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(BLOCK_OF_CHOCOLATE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(BLOCK_OF_FROSTING, sugarRush(200, 0.02F));
+        FOOD_EFFECT_CONSUMABLES.put(SWEET_PUFF, sugarRush(200, 0.02F));
+        FOOD_EFFECT_CONSUMABLES.put(CAKE_LAYER, sugarRush(200, 0.02F));
+        FOOD_EFFECT_CONSUMABLES.put(COOKIE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(COOKIE_HALF, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(DOUGH, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(SMALL_PEPPERMINT, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(LARGE_PEPPERMINT, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(VANILLA_ICE_CREAM, sugarRush(200, 0.03F));
+        FOOD_EFFECT_CONSUMABLES.put(CHOCOLATE_ICE_CREAM, sugarRush(200, 0.03F));
+        FOOD_EFFECT_CONSUMABLES.put(SWEETBERRY_ICE_CREAM, sugarRush(200, 0.03F));
+        FOOD_EFFECT_CONSUMABLES.put(SUNDAE, sugarRush(400, 0.2F));
+        FOOD_EFFECT_CONSUMABLES.put(SPRINKLES, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(CANDY_CANE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(CANDY_CANE_POLE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(LOLLIPOP_BUNCH, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(FROSTMINT, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(SUGAR_GLASS, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(SUNDROP, sugarRush(200, 0.05F));
+        FOOD_EFFECT_CONSUMABLES.put(GUMMY_RING, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(ROCK_CANDY, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(GINGERBREAD, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(GINGERBREAD_HALF, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(GINGERBREAD_CRUMBS, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(PURPLE_SODA_BOTTLE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(SWEETISH_FISH, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(GELATIN, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(HOT_CHOCOLATE_BOTTLE, sugarRush(200, 0.02F));
+        FOOD_EFFECT_CONSUMABLES.put(PEPPERMINT_POWDER, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(CARAMEL, sugarRush(200, 0.04F));
+        FOOD_EFFECT_CONSUMABLES.put(CARAMEL_APPLE, sugarRush(200, 0.02F));
+        FOOD_EFFECT_CONSUMABLES.put(GUMBALL_PILE, sugarRush(200, 0.01F));
+        FOOD_EFFECT_CONSUMABLES.put(LICOROOT, foodEffect(net.minecraft.world.effect.MobEffects.NAUSEA, 200, 0.1F));
+        FOOD_EFFECT_CONSUMABLES.put(LICOROOT_VINE, foodEffect(net.minecraft.world.effect.MobEffects.NAUSEA, 200, 0.1F));
     }
 }

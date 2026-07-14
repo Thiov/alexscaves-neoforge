@@ -430,7 +430,7 @@ public class ACBlockRegistry {
             // Candy blocks grant Sugar Rush too: if this food has a sugar-rush consumable registered, attach it
             // (the two-arg food() overload) so eating the block-item runs the effect; plain edibles keep food().
             Item.Properties itemProps = new Item.Properties();
-            var rush = ACFoods.SUGAR_RUSH_CONSUMABLES.get(foodProperties);
+            var rush = ACFoods.FOOD_EFFECT_CONSUMABLES.get(foodProperties);
             if (rush != null) {
                 itemProps.food(foodProperties, rush);
             } else {
