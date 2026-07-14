@@ -172,6 +172,13 @@ public final class ACRenderTypes {
     private static final OutputTarget IRRADIATED_OUT = new OutputTarget("alexscaves_irradiated_glow",
             () -> com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry.glowTarget());
 
+    // Dedicated target for the IRRADIATED potion-effect shells ONLY (backed by the same glowTarget texture).
+    // The purple-witch/peppermint shells keep IRRADIATED_OUT so their on-screen halo is untouched; only draws
+    // of this target get rerouted off-screen by BufferSourceIrradiatedGlowMixin, so the blurred aura is
+    // composited exclusively for the irradiated effect (fixing the flat-green tint on afflicted entities).
+    private static final OutputTarget IRRADIATED_POTION_OUT = new OutputTarget("alexscaves_irradiated_potion_glow",
+            () -> com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry.glowTarget());
+
     private static final RenderPipeline IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
                     .withLocation(Identifier.fromNamespaceAndPath("alexscaves", "pipeline/rendertype_irradiated_shell"))
@@ -187,7 +194,7 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_irradiated_shell",
                     RenderSetup.builder(IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
-                            .setOutputTarget(IRRADIATED_OUT)
+                            .setOutputTarget(IRRADIATED_POTION_OUT)
                             .createRenderSetup()));
 
     private static final RenderPipeline BLUE_IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
@@ -205,7 +212,7 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_blue_irradiated_shell",
                     RenderSetup.builder(BLUE_IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
-                            .setOutputTarget(IRRADIATED_OUT)
+                            .setOutputTarget(IRRADIATED_POTION_OUT)
                             .createRenderSetup()));
 
     public static RenderType getRadiationGlowShell(Identifier locationIn) {
@@ -214,6 +221,13 @@ public final class ACRenderTypes {
 
     public static RenderType getBlueRadiationGlowShell(Identifier locationIn) {
         return BLUE_IRRADIATED_SHELL.apply(locationIn);
+    }
+
+    // True only for the two irradiated potion-effect shells (see IRRADIATED_POTION_OUT). Lets the buffer-flush
+    // redirect reroute just those draws off-screen while leaving all other rendering (incl. the peppermint
+    // purple-witch shells on IRRADIATED_OUT) exactly as-is.
+    public static boolean isPotionGlowShell(RenderType type) {
+        return type != null && type.outputTarget() == IRRADIATED_POTION_OUT;
     }
 
     // ---------------------------------------------------------------------------------------------
