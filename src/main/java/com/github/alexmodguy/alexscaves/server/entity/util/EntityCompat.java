@@ -112,6 +112,16 @@ public class EntityCompat {
         return player.xxa;
     }
 
+    // 26.1 stopped feeding a rider's jump key to the vehicle the old way (the client keybind poll no longer
+    // fires while mounted); the live jump input rides in ServerPlayer.getLastClientInput().jump(). Same trap the
+    // steering fix already solved — the submarine's Space-to-ascend was still on the dead keybind path.
+    public static boolean getRiddenJump(Player player) {
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            return serverPlayer.getLastClientInput().jump();
+        }
+        return false;
+    }
+
     public static boolean isInvulnerableTo(Entity entity, net.minecraft.world.damagesource.DamageSource damageSource) {
         if (entity instanceof LivingEntity livingEntity && entity.level() instanceof ServerLevel serverLevel) {
             return ((LivingEntity) livingEntity).isInvulnerableTo(serverLevel, damageSource);

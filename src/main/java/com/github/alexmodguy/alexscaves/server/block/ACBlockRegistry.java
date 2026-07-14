@@ -426,7 +426,18 @@ public class ACBlockRegistry {
 
     private static DeferredHolder<Block, Block> registerBlockAndItemEdible(String name, Supplier<Block> block, FoodProperties foodProperties) {
         DeferredHolder<Block, Block> blockObj = DEF_REG.register(name, block);
-        ACItemRegistry.DEF_REG.register(name, () -> new BlockItemWithSupplier(blockObj, new Item.Properties().food(foodProperties).useBlockDescriptionPrefix()));
+        ACItemRegistry.DEF_REG.register(name, () -> {
+            // Candy blocks grant Sugar Rush too: if this food has a sugar-rush consumable registered, attach it
+            // (the two-arg food() overload) so eating the block-item runs the effect; plain edibles keep food().
+            Item.Properties itemProps = new Item.Properties();
+            var rush = ACFoods.SUGAR_RUSH_CONSUMABLES.get(foodProperties);
+            if (rush != null) {
+                itemProps.food(foodProperties, rush);
+            } else {
+                itemProps.food(foodProperties);
+            }
+            return new BlockItemWithSupplier(blockObj, itemProps.useBlockDescriptionPrefix());
+        });
         return blockObj;
     }
 

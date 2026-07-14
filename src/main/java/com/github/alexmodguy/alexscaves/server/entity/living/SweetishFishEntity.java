@@ -95,7 +95,12 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
                 return new PathFinder(this.nodeEvaluator, p_26598_);
             }
 
-            public boolean isInLiquid() {
+            // 26.1 WaterBoundPathNavigation.canUpdatePath() gates on mob.isInLiquid() (water||lava, both false in
+            // soda), and never calls the navigation's own isInLiquid() (which 1.20 did). Override canUpdatePath so
+            // the fish's pathfinder runs in its home fluid — otherwise the wander goal never gets a path and it
+            // just sits on a block.
+            @Override
+            protected boolean canUpdatePath() {
                 return SweetishFishEntity.this.isInLiquidInternal();
             }
         };

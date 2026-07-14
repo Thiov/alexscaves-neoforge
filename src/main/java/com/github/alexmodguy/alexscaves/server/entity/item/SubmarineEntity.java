@@ -458,6 +458,11 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
                 this.setAcceleration(Mth.approach(this.getAcceleration(), -0.5F, 0.02F));
             }
         }
+        // Space-to-ascend read from the authoritative rider input (the client isKeyDown(0) path above is dead
+        // while riding on 26.1). The getWaterHeight() > 1.5F gate on controlUpTicks still keeps it below surface.
+        if (EntityCompat.getRiddenJump(passenger)) {
+            controlUpTicks = 10;
+        }
     }
 
     
