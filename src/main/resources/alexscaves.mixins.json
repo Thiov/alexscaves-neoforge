@@ -69,7 +69,6 @@
     "client.ItemInHandRendererAccessor",
     "client.ItemModelsMixin",
     "client.RangeSelectItemModelPropertiesMixin",
-    "client.BufferSourceIrradiatedGlowMixin",
     "client.ItemTintSourcesMixin",
     "client.LevelRendererMixin",
     "client.LiquidBlockRendererMixin",
