@@ -88,7 +88,12 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Min
 
         if (ac_magLevBelow == null) {
             if (ac_magLevProgress > 0.0F) {
-                ac_magLevProgress = Math.max(0.0F, ac_magLevProgress - 0.2F);
+                // Cart just left the maglev rail while still elevated (~1.5 blocks up). Upstream LAUNCHES it clear
+                // on exit; the port only faded the hover and returned, so the airborne cart lingered in the
+                // Magnetic Caves' magnet field ("levitates a moment") then dropped. Eject it once (multiply
+                // horizontal delta + small upward pop) and zero the progress so this fires a single impulse.
+                this.setDeltaMovement(this.getDeltaMovement().multiply(1.5D, 1.0D, 1.5D).add(0.0D, 0.1D, 0.0D));
+                ac_magLevProgress = 0.0F;
             }
             return;
         }

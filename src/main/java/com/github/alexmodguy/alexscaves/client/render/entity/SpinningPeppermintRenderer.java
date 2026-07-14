@@ -12,7 +12,6 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import com.github.alexmodguy.alexscaves.client.render.entity.compat.EntityRenderer121X;
-import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -23,7 +22,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -56,48 +54,39 @@ public class SpinningPeppermintRenderer extends EntityRenderer121X<SpinningPeppe
             poseStack.mulPose(Axis.XP.rotationDegrees((float) Math.sin(ageInTicks * 0.8F) * 8));
             poseStack.mulPose(Axis.XP.rotationDegrees((float) Math.cos(ageInTicks * 0.8F) * 8));
         }
-        // Upstream draws the raw baked block model at FULL block scale (the item pipeline's GROUND
-        // transform shrinks block items to 0.25 — that was the size bug), centred with a -0.5 translate,
-        // then draws the same quads again with the purple-witch types for the pink recolor + outline glow.
+        // Render the actual peppermint block model at FULL block scale (the item pipeline's GROUND transform
+        // shrank it to 0.25 = the size bug), centred with -0.5. Use renderSingleBlock — the SAME proven path
+        // the moving-metal block uses — so the peppermint texture renders correctly (the earlier attempt drew
+        // raw quads through a translucent sheet + a solid main-pass magenta recolor, which produced a pink blob).
         poseStack.translate(-0.5D, -0.5D, -0.5D);
         int redOverlay = OverlayTexture.pack(OverlayTexture.u(0), OverlayTexture.v(true));
-        BlockState renderBlockState = entity.peppermintRenderStack.getItem() instanceof BlockItem blockItem
-                ? blockItem.getBlock().defaultBlockState()
-                : ACBlockRegistry.SMALL_PEPPERMINT.get().defaultBlockState();
+        BlockState renderBlockState = ACBlockRegistry.SMALL_PEPPERMINT.get().defaultBlockState();
+        BlockRenderCompat.renderSingleBlock(renderBlockState, poseStack, source, lightIn, redOverlay);
+        // Pink outline glow: draw the same quads into the OFF-SCREEN glow target (soft additive bloom halo,
+        // the same mechanism as the irradiated glow) — this is a halo AROUND the peppermint, it does not
+        // cover the texture. Gated by markIrradiatedOnScreen so the composite actually runs this frame.
         Minecraft minecraft = Minecraft.getInstance();
-        BlockStateModel model = minecraft.getModelManager() == null || minecraft.getModelManager().getBlockStateModelSet() == null
-                ? null : minecraft.getModelManager().getBlockStateModelSet().get(renderBlockState);
-        if (model != null) {
-            RandomSource random = RandomSource.create();
-            random.setSeed(42L);
-            List<BlockStateModelPart> parts = new ArrayList<>();
-            model.collectParts(random, parts);
-            List<BakedQuad> quads = new ArrayList<>();
-            for (BlockStateModelPart part : parts) {
-                for (Direction direction : Direction.values()) {
-                    quads.addAll(part.getQuads(direction));
+        if (minecraft.getModelManager() != null && minecraft.getModelManager().getBlockStateModelSet() != null) {
+            BlockStateModel model = minecraft.getModelManager().getBlockStateModelSet().get(renderBlockState);
+            if (model != null) {
+                RandomSource random = RandomSource.create();
+                random.setSeed(42L);
+                List<BlockStateModelPart> parts = new ArrayList<>();
+                model.collectParts(random, parts);
+                PoseStack.Pose pose = poseStack.last();
+                VertexConsumer glowBuffer = source.getBuffer(ACRenderTypes.getPurpleWitchGlowShell(TextureAtlas.LOCATION_BLOCKS));
+                for (BlockStateModelPart part : parts) {
+                    for (Direction direction : Direction.values()) {
+                        for (BakedQuad quad : part.getQuads(direction)) {
+                            BlockRenderCompat.putColoredQuad(glowBuffer, pose, quad, 1.0F, 0.4F, 1.0F, 1.0F, lightIn, redOverlay);
+                        }
+                    }
+                    for (BakedQuad quad : part.getQuads(null)) {
+                        BlockRenderCompat.putColoredQuad(glowBuffer, pose, quad, 1.0F, 0.4F, 1.0F, 1.0F, lightIn, redOverlay);
+                    }
                 }
-                quads.addAll(part.getQuads(null));
+                ACPostEffectRegistry.markIrradiatedOnScreen();
             }
-            PoseStack.Pose pose = poseStack.last();
-            // Base pass — upstream tints the green channel by growth so the peppermint fades in pink.
-            VertexConsumer baseBuffer = source.getBuffer(Sheets.translucentItemSheet());
-            for (BakedQuad quad : quads) {
-                BlockRenderCompat.putColoredQuad(baseBuffer, pose, quad, 1.0F, minAge, 1.0F, 1.0F, lightIn, redOverlay);
-            }
-            // Pulsing pink/purple recolor (upstream's ACRenderTypes.getPurpleWitch pass)...
-            VertexConsumer witchBuffer = source.getBuffer(ACRenderTypes.getPurpleWitch(TextureAtlas.LOCATION_BLOCKS));
-            for (BakedQuad quad : quads) {
-                BlockRenderCompat.putColoredQuad(witchBuffer, pose, quad, 1.0F, 1.0F, 1.0F, 1.0F, lightIn, redOverlay);
-            }
-            // ...plus the additive shell into the off-screen glow target = the pink outline halo
-            // (same double-pass convention as LicowitchRenderer's teleport double).
-            VertexConsumer glowBuffer = source.getBuffer(ACRenderTypes.getPurpleWitchGlowShell(TextureAtlas.LOCATION_BLOCKS));
-            for (BakedQuad quad : quads) {
-                BlockRenderCompat.putColoredQuad(glowBuffer, pose, quad, 1.0F, 1.0F, 1.0F, 1.0F, lightIn, redOverlay);
-            }
-            // The glow composite is gated — without this the shell is drawn and discarded.
-            ACPostEffectRegistry.markIrradiatedOnScreen();
         }
         poseStack.popPose();
     }

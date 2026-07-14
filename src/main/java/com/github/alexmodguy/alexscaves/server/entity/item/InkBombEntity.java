@@ -56,9 +56,17 @@ public class InkBombEntity extends ThrowableItemProjectile {
 
     public void handleEntityEvent(byte message) {
         if (message == 3) {
+            // 26.1 ItemParticleOption HARD-throws on an empty ItemStack (1.20 didn't). The Deep One spawns and
+            // detonates the ink bomb so fast the ITEM_STACK data component may not be synced client-side yet, so
+            // getItem() returns EMPTY -> "Item must be non-empty" killed the client packet listener = the random
+            // "connection lost: protocol error" crash to menu in singleplayer. Fall back to the default item.
+            net.minecraft.world.item.ItemStack particleStack = this.getItem();
+            if (particleStack.isEmpty()) {
+                particleStack = new net.minecraft.world.item.ItemStack(getDefaultItem());
+            }
             double d0 = 0.08D;
             for (int i = 0; i < 8; ++i) {
-                this.level().addParticle(com.github.alexmodguy.alexscaves.client.render.compat.ItemParticleOptionCompat.of(ParticleTypes.ITEM, this.getItem()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
+                this.level().addParticle(com.github.alexmodguy.alexscaves.client.render.compat.ItemParticleOptionCompat.of(ParticleTypes.ITEM, particleStack), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D, ((double) this.random.nextFloat() - 0.5D) * 0.08D);
             }
         }
     }

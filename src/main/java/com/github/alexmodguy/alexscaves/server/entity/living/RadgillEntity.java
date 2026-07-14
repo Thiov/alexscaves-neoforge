@@ -92,7 +92,9 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
                 return new PathFinder(this.nodeEvaluator, p_26598_);
             }
 
-            public boolean isInLiquid() {
+            // See SweetishFish: 26.1 canUpdatePath() gates on mob.isInLiquid(), not the nav's isInLiquid().
+            @Override
+            protected boolean canUpdatePath() {
                 return RadgillEntity.this.checkInLiquid();
             }
         };
@@ -135,8 +137,33 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         this.setFromBucket(com.github.alexmodguy.alexscaves.server.misc.NbtCompat.getBoolean(compound, "FromBucket"));
     }
 
-    protected int calculateFallDamage(float f, float f1) {
+    @Override
+    protected int calculateFallDamage(double f, float f1) {
         return super.calculateFallDamage(f, f1) - 5;
+    }
+
+    @Override
+    public boolean causeFallDamage(double distance, float multiplier, net.minecraft.world.damagesource.DamageSource source) {
+        // No fall damage while in its home fluid: 26.1's LivingEntity.travel() sends non-water/lava fluids down
+        // the air path (gravity), so a fish in acid accumulated fall distance and got hurt on the acid floor.
+        return !checkInLiquid() && super.causeFallDamage(distance, multiplier, source);
+    }
+
+    @Override
+    public void travel(net.minecraft.world.phys.Vec3 travelVector) {
+        // 26.1 LivingEntity.shouldTravelInFluid() only returns true for water/lava, so acid fell through to the
+        // gravity air-path. Apply the same buoyant swim physics SweetishFish uses so Radgill actually swims in acid.
+        if (this.isEffectiveAi() && checkInLiquid()) {
+            this.moveRelative(this.getSpeed(), travelVector);
+            net.minecraft.world.phys.Vec3 delta = this.getDeltaMovement();
+            this.move(net.minecraft.world.entity.MoverType.SELF, delta);
+            if (!this.onGround()) {
+                delta = delta.add(0.0D, -0.009D, 0.0D);
+            }
+            this.setDeltaMovement(delta.scale(0.9D));
+        } else {
+            super.travel(travelVector);
+        }
     }
 
     public static boolean checkRadgillSpawnRules(EntityType<? extends LivingEntity> type, ServerLevelAccessor level, EntitySpawnReason spawnType, BlockPos pos, RandomSource randomSource) {
