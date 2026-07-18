@@ -34,7 +34,7 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 public class PrimitiveClubItem extends Item {
 
     public PrimitiveClubItem(Item.Properties properties) {
-        super(properties.repairable(ACItemRegistry.HEAVY_BONE.get()));
+        super(properties.repairable(com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry.PRIMITIVE_CLUB_REPAIR));
     }
 
     private static ItemAttributeModifiers createDefaultAttributes() {

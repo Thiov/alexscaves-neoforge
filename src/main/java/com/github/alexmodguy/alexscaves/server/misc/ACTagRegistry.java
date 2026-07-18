@@ -55,6 +55,15 @@ public class ACTagRegistry {
     public static final TagKey<Item> GALENA_GAUNTLET_CRYSTALLIZATION_ITEMS = registerItemTag("galena_gauntlet_crystallization_items");
     public static final TagKey<Item> TELETOR_SPAWNS_WITH = registerItemTag("teletor_spawns_with");
     public static final TagKey<Item> VALLUMRAPTOR_STEALS = registerItemTag("vallumraptor_steals");
+
+    // Repair materials as TAGS, not eager item references. Item.Properties.repairable(Item) resolves the item
+    // immediately at construction; for a BLOCK item (packed galena) the BlockItem is registered AFTER the plain
+    // items, so asItem() returned AIR and permanently cached it. That baked an air entry into the REPAIRABLE
+    // component, and any recipe viewer building an Ingredient from it crashed with "Ingredient can't contain
+    // air" while JEI loaded on world join. The tag overload yields a named HolderSet, which can never throw.
+    public static final TagKey<Item> GALENA_GAUNTLET_REPAIR = registerItemTag("repairs/galena_gauntlet");
+    public static final TagKey<Item> EXTINCTION_SPEAR_REPAIR = registerItemTag("repairs/extinction_spear");
+    public static final TagKey<Item> PRIMITIVE_CLUB_REPAIR = registerItemTag("repairs/primitive_club");
     public static final TagKey<Item> RAW_MEATS = registerCommonItemTag("raw_meats");
     public static final TagKey<Item> NUCLEAR_FURNACE_BARRELS = registerItemTag("nuclear_furnace_barrels");
     public static final TagKey<Item> NUCLEAR_FURNACE_RODS = registerItemTag("nuclear_furnace_rods");
