@@ -107,14 +107,23 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Min
             return;
         }
 
-        // Client is purely a spectator here: the server streams hover positions and the vanilla
-        // client tick interpolates them. We only add the azure "magnetic wave" particles and let
-        // the normal tick run (do NOT cancel) so interpolation keeps working.
+        // The CLIENT has to take the tick over as well. Letting vanilla's tick run here (the old "client is
+        // just a spectator" approach) meant vanilla's rail-glued minecart behaviour re-snapped the cart down
+        // onto the rail every tick, so the server's hover never showed: the cart looked like it was riding a
+        // normal rail and then visibly "snapped" when the end-of-rail eject finally diverged. Upstream cancels
+        // on BOTH sides and drives the interpolation itself (it used the old lerpSteps/lerpX-Y-Z fields, which
+        // 26.x replaced with InterpolationHandler) - so step that instead to keep following the server's hover.
         if (this.level().isClientSide()) {
             if (this.random.nextFloat() < 0.4F) {
                 Vec3 from = ac_magLevBelow.getCenter().add(this.random.nextFloat() - 0.5F, -0.4F, this.random.nextFloat() - 0.5F);
                 Vec3 to = this.position().add(this.getDeltaMovement()).add(this.random.nextFloat() - 0.5F, 0.2F, this.random.nextFloat() - 0.5F);
                 this.level().addParticle(ACParticleRegistry.AZURE_SHIELD_LIGHTNING.get(), from.x, from.y, from.z, to.x, to.y, to.z);
+            }
+            ci.cancel();
+            if (this.getInterpolation().hasActiveInterpolation()) {
+                this.getInterpolation().interpolate();
+            } else {
+                this.reapplyPosition();
             }
             return;
         }
