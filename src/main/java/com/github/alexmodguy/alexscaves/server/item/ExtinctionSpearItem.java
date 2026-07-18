@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 public class ExtinctionSpearItem extends SpearItem {
 
     public ExtinctionSpearItem(Item.Properties properties) {
-        super(properties.repairable(ACItemRegistry.TECTONIC_SHARD.get()), 8.0D);
+        super(properties.repairable(com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry.EXTINCTION_SPEAR_REPAIR), 8.0D);
     }
 
     
