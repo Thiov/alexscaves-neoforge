@@ -87,11 +87,11 @@ public class AlexsCaves {
     private static boolean worldgenBootstrapped;
 
     static {
-        final Pair<ACServerConfig, ACModConfigSpec> serverPair = new ACModConfigSpec.Builder()
+        final Pair<ACServerConfig, ACModConfigSpec> serverPair = new ACModConfigSpec.Builder("alexscaves-common.toml")
                 .configure(ACServerConfig::new);
         COMMON_CONFIG = serverPair.getLeft();
 
-        final Pair<ACClientConfig, ACModConfigSpec> clientPair = new ACModConfigSpec.Builder()
+        final Pair<ACClientConfig, ACModConfigSpec> clientPair = new ACModConfigSpec.Builder("alexscaves-client.toml")
                 .configure(ACClientConfig::new);
         CLIENT_CONFIG = clientPair.getLeft();
     }

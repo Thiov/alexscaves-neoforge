@@ -187,7 +187,6 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_irradiated_shell",
                     RenderSetup.builder(IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
-                            .setOutputTarget(IRRADIATED_OUT)
                             .createRenderSetup()));
 
     private static final RenderPipeline BLUE_IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
@@ -205,7 +204,6 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_blue_irradiated_shell",
                     RenderSetup.builder(BLUE_IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
-                            .setOutputTarget(IRRADIATED_OUT)
                             .createRenderSetup()));
 
     public static RenderType getRadiationGlowShell(Identifier locationIn) {
