@@ -82,6 +82,9 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
 
+    private static final java.util.concurrent.atomic.AtomicBoolean ALEXSCAVES$LOGGED_THIRD_PERSON_MAP =
+            new java.util.concurrent.atomic.AtomicBoolean(false);
+
     @Override
     public void renderByItem(ItemStack itemStackIn, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ClientLevel level = Minecraft.getInstance().level;
@@ -114,6 +117,14 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 }
                 poseStack.popPose();
             } else if(heldIn3d && AlexsCaves.CLIENT_CONFIG.caveMapsVisibleInThirdPerson.get() && done){
+                // One-shot diagnostic: the cave map is reported invisible in third person, but every gate on
+                // this branch verifies as true and the path traces as reachable. If this line never appears in
+                // the log, the branch is not running and the bug is upstream of here; if it DOES appear, the
+                // geometry is being emitted and the problem is orientation/culling instead. Remove once known.
+                if (ALEXSCAVES$LOGGED_THIRD_PERSON_MAP.compareAndSet(false, true)) {
+                    AlexsCaves.LOGGER.info("[alexscaves] cave map third-person branch reached: ctx={} light={}",
+                            transformType, combinedLightIn);
+                }
                 poseStack.translate(left ? 0.15F : -0.15F, 0.25F, 0.05F);
                 poseStack.scale(1.5F, 1.5F, 1.5F);
                 CaveMapRenderHelper.renderCaveMap(poseStack, bufferIn, combinedLightIn, itemStackIn, true);
