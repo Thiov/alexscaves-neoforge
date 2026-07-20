@@ -34,7 +34,20 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 public class PrimitiveClubItem extends Item {
 
     public PrimitiveClubItem(Item.Properties properties) {
-        super(properties.repairable(com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry.PRIMITIVE_CLUB_REPAIR));
+        super(properties
+                .repairable(com.github.alexmodguy.alexscaves.server.misc.ACTagRegistry.PRIMITIVE_CLUB_REPAIR)
+                // 26.1 removed Item.getDefaultAttributeModifiers(ItemStack). The club's 8.0 damage / -3.75 speed
+                // lived ONLY in that method, so on Fabric the club carried no modifiers at all (1.0 dmg / 4.0
+                // speed = "fast swing, almost no damage") while NeoForge kept them alive through a legacy
+                // IItemStackExtension fallback (9.0 dmg / 0.25 speed = the 80-tick wind-up). Real component now.
+                .attributes(createDefaultAttributes())
+                // ItemStack.hurtEnemy() short-circuits without a WEAPON component, so hurtEnemy() below - the
+                // entire stun mechanic - never ran, and durability was being charged by hand instead.
+                .component(net.minecraft.core.component.DataComponents.WEAPON,
+                        new net.minecraft.world.item.component.Weapon(1))
+                .component(net.minecraft.core.component.DataComponents.SWING_ANIMATION,
+                        new net.minecraft.world.item.component.SwingAnimation(
+                                net.minecraft.world.item.SwingAnimationType.WHACK, 12)));
     }
 
     private static ItemAttributeModifiers createDefaultAttributes() {
@@ -44,27 +57,8 @@ public class PrimitiveClubItem extends Item {
             .build();
     }
 
-    private static ItemAttributeModifiers createAttributesForSwiftwoodLevel(int swiftwoodLevel) {
-        double speedModifier = Math.min(0, -3.75D + 0.15D * swiftwoodLevel);
-        return ItemAttributeModifiers.builder()
-            .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "primitive_club_attack_damage"), 8.0D, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-            .add(Attributes.ATTACK_SPEED, new AttributeModifier(Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "primitive_club_attack_speed"), speedModifier, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-            .build();
-    }
-
-    
-    public int getEnchantmentValue() {
-        return 1;
-    }
-
-    
-    public boolean isEnchantable(ItemStack stack) {
-        return stack.getCount() == 1;
-    }
-
     
     public void hurtEnemy(ItemStack stack, LivingEntity hurtEntity, LivingEntity player) {
-        stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
         if (!hurtEntity.level().isClientSide()) {
             SoundEvent soundEvent = ACSoundRegistry.PRIMITIVE_CLUB_MISS.get();
             if (hurtEntity.getRandom().nextFloat() < 0.8F) {
@@ -111,39 +105,7 @@ public class PrimitiveClubItem extends Item {
     }
 
     
-    @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        int swift = ACEnchantmentHelper.getEnchantmentLevelFromStack(ACEnchantmentRegistry.SWIFTWOOD, stack);
-        if (swift > 0) {
-            return createAttributesForSwiftwoodLevel(Mth.clamp(swift, 0, 3));
-        }
-        return createDefaultAttributes();
-    }
-
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept((IClientItemExtensions) AlexsCaves.PROXY.getISTERProperties());
-    }
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        return player.getAttackStrengthScale(0) < 0.95 || player.attackAnim != 0;
-    }
-
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        if (entity instanceof Player player) {
-            if (player.getAttackStrengthScale(0) < 1 && player.attackAnim > 0) {
-                return true;
-            }
-            player.swingTime = -1;
-        }
-        return false;
-    }
-
-    
-    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot equipmentSlot) {
-        super.inventoryTick(stack, level, entity, equipmentSlot);
-        if (entity instanceof Player player && ItemCompat121X.isHeldBy(entity, stack) && player.getAttackStrengthScale(0) < 0.95 && player.attackAnim > 0) {
-            player.swingTime--;
-        }
     }
 }

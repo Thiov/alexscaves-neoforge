@@ -41,7 +41,13 @@ public class PurpleSodaBlock extends LiquidBlock {
     }
 
     
-    public void entityInside(BlockState blockState, Level level, BlockPos pos, Entity entity) {
+    // 26.1 widened this to (BlockState, Level, BlockPos, Entity, InsideBlockEffectApplier, boolean). The port
+    // kept upstream's 1.21.1 4-arg form, so this was a DEAD HOOK - never invoked. That is why acid dealt no
+    // damage and neither acid nor purple soda interacted with players or mobs at all, while still reacting with
+    // water (that path lives in neighborChanged / FluidInteractionRegistry, which stayed live).
+    @Override
+    public void entityInside(BlockState blockState, Level level, BlockPos pos, Entity entity,
+            net.minecraft.world.entity.InsideBlockEffectApplier applier, boolean flag) {
         entity.fallDistance = 0.0F;
         // Movement sound implementation - plays sound based on entity movement speed
         if (entity instanceof LivingEntity living && !(entity instanceof SweetishFishEntity)) {
