@@ -40,11 +40,30 @@ public class CaveMapRenderHelper {
         float f = Mth.sqrt(animation2);
         float f1 = -0.2F * Mth.sin(animation2 * (float) Math.PI);
         float f2 = -0.4F * Mth.sin(f * (float) Math.PI);
+        // The port had replaced upstream's pitch-driven tilt with a hardcoded +75 degrees. calculateMapTilt
+        // returns 1.0 when looking level or up, so upstream rotates -85 degrees there - about 160 degrees away
+        // from +75, which is why the map rendered UPSIDE DOWN. Restored upstream's math.
+        net.minecraft.world.entity.player.Player player = net.minecraft.client.Minecraft.getInstance().player;
+        float xRot = player == null ? 0.0F : Mth.lerp(partialTick, player.xRotO, player.getXRot());
         poseStack.pushPose();
-        poseStack.translate(0.0F, -f1 / 2.0F, f2 - 0.72F);
-        poseStack.mulPose(Axis.XP.rotationDegrees(75.0F));
+        poseStack.translate(0.0F, -f1 / 2.0F, f2);
+        float f3 = calculateMapTilt(xRot);
+        poseStack.translate(0.0F, 0.04F + animation1 * -1.2F + f3 * -0.5F, -0.72F);
+        poseStack.mulPose(Axis.XP.rotationDegrees(f3 * -85.0F));
+        // NOTE: upstream also drew both player hands here via PlayerRenderer.renderRightHand/renderLeftHand.
+        // Those methods do not exist in 26.1 (the render overhaul moved first-person arm rendering), which is
+        // why the port dropped them - hence the map appearing without arms. Needs the 26.1 replacement.
+        float f4 = Mth.sin(f * (float) Math.PI);
+        poseStack.mulPose(Axis.XP.rotationDegrees(f4 * 20.0F));
         poseStack.scale(2.0F, 2.0F, 2.0F);
         renderCaveMap(poseStack, multiBufferSource, packedLight, caveMapItem, false);
         poseStack.popPose();
+    }
+
+    /** Upstream's pitch-driven tilt: 1.0 looking level or up, falling to 0.0 looking straight down. */
+    private static float calculateMapTilt(float pitch) {
+        float f = 1.0F - pitch / 45.0F + 0.1F;
+        f = Mth.clamp(f, 0.0F, 1.0F);
+        return -Mth.cos(f * (float) Math.PI) * 0.5F + 0.5F;
     }
 }
