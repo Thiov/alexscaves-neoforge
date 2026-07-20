@@ -178,7 +178,7 @@ public final class ACRenderTypes {
                     .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated"))
                     .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_irradiated_shell"))
                     .withUniform("Globals", UniformType.UNIFORM_BUFFER)
-                    .withColorTargetState(new ColorTargetState(BlendFunction.ADDITIVE))
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                     .withCull(true)
                     .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                     .build());
@@ -187,6 +187,7 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_irradiated_shell",
                     RenderSetup.builder(IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
+                            .setOutputTarget(IRRADIATED_OUT)
                             .createRenderSetup()));
 
     private static final RenderPipeline BLUE_IRRADIATED_SHELL_PIPELINE = RenderPipelines.register(
@@ -195,7 +196,7 @@ public final class ACRenderTypes {
                     .withVertexShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated"))
                     .withFragmentShader(Identifier.fromNamespaceAndPath("alexscaves", "core/rendertype_blue_irradiated_shell"))
                     .withUniform("Globals", UniformType.UNIFORM_BUFFER)
-                    .withColorTargetState(new ColorTargetState(BlendFunction.ADDITIVE))
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                     .withCull(true)
                     .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                     .build());
@@ -204,6 +205,7 @@ public final class ACRenderTypes {
             texture -> RenderType.create("alexscaves_blue_irradiated_shell",
                     RenderSetup.builder(BLUE_IRRADIATED_SHELL_PIPELINE)
                             .withTexture("Sampler0", texture)
+                            .setOutputTarget(IRRADIATED_OUT)
                             .createRenderSetup()));
 
     public static RenderType getRadiationGlowShell(Identifier locationIn) {

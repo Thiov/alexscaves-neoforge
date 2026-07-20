@@ -33,6 +33,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = LevelRenderer.class, priority = 800)
 public abstract class LevelRendererMixin {
 
+    @Inject(method = "submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", at = @At("HEAD"))
+    private void alexscaves$beginIrradiatedGlowFrame(PoseStack poseStack, LevelRenderState levelRenderState,
+            SubmitNodeCollector collector, CallbackInfo ci) {
+        // Clear the isolated glow target (colour AND depth) before any entity draws into it this frame.
+        com.github.alexmodguy.alexscaves.client.shader.ACPostEffectRegistry.beginFrame();
+    }
+
     @Inject(method = "submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V", at = @At("TAIL"))
     private void alexscaves$renderRaygunBeams(PoseStack poseStack, LevelRenderState levelRenderState, SubmitNodeCollector collector, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
