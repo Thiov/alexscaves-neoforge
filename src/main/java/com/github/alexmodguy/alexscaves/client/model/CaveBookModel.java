@@ -72,11 +72,13 @@ public class CaveBookModel extends AdvancedEntityModel {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float openAmount, float pageAngle, float pageUp, float bookRotateX, float bookRotateY) {
         this.resetToDefaultPose();
         float close = 1F - openAmount;
@@ -97,6 +99,7 @@ public class CaveBookModel extends AdvancedEntityModel {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, rcover, lcover, rpageOpen, rpageStack, lpageStack, page_flip, spine);
     }

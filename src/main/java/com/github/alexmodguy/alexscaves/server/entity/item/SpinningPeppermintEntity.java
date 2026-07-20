@@ -57,6 +57,7 @@ public class SpinningPeppermintEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SPIN_AROUND, Optional.empty());
         builder.define(SPIN_RADIUS, 1.0F);

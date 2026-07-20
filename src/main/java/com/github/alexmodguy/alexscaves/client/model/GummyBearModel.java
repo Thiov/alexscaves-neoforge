@@ -136,11 +136,13 @@ public class GummyBearModel extends ACAdvancedEntityModel<GummyBearEntity> imple
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, head, body, nose, tail, left_Arm, right_Arm, left_Ear, right_Ear, right_Leg, left_Leg);
     }

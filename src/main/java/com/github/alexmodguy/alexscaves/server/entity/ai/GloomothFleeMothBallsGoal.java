@@ -21,6 +21,7 @@ public class GloomothFleeMothBallsGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         long worldTime = gloomoth.level().getGameTime() % 10;
         if (gloomoth.getRandom().nextInt(20) != 0 && worldTime != 0) {
@@ -37,22 +38,26 @@ public class GloomothFleeMothBallsGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return blockPos != null && this.gloomoth.distanceToSqr(blockPos.getCenter()) < 32;
     }
 
     
+    @Override
     public void start() {
         gloomoth.setFlying(true);
     }
 
     
+    @Override
     public void stop() {
         retreatTo = null;
         blockPos = null;
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         if(retreatTo == null || gloomoth.distanceToSqr(retreatTo) < 4){

@@ -107,6 +107,7 @@ public class HullbreakerEntity extends WaterAnimal implements IAnimatedEntity, K
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(INTEREST_LEVEL, 0);
@@ -380,30 +381,36 @@ public class HullbreakerEntity extends WaterAnimal implements IAnimatedEntity, K
         com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat.updateWalkAnimation(this.walkAnimation, f2, 0.4F);
     }
 
+    @Override
     public boolean isMultipartEntity() {
         return true;
     }
 
+    @Override
     public PartEntity<?>[] getParts() {
         return allParts;
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
@@ -417,6 +424,7 @@ public class HullbreakerEntity extends WaterAnimal implements IAnimatedEntity, K
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_PUZZLE, ANIMATION_BITE, ANIMATION_BASH, ANIMATION_DIE};
     }

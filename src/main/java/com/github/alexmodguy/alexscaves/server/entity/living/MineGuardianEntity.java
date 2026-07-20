@@ -74,6 +74,7 @@ public class MineGuardianEntity extends Monster {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ANCHOR_UUID, Optional.empty());
@@ -358,6 +359,7 @@ public class MineGuardianEntity extends Monster {
     }
 
     
+    @Override
     protected void dropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource) {
         super.dropAllDeathLoot(serverLevel, damageSource);
         if (!serverLevel.isClientSide() && damageSource.getEntity() instanceof Player player) {
@@ -370,6 +372,7 @@ public class MineGuardianEntity extends Monster {
     }
 
     
+    @Override
     public int getMaxSpawnClusterSize() {
         return 2;
     }
@@ -383,6 +386,7 @@ public class MineGuardianEntity extends Monster {
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = MineGuardianEntity.this.getTarget();
             return target != null;

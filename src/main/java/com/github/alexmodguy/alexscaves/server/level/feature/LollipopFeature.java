@@ -33,6 +33,7 @@ public class LollipopFeature extends Feature<LollipopFeatureConfiguration> {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<LollipopFeatureConfiguration> context) {
         RandomSource randomsource = context.random();
         WorldGenLevel level = context.level();

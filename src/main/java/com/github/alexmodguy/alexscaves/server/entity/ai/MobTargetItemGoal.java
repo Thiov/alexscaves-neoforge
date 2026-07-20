@@ -61,6 +61,7 @@ public class MobTargetItemGoal<T extends ItemEntity> extends TargetGoal {
         this.theNearestAttackableTargetSorter = new MobTargetItemGoal.Sorter(creature);
         this.targetEntitySelector = new Predicate<ItemEntity>() {
             
+            @Override
             public boolean apply(@Nullable ItemEntity item) {
                 ItemStack stack = item.getItem();
                 return !stack.isEmpty() && hunter.canTargetItem(stack) && item.tickCount > tickThreshold;
@@ -72,6 +73,7 @@ public class MobTargetItemGoal<T extends ItemEntity> extends TargetGoal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (this.mob.isPassenger() || mob.isVehicle() && mob.getControllingPassenger() != null || this.mob instanceof TamableAnimal tamableAnimal && tamableAnimal.isOrderedToSit()) {
             return false;
@@ -112,6 +114,7 @@ public class MobTargetItemGoal<T extends ItemEntity> extends TargetGoal {
     }
 
     
+    @Override
     public void start() {
         moveTo();
         super.start();
@@ -134,6 +137,7 @@ public class MobTargetItemGoal<T extends ItemEntity> extends TargetGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         if (this.targetEntity == null || this.targetEntity != null && !this.targetEntity.isAlive()) {
@@ -156,6 +160,7 @@ public class MobTargetItemGoal<T extends ItemEntity> extends TargetGoal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         boolean path = this.mob.getBbWidth() > 2D || !this.mob.getNavigation().isDone();
         return path && targetEntity != null && targetEntity.isAlive();

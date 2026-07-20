@@ -72,6 +72,7 @@ public class GingerbreadRoadPiece extends StructurePiece {
     }
 
     
+    @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
         tag.putInt("OX", this.origin.getX());
         tag.putInt("OY", this.origin.getY());
@@ -82,6 +83,7 @@ public class GingerbreadRoadPiece extends StructurePiece {
     }
 
     
+    @Override
     public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         int built = 0;
         BlockPos building = origin;
@@ -116,6 +118,7 @@ public class GingerbreadRoadPiece extends StructurePiece {
 
 
     
+    @Override
     public void addChildren(StructurePiece startPiece, StructurePieceAccessor piecesBuilder, RandomSource randomSource) {
         if(startPiece instanceof GingerbreadRoadPiece startRoadPiece && branchesLeft > 0){
             for(int childrenIndex = 0; childrenIndex < this.branchesLeft; childrenIndex++){

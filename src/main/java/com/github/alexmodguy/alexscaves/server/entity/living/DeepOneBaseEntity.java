@@ -93,6 +93,7 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SWIMMING, false);
@@ -242,6 +243,7 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
     }
 
     
+    @Override
     public void aiStep() {
         this.updateSwingTime();
         this.updateNoActionTime();
@@ -256,41 +258,49 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
     }
 
     
+    @Override
     public SoundSource getSoundSource() {
         return SoundSource.HOSTILE;
     }
 
     
+    @Override
     protected SoundEvent getSwimSound() {
         return SoundEvents.HOSTILE_SWIM;
     }
 
     
+    @Override
     protected SoundEvent getSwimSplashSound() {
         return SoundEvents.HOSTILE_SPLASH;
     }
 
     
+    @Override
     protected SoundEvent getHurtSound(DamageSource p_33034_) {
         return SoundEvents.HOSTILE_HURT;
     }
 
     
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.HOSTILE_DEATH;
     }
 
     
+    @Override
     public LivingEntity.Fallsounds getFallSounds() {
         return new LivingEntity.Fallsounds(SoundEvents.HOSTILE_SMALL_FALL, SoundEvents.HOSTILE_BIG_FALL);
     }
 
     
+    @Override
     public float getWalkTargetValue(BlockPos blockPos, LevelReader levelReader) {
         return -levelReader.getPathfindingCostFromLightLevels(blockPos);
     }
 
     
+    @Override
     public boolean shouldDropExperience() {
         return true;
     }
@@ -448,6 +458,7 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
     }
 
     
+    @Override
     public EntityDimensions getDefaultDimensions(Pose poseIn) {
         return this.isDeepOneSwimming() ? getSwimmingSize() : super.getDefaultDimensions(poseIn);
     }
@@ -547,21 +558,25 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
@@ -672,6 +687,7 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
         }
 
         
+        @Override
         protected void alertOthers() {
             double d0 = this.getFollowDistance();
             AABB aabb = AABB.unitCubeFromLowerCorner(this.mob.position()).inflate(d0, 10.0D, d0);
@@ -715,11 +731,13 @@ public abstract class DeepOneBaseEntity extends PathfinderMob implements IAnimat
         }
 
         
+        @Override
         protected Vec3 getTempMobPos() {
             return new Vec3(this.mob.getX(), this.mob.getY(0.5D), this.mob.getZ());
         }
 
         
+        @Override
         protected double getGroundY(Vec3 vec3) {
             if (isDeepOneSwimming() || !DeepOneBaseEntity.this.isInWater()) {
                 return super.getGroundY(vec3);

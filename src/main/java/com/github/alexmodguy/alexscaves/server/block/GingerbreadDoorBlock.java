@@ -129,6 +129,7 @@ public class GingerbreadDoorBlock extends Block {
     }
 
     
+    @Override
     protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hitResult) {
         blockState = blockState.cycle(OPEN);
         level.setBlock(blockPos, blockState, 10);

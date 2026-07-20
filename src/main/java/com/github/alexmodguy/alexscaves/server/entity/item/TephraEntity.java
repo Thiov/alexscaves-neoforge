@@ -61,6 +61,7 @@ public class TephraEntity extends Projectile {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(ARC_TOWARDS_ENTITY_UUID, Optional.empty());
         builder.define(MAX_SCALE, 1.0F);

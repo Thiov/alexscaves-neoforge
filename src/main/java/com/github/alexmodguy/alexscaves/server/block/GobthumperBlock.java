@@ -97,6 +97,7 @@ public class GobthumperBlock extends BaseEntityBlock implements SimpleWaterlogge
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new GobthumperBlockEntity(pos, state);
     }

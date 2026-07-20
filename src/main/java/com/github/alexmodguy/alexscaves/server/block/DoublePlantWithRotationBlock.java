@@ -27,6 +27,7 @@ public class DoublePlantWithRotationBlock extends DoublePlantBlock implements Bo
     }
 
     
+    @Override
     public MapCodec<? extends DoublePlantBlock> codec() {
         return simpleCodec(DoublePlantWithRotationBlock::new);
     }

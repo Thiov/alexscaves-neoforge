@@ -24,12 +24,14 @@ public class CaniacMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = caniac.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void stop() {
         caniac.setRunning(false);
         caniac.setArmSpinSpeed(0.0F);

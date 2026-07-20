@@ -83,11 +83,13 @@ public class GingerbreadTownStructure extends Structure {
 
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.GINGERBREAD_TOWN.get();
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }

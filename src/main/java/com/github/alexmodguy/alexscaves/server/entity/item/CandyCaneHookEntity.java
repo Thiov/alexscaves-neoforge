@@ -274,6 +274,7 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     protected void updateRotation() {
         Vec3 vec3 = this.getDeltaMovement();
         if (vec3.length() > 0.1F) {
@@ -286,6 +287,7 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
         this.setDeltaMovement(Vec3.ZERO);
         this.setHookedPosition(entityHitResult.getLocation());
@@ -297,6 +299,7 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     protected void onHitBlock(BlockHitResult blockHitResult) {
         BlockState blockstate = this.level().getBlockState(blockHitResult.getBlockPos());
         blockstate.onProjectileHit(this.level(), blockstate, blockHitResult, this);
@@ -307,12 +310,14 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     public void remove(Entity.RemovalReason removalReason) {
         postReel();
         super.remove(removalReason);
     }
 
     
+    @Override
     protected double getDefaultGravity() {
         return isReeling() || this.entityData.get(RESISTS_GRAVITY) && this.getDeltaMovement().horizontalDistance() > 0.05F ? 0 : 0.08;
     }
@@ -367,6 +372,7 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     public Entity getOwner() {
         Entity prev = super.getOwner();
         if (this.entityData.get(OWNER_ID) != -1) {
@@ -377,6 +383,7 @@ public class CandyCaneHookEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     public void setOwner(@Nullable Entity owner) {
         super.setOwner(owner);
         this.entityData.set(OWNER_ID, owner == null ? -1 : owner.getId());

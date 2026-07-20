@@ -35,6 +35,7 @@ public class MineGuardianAnchorEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(GUARDIAN_UUID, Optional.empty());
         builder.define(GUARDIAN_ID, -1);
@@ -42,6 +43,7 @@ public class MineGuardianAnchorEntity extends Entity {
 
 
     
+    @Override
     public void tick() {
         super.tick();
         Entity guardian = getGuardian();
@@ -137,6 +139,7 @@ public class MineGuardianAnchorEntity extends Entity {
     }
 
     
+    @Override
     protected Entity.MovementEmission getMovementEmission() {
         return MovementEmission.EVENTS;
     }

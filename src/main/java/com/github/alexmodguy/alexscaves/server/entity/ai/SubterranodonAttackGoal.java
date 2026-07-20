@@ -27,6 +27,7 @@ public class SubterranodonAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         if (target == null || !target.isAlive()) {
@@ -39,6 +40,7 @@ public class SubterranodonAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity target = entity.getTarget();
         if (target == null || !target.isAlive()) {
@@ -51,6 +53,7 @@ public class SubterranodonAttackGoal extends Goal {
     }
 
     
+    @Override
     public void start() {
         // Take off when starting to attack
         if (!entity.isFlying() && entity.onGround()) {
@@ -63,11 +66,13 @@ public class SubterranodonAttackGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         entity.getNavigation().stop();
     }
 
     
+    @Override
     public void tick() {
         LivingEntity target = entity.getTarget();
         if (target == null) {
@@ -123,6 +128,7 @@ public class SubterranodonAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean requiresUpdateEveryTick() {
         return true;
     }

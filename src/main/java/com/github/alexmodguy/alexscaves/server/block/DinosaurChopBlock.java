@@ -141,6 +141,7 @@ public class DinosaurChopBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     
+    @Override
     protected InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (level.isClientSide()) {
             if (eat(level, blockPos, blockState, player).consumesAction()) {

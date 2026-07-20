@@ -71,6 +71,7 @@ public class HullbreakerRenderer extends MobRenderer121X<HullbreakerEntity, Hull
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

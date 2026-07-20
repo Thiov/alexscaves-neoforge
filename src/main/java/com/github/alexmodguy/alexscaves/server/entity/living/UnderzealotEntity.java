@@ -95,6 +95,7 @@ public class UnderzealotEntity extends Monster implements PackAnimal, IAnimatedE
         this.targetSelector.addGoal(1, (new UnderzealotHurtByTargetGoal(this)));
         this.targetSelector.addGoal(2, new MobTargetClosePlayers(this, 40, 12){
             
+            @Override
             public boolean canUse() {
                 return !UnderzealotEntity.this.isTargetingBlocked() && super.canUse();
             }
@@ -102,6 +103,7 @@ public class UnderzealotEntity extends Monster implements PackAnimal, IAnimatedE
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(BURIED, false);
@@ -333,26 +335,31 @@ public class UnderzealotEntity extends Monster implements PackAnimal, IAnimatedE
     }
 
     
+    @Override
     public PackAnimal getPriorPackMember() {
         return this.priorPackMember;
     }
 
     
+    @Override
     public PackAnimal getAfterPackMember() {
         return afterPackMember;
     }
 
     
+    @Override
     public void setPriorPackMember(PackAnimal animal) {
         this.priorPackMember = (UnderzealotEntity) animal;
     }
 
     
+    @Override
     public void setAfterPackMember(PackAnimal animal) {
         this.afterPackMember = (UnderzealotEntity) animal;
     }
 
     
+    @Override
     public boolean isValidLeader(PackAnimal packLeader) {
         return ((UnderzealotEntity) packLeader).isCarrying() && !packLeader.isPackFollower() && ((LivingEntity) packLeader).isAlive();
     }
@@ -393,26 +400,31 @@ public class UnderzealotEntity extends Monster implements PackAnimal, IAnimatedE
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_ATTACK_0, ANIMATION_ATTACK_1, ANIMATION_BREAKTORCH};
     }

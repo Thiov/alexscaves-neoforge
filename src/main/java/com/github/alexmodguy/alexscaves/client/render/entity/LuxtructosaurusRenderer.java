@@ -84,6 +84,7 @@ public class LuxtructosaurusRenderer extends MobRenderer121X<LuxtructosaurusEnti
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

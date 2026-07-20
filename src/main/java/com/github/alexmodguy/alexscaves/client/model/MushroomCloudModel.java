@@ -164,17 +164,20 @@ public class MushroomCloudModel extends AdvancedEntityModel {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(mushroom_cloud);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(rings, mushroom_cloud, lowerCloud, lowerCloud_planes, lightBall, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5, cube_r6, cube_r7, cube_r8, cube_r9, cube_r10, plume, plumeBlast, plumeRing, upperCloud, upperCloud_planes, upperCloud1, upperRing, lowerRing);
     }
 
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }

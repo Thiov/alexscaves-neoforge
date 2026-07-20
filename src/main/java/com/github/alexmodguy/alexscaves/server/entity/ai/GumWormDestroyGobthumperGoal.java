@@ -23,22 +23,26 @@ public class GumWormDestroyGobthumperGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         BlockPos gobthumperPos = entity.getGobthumperPos();
         return gobthumperPos != null && entity.level().getBlockState(gobthumperPos).is(ACBlockRegistry.GOBTHUMPER.get()) && entity.distanceToSqr(gobthumperPos.getX() + 0.5F, gobthumperPos.getY() + 0.5F, gobthumperPos.getZ() + 0.5F) < 50000 && !entity.isRidingMode();
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return (super.canContinueToUse() || continueLeapFor > 0) && !entity.isRidingMode();
     }
 
     
+    @Override
     public void start() {
         continueLeapFor = 40;
     }
 
     
+    @Override
     public void stop() {
         entity.setBiting(false);
         entity.setLeaping(false);

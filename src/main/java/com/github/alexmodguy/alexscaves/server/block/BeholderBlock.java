@@ -78,6 +78,7 @@ public class BeholderBlock extends BaseEntityBlock implements SimpleWaterloggedB
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BeholderBlockEntity(pos, state);
     }

@@ -64,6 +64,7 @@ public class WaterBoltEntity extends Projectile {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(BUBBLING, false);
         builder.define(ARC_TOWARDS_ENTITY_UUID, Optional.empty());

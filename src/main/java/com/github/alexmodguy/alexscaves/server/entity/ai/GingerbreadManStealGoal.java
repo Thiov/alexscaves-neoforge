@@ -32,6 +32,7 @@ public class GingerbreadManStealGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (this.gingerbreadMan.isOvenSpawned()) {
             return false;
@@ -52,16 +53,19 @@ public class GingerbreadManStealGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return !this.hasStolen && this.target != null && this.target.isAlive() && canStealFromEntityType(this.target);
     }
 
     
+    @Override
     public void start() {
         this.hasStolen = false;
     }
 
     
+    @Override
     public void tick() {
         if (this.recheckInventoryCooldown < 0) {
             this.recheckInventoryCooldown = 15;

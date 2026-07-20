@@ -27,6 +27,7 @@ public class NotorScanGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         long worldTime = notor.level().getGameTime() % 10;
         if (notor.getRandom().nextInt(300) != 0 && worldTime != 0 || notor.getHologramUUID() != null || notor.stopScanningFor > 0) {
@@ -50,11 +51,13 @@ public class NotorScanGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return scanTarget != null && scanTarget.isAlive() && notor.hasLineOfSight(scanTarget) && scanTarget.distanceTo(notor) <= 40 && scanTime < getMaxScanTime() && notor.getHologramUUID() == null;
     }
 
     
+    @Override
     public void start() {
         notor.getNavigation().stop();
         scanTime = 0;
@@ -62,6 +65,7 @@ public class NotorScanGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         if (scanTime >= getMaxScanTime() && scanTarget != null && scanTarget.isAlive()) {
             notor.setHologramUUID(scanTarget.getUUID());
@@ -72,6 +76,7 @@ public class NotorScanGoal extends Goal {
     }
 
     
+    @Override
     public void tick() {
         double dist = scanTarget.distanceTo(notor);
         notor.lookAt(EntityAnchorArgument.Anchor.EYES, scanTarget.getEyePosition());

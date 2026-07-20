@@ -38,6 +38,7 @@ public class RecipeCaveMap extends CustomRecipe implements SpecialRecipeInGuideB
     }
 
     
+    @Override
     public boolean matches(CraftingInput input, Level level) {
         if (input.width() != 3 || input.height() != 3) {
             return false;
@@ -75,11 +76,13 @@ public class RecipeCaveMap extends CustomRecipe implements SpecialRecipeInGuideB
     }
 
     
+    @Override
     public NonNullList<Ingredient> getDisplayIngredients() {
         return DISPLAY_INGREDIENTS;
     }
 
     
+    @Override
     public ItemStack getDisplayResultFor(NonNullList<ItemStack> nonNullList) {
         ItemStack scroll = ItemStack.EMPTY;
         for (int i = 0; i < nonNullList.size(); ++i) {

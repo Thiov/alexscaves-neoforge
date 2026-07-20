@@ -48,6 +48,7 @@ public abstract class AbstractMovingBlockEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(BLOCK_DATA_TAG, new CompoundTag());
     }
@@ -233,6 +234,7 @@ public abstract class AbstractMovingBlockEntity extends Entity {
     }
 
     
+    @Override
     public Vec3 getLightProbePosition(float f) {
         return this.getPosition(f);
     }

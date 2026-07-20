@@ -78,6 +78,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(EATING_POS, Optional.empty());
@@ -91,6 +92,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     protected void onStep() {
         if(!this.isBaby()){
             if (screenShakeAmount <= 1.0F) {
@@ -103,6 +105,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         if (level().isClientSide()) {
@@ -188,6 +191,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     public boolean onFeedMixture(ItemStack itemStack, Player player) {
         if (itemStack.is(ACItemRegistry.SERENE_SALAD.get())) {
             this.setRideableFor(12000);
@@ -213,6 +217,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
 
 
     
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 2) {
@@ -243,6 +248,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     public float getTargetNeckXRot() {
         if (this.getAnimation() == ANIMATION_EAT_LEAVES && this.getAnimationTick() <= 35) {
             BlockPos eatingPos = getEatingPos();
@@ -363,6 +369,7 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
         return new Vec3(this.getX(), this.getBoundingBox().minY, this.getZ());
     }
@@ -384,12 +391,14 @@ public class AtlatitanEntity extends SauropodBaseEntity implements KeybindUsingM
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.ATLATITAN_EGG.get().defaultBlockState();
     }
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ACEntityRegistry.ATLATITAN.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }

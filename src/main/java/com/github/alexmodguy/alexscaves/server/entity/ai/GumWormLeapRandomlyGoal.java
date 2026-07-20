@@ -30,6 +30,7 @@ public class GumWormLeapRandomlyGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         Entity attackTarget = entity.getTarget();
         if (!entity.isInWall() || entity.isLeaping() || entity.isRidingMode() || attackTarget != null && attackTarget.isAlive() || entity.getRandom().nextInt(1) != 0) {

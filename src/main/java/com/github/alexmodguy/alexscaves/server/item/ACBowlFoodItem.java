@@ -17,6 +17,7 @@ public class ACBowlFoodItem extends Item {
     }
 
     
+    @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         ItemStack result = super.finishUsingItem(stack, level, livingEntity);
         return result.isEmpty() ? new ItemStack(Items.BOWL) : result;

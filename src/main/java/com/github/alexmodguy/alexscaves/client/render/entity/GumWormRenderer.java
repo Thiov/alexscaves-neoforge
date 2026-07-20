@@ -32,6 +32,7 @@ public class GumWormRenderer extends MobRenderer121X<GumWormEntity, GumWormModel
     }
 
     
+    @Override
     protected void setupRotations(GumWormEntity entity, PoseStack poseStack, float bob, float yawIn, float partialTicks, float scale) {
         if (this.isShaking(entity)) {
             yawIn += (float)(Math.cos((double)entity.tickCount * 3.25D) * Math.PI * (double)0.4F);

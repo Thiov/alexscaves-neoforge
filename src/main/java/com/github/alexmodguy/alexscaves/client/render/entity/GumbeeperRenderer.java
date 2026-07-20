@@ -50,12 +50,14 @@ public class GumbeeperRenderer extends MobRenderer121X<GumbeeperEntity, Gumbeepe
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }
 
     @Nullable
     
+    @Override
     protected RenderType getRenderType(GumbeeperEntity deepOneMageEntity, boolean normal, boolean translucent, boolean outline) {
         Identifier resourcelocation = this.getTextureLocation(deepOneMageEntity);
         if (translucent) {

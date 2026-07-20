@@ -67,6 +67,7 @@ public class AnimalLootChestsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (this.entity instanceof TamableAnimal && ((TamableAnimal) entity).isTame()) {
             return false;
@@ -78,6 +79,7 @@ public class AnimalLootChestsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return super.canContinueToUse() && this.entity.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
     }
@@ -118,6 +120,7 @@ public class AnimalLootChestsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockEntity te = this.entity.level().getBlockEntity(this.blockPos);
@@ -171,6 +174,7 @@ public class AnimalLootChestsGoal extends MoveToBlockGoal {
 
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         return pos != null && isChestRaidable(worldIn, pos);
     }

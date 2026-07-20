@@ -59,6 +59,7 @@ public class NuclearSirenBlock extends BaseEntityBlock implements SimpleWaterlog
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new NuclearSirenBlockEntity(pos, state);
     }

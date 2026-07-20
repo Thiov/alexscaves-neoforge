@@ -19,6 +19,7 @@ public class ForlornRuinsFeature extends UndergroundRuinsFeature {
     }
 
     
+    @Override
     protected boolean canGenerateAt(WorldGenLevel level, BlockPos blockpos) {
         return level.getBlockState(blockpos).is(Blocks.PACKED_MUD);
     }
@@ -44,6 +45,7 @@ public class ForlornRuinsFeature extends UndergroundRuinsFeature {
     }
 
     
+    @Override
     public StructurePlaceSettings modifyPlacementSettings(StructurePlaceSettings structureplacesettings) {
         return structureplacesettings;
     }

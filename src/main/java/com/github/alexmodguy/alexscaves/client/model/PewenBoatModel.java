@@ -72,11 +72,13 @@ public class PewenBoatModel extends ACBoatModel {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(bottom, right, left, back, front, paddle_left, paddle_right, bb_main);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(bottom, right, left, back, front, paddle_left, paddle_right, bb_main, water_mask);
     }
@@ -86,6 +88,7 @@ public class PewenBoatModel extends ACBoatModel {
     }
 
     
+    @Override
     public void setupAnim(Boat entity, float partialTicks, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         setupPaddleAnims(entity, paddle_left, paddle_right, partialTicks);

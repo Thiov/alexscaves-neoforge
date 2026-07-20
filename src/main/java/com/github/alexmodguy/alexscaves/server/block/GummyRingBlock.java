@@ -171,6 +171,7 @@ public class GummyRingBlock extends DirectionalBlock implements BucketPickup, Li
     }
 
     
+    @Override
     public Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }

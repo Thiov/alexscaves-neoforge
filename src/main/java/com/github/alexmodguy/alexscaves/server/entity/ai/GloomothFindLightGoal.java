@@ -26,6 +26,7 @@ public class GloomothFindLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canUse() {
         return this.gloomoth.lightPos == null && super.canUse() && !isTargetBlocked(blockPos.getCenter());
     }
@@ -36,6 +37,7 @@ public class GloomothFindLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return super.canContinueToUse() && this.gloomoth.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && this.gloomoth.lightPos == null;
     }
@@ -45,6 +47,7 @@ public class GloomothFindLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -71,6 +74,7 @@ public class GloomothFindLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
          if(pos != null && worldIn.getBlockState(pos).is(ACTagRegistry.GLOOMOTH_LIGHT_SOURCES) && worldIn.getLightEmission(pos) > 0 && worldIn instanceof ServerLevel serverLevel){
             return gloomoth.getNearestMothBall(serverLevel, blockPos, 10) == null;

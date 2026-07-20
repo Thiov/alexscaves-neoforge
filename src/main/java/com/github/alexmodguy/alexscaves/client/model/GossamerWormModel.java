@@ -257,16 +257,19 @@ public class GossamerWormModel extends AdvancedEntityModel<GossamerWormEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(head, antennae, antennae2, segment, rflipperFront, rflipperBack, lflipperFront, lflipperBack, segment2, rflipperFront2, rflipperBack2, lflipperFront2, lflipperBack2, segment3, rflipperFront3, rflipperBack3, lflipperFront3, lflipperBack3, segment4, rflipperFront4, rflipperBack4, lflipperFront4, lflipperBack4, segment5, rflipperBack5, lflipperBack5, rflipperFront5, lflipperFront5, segment6, rflipperBack6, lflipperBack6, rflipperFront6, lflipperFront6, segment7, rflipperBack7, lflipperBack7, rflipperFront7, lflipperFront7, segment8, segment9);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(head);
     }
 
     
+    @Override
     public void setupAnim(GossamerWormEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

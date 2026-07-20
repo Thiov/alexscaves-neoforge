@@ -73,6 +73,7 @@ public class SpelunkeryTableWordButton extends AbstractWidget {
         }
     }
 
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput output) {
     }
 

@@ -15,6 +15,7 @@ public class BurrowingArrowItem extends ArrowItem {
     }
 
     
+    @Override
     public AbstractArrow createArrow(Level level, ItemStack ammo, LivingEntity shooter, @Nullable ItemStack weapon) {
         return new BurrowingArrowEntity(level, shooter);
     }

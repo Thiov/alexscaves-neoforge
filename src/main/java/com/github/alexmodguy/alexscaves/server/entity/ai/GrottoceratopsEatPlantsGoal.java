@@ -28,11 +28,13 @@ public class GrottoceratopsEatPlantsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canUse() {
         return super.canUse();
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return super.canContinueToUse() && this.grottoceratops.getItemInHand(InteractionHand.MAIN_HAND).isEmpty();
     }
@@ -42,6 +44,7 @@ public class GrottoceratopsEatPlantsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -70,6 +73,7 @@ public class GrottoceratopsEatPlantsGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         if (pos != null) {
             BlockState state = worldIn.getBlockState(pos.above());

@@ -159,6 +159,7 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(CROSSED_ARMS, true);
@@ -182,6 +183,7 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevUncrossedArmsProgress = uncrossedArmsProgress;
@@ -387,26 +389,31 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SWING_LEFT, ANIMATION_SWING_RIGHT, ANIMATION_EAT, ANIMATION_SPELL_0, ANIMATION_SPELL_1};
     }
@@ -513,6 +520,7 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     public void travel(Vec3 vec3d) {
         if (this.getTeleportingToPos() != null) {
             if (this.getNavigation().getPath() != null) {
@@ -529,6 +537,7 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
             super(LicowitchEntity.this);
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.STRAFE) {
                 speedModifier = 0.5F;
@@ -559,6 +568,7 @@ public class LicowitchEntity extends Monster implements IAnimatedEntity {
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = LicowitchEntity.this.getTarget();
             if (LicowitchEntity.this.random.nextInt(1000) == 0 && LicowitchEntity.this.canTeleport() && LicowitchEntity.this.getTeleportingToPos() == null && (target == null || !target.isAlive())) {

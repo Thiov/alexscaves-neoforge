@@ -40,6 +40,7 @@ public class DarkArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SHADOW_ARROW_DAMAGE, 0.0F);
@@ -47,6 +48,7 @@ public class DarkArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         // 26.1 rejects serializing an air pickup item ("item must be 1;99"); use a real item. Pickup is
         // DISALLOWED so dark arrows still can't actually be collected.
@@ -58,6 +60,7 @@ public class DarkArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         this.prevArrowR = this.arrowR;

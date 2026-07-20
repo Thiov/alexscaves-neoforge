@@ -26,6 +26,7 @@ public class MagneticNodeFeature extends Feature<MagneticNodeFeatureConfiguratio
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<MagneticNodeFeatureConfiguration> context) {
         BlockPos pos = context.origin();
         WorldGenLevel level = context.level();

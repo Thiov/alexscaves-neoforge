@@ -20,11 +20,13 @@ public class DeepOnesRuinsFeature extends UndergroundRuinsFeature {
     }
 
     
+    @Override
     protected boolean canGenerateAt(WorldGenLevel level, BlockPos blockpos) {
         return level.getBlockState(blockpos).is(ACBlockRegistry.MUCK.get());
     }
 
     
+    @Override
     public void processMarker(String marker, WorldGenLevel level, BlockPos pos, RandomSource randomsource) {
         if (marker.equals("submarine")) {
             level.setBlock(pos, Blocks.CAVE_AIR.defaultBlockState(), 3);
@@ -55,6 +57,7 @@ public class DeepOnesRuinsFeature extends UndergroundRuinsFeature {
     }
 
     
+    @Override
     public StructurePlaceSettings modifyPlacementSettings(StructurePlaceSettings structureplacesettings) {
         return structureplacesettings;
     }

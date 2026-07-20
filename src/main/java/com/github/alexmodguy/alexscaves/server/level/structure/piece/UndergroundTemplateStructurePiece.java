@@ -46,12 +46,14 @@ public abstract class UndergroundTemplateStructurePiece extends TemplateStructur
     }
 
     
+    @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
         super.addAdditionalSaveData(context, tag);
         tag.putBoolean("PlacedInCave", this.placedInCaveFlag);
     }
 
     
+    @Override
     public void postProcess(WorldGenLevel worldGenLevel, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos pos) {
         if (!this.placedInCaveFlag) {
             int originalY = this.templatePosition.getY();

@@ -51,12 +51,14 @@ public class LicowitchAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = licowitch.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void stop() {
         licowitch.updateFoldedArms = true;
         licowitch.updateHeldItems = true;

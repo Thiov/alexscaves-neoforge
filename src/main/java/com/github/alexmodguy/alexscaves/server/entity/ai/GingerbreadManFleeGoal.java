@@ -23,6 +23,7 @@ public class GingerbreadManFleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         UUID uuid = gingerbreadMan.getFleeingFromUUID();
         if(gingerbreadMan.getFleeFor() > 0 && uuid != null && gingerbreadMan.level() instanceof ServerLevel serverLevel){
@@ -33,6 +34,7 @@ public class GingerbreadManFleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse(){
         return runFrom != null && runFrom.isAlive() && gingerbreadMan.getFleeFor() > 0;
     }

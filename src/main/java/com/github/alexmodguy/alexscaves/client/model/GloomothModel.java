@@ -123,6 +123,7 @@ public class GloomothModel extends AdvancedEntityModel<GloomothEntity> {
     }
 
     
+    @Override
     public void setupAnim(GloomothEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float walkSpeed = 2F;
@@ -166,11 +167,13 @@ public class GloomothModel extends AdvancedEntityModel<GloomothEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, body, head, rantennae, lantennae, lWing, rWing, lWing_s, rWing_s, lWing_b, rWing_b, legs, rleg, rleg2, rleg3, lleg, lleg2, lleg3);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }

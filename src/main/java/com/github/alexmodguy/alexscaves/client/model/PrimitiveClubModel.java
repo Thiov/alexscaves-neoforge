@@ -23,17 +23,20 @@ public class PrimitiveClubModel extends AdvancedEntityModel {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(club);
     }
 
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(club);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float explode, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }

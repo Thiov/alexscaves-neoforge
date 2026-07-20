@@ -61,6 +61,7 @@ public class CaniacEntity extends Monster implements IAnimatedEntity, PossessedB
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SPIN_SPEED, 0F);
@@ -164,26 +165,31 @@ public class CaniacEntity extends Monster implements IAnimatedEntity, PossessedB
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_LUNGE};
     }
@@ -253,11 +259,13 @@ public class CaniacEntity extends Monster implements IAnimatedEntity, PossessedB
     }
 
     
+    @Override
     public void setPossessedByLicowitchId(int entityId) {
         this.entityData.set(POSSESSOR_LICOWITCH_ID, entityId);
     }
 
     
+    @Override
     public int getPossessedByLicowitchId() {
         return this.entityData.get(POSSESSOR_LICOWITCH_ID);
     }
@@ -268,6 +276,7 @@ public class CaniacEntity extends Monster implements IAnimatedEntity, PossessedB
     }
 
     
+    @Override
     public boolean canAttack(LivingEntity living) {
         if(this.getPossessedByLicowitchId() != -1){
             LicowitchEntity licowitch = this.getPossessingLicowitch(this.level());

@@ -194,11 +194,13 @@ public class GrottoceratopsModel extends ACAdvancedEntityModel<GrottoceratopsEnt
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, bodySpikes, tail, tail2, tailSpike, tail2Spike, neck, head, jaw, larm, rarm, lleg, lleg2, lfoot, rleg, rleg2, rfoot, grassBunch, grassBunch2, grass, grass2, grass3, grass4, grass5, grass6);
     }
@@ -351,6 +353,7 @@ public class GrottoceratopsModel extends ACAdvancedEntityModel<GrottoceratopsEnt
     }
 
     
+    @Override
     public void setupAnim(GrottoceratopsEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

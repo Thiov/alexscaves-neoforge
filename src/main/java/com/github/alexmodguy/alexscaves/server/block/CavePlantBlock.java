@@ -31,6 +31,7 @@ public class CavePlantBlock extends BushBlock {
     }
 
     
+    @Override
     protected boolean mayPlaceOn(BlockState blockState, BlockGetter getter, BlockPos pos) {
         return blockState.isFaceSturdy(getter, pos, Direction.UP, SupportType.FULL);
     }

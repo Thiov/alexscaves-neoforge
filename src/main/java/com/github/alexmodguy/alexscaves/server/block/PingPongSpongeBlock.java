@@ -50,6 +50,7 @@ public class PingPongSpongeBlock extends BushBlock implements LiquidBlockContain
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         Vec3 vec3 = state.getOffset(pos);
         VoxelShape shape = state.getValue(TOP) ? SHAPE_TOP : SHAPE;
@@ -61,16 +62,19 @@ public class PingPongSpongeBlock extends BushBlock implements LiquidBlockContain
     }
 
     
+    @Override
     public long getSeed(BlockState blockState, BlockPos pos) {
         return Mth.getSeed(pos.getX(), 0, pos.getZ());
     }
 
     
+    @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
         return state.isFaceSturdy(level, pos, Direction.UP) && !state.is(Blocks.MAGMA_BLOCK) || state.getBlock() == this;
     }
 
     
+    @Override
     public float getMaxHorizontalOffset() {
         return 0.4F;
     }

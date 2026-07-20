@@ -16,6 +16,7 @@ public class DeepOneTargetHostilePlayersGoal extends NearestAttackableTargetGoal
     }
 
     
+    @Override
     protected void findTarget() {
         this.target = LevelCompat.getNearestEntity(this.mob.level(), this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), targetEntity -> targetEntity instanceof Player player && this.deepOne.getReactionTo(player) == DeepOneReaction.AGGRESSIVE && !player.isCreative()), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }

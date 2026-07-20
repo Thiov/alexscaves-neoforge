@@ -41,17 +41,20 @@ public class ResistorShieldModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float useProgress, float switchProgress, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         this.rotationBolt.rotateAngleX = (float) Math.toRadians(360F * useProgress + switchProgress * 180);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, rotationBolt, base);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }

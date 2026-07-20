@@ -38,12 +38,14 @@ public class ForsakenAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void start() {
         navigationCheckCooldown = 0;
         jumpEnqueued = false;
@@ -52,6 +54,7 @@ public class ForsakenAttackGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         jumpEnqueued = false;
         sonicEnqueued = false;
@@ -59,6 +62,7 @@ public class ForsakenAttackGoal extends Goal {
     }
 
     
+    @Override
     public void tick() {
         LivingEntity target = entity.getTarget();
         if (target != null && target.isAlive()) {

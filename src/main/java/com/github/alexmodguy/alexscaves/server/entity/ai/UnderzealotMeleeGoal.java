@@ -22,6 +22,7 @@ public class UnderzealotMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return entity.getTarget() != null && entity.getTarget().isAlive();
     }

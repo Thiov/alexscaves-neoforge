@@ -69,6 +69,7 @@ public class TeletorEntity extends Monster {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(WEAPON_UUID, Optional.empty());
@@ -308,6 +309,7 @@ public class TeletorEntity extends Monster {
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = TeletorEntity.this.getTarget();
             return target != null && target.isAlive() && TeletorEntity.this.getWeapon() != null;

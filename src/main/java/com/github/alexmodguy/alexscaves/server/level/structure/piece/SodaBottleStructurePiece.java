@@ -39,11 +39,13 @@ public class SodaBottleStructurePiece extends UndergroundTemplateStructurePiece 
     }
 
     
+    @Override
     public int minimumDepthBeneathSurface() {
         return 35;
     }
 
     
+    @Override
     protected void handleDataMarker(String string, BlockPos pos, ServerLevelAccessor accessor, RandomSource random, BoundingBox box) {
         accessor.setBlock(pos, Blocks.CAVE_AIR.defaultBlockState(), 0);
     }

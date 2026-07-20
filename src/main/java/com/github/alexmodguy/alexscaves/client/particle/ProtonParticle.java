@@ -110,6 +110,7 @@ public class ProtonParticle extends MagneticOrbitParticle {
     }
 
     
+    @Override
     public Vec3 getOrbitPosition(float angle) {
         Vec3 center = new Vec3(orbitX, orbitY, orbitZ);
         float f = reverseOrbit ? -1 : 1;
@@ -130,6 +131,7 @@ public class ProtonParticle extends MagneticOrbitParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.2F;
     }
@@ -140,6 +142,7 @@ public class ProtonParticle extends MagneticOrbitParticle {
     }
 
     
+    @Override
     public int sampleCount() {
         return Math.min(10, lifetime - age);
     }

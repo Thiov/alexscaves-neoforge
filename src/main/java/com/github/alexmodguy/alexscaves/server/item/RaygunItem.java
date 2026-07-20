@@ -115,6 +115,7 @@ public class RaygunItem extends Item implements UpdatesStackTags, AlwaysCombinab
     }
 
     
+    @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }

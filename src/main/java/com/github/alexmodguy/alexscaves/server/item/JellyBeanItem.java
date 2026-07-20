@@ -43,6 +43,7 @@ public class JellyBeanItem extends PotionItem {
     }
 
     
+    @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity entity) {
         return 16;
     }
@@ -62,6 +63,7 @@ public class JellyBeanItem extends PotionItem {
     }
 
     
+    @Override
     public void onUseTick(Level level, LivingEntity living, ItemStack stack, int useDir) {
         Vec3 motion = new Vec3((level.getRandom().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
         motion = motion.xRot(-living.getXRot() * ((float) Math.PI / 180F));

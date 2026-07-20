@@ -35,6 +35,7 @@ public class GuanoLayerBlock extends SnowLayerBlock implements Fallable {
     }
 
     
+    @Override
     public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
         return true;
     }
@@ -46,6 +47,7 @@ public class GuanoLayerBlock extends SnowLayerBlock implements Fallable {
     }
 
     
+    @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         if(!context.getItemInHand().isEmpty()  && context.getItemInHand().is(this.asItem())){
             return (state.getBlock() instanceof SnowLayerBlock && state.getValue(LAYERS) < 8);
@@ -54,6 +56,7 @@ public class GuanoLayerBlock extends SnowLayerBlock implements Fallable {
     }
 
     
+    @Override
     public void tick(BlockState state, ServerLevel blockState, BlockPos blockPos, RandomSource randomSource) {
         if (isFree(blockState.getBlockState(blockPos.below())) && blockPos.getY() >= blockState.getMinY()) {
             FallingGuanoEntity.fall(blockState, blockPos, state);
@@ -80,6 +83,7 @@ public class GuanoLayerBlock extends SnowLayerBlock implements Fallable {
     }
 
     
+    @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 

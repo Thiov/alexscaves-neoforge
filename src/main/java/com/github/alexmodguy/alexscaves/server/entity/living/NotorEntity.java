@@ -86,6 +86,7 @@ public class NotorEntity extends PathfinderMob {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HOLOGRAM_POS, Optional.empty());

@@ -55,6 +55,7 @@ public class GossamerWormRenderer extends MobRenderer121X<GossamerWormEntity, Go
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

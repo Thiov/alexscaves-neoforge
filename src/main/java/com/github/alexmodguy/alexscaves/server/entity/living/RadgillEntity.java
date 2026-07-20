@@ -118,11 +118,13 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public boolean fromBucket() {
         return this.entityData.get(FROM_BUCKET);
     }
 
     
+    @Override
     public void setFromBucket(boolean sit) {
         this.entityData.set(FROM_BUCKET, sit);
     }
@@ -171,6 +173,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevLandProgress = landProgress;
@@ -256,6 +259,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void saveToBucketTag(@Nonnull ItemStack bucket) {
         if (this.hasCustomName()) {
             bucket.set(DataComponents.CUSTOM_NAME, this.getCustomName());
@@ -268,6 +272,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void loadFromBucketTag(@Nonnull CompoundTag compound) {
         if (com.github.alexmodguy.alexscaves.server.misc.NbtCompat.contains(compound, "FishBucketTag")) {
             this.readAdditionalSaveData(com.github.alexmodguy.alexscaves.server.misc.NbtCompat.asValueInput(this.registryAccess(), com.github.alexmodguy.alexscaves.server.misc.NbtCompat.getCompound(compound, "FishBucketTag")));
@@ -276,6 +281,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public ItemStack getBucketItemStack() {
         ItemStack stack = new ItemStack(ACItemRegistry.RADGILL_BUCKET.get());
         if (this.hasCustomName()) {
@@ -286,6 +292,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
 
     
     @Nonnull
+    @Override
     public SoundEvent getPickupSound() {
         return SoundEvents.BUCKET_FILL_FISH;
     }
@@ -336,6 +343,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public boolean canUse() {
             if (!RadgillEntity.this.checkInLiquid()) {
                 return false;
@@ -352,6 +360,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public boolean canContinueToUse() {
             return (RadgillEntity.this.checkInLiquid() && !hasJumped || isJump) && RadgillEntity.this.distanceToSqr(Vec3.atCenterOf(target)) < 3 && timeout < 200;
         }
@@ -362,6 +371,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public void tick() {
             timeout++;
             RadgillEntity.this.getNavigation().moveTo(target.getX() + 0.5F, target.getY() + 0.25F, target.getZ() + 0.5F, 1.0D);
@@ -391,6 +401,7 @@ public class RadgillEntity extends WaterAnimal implements Bucketable {
             super(RadgillEntity.this);
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.MOVE_TO && RadgillEntity.this.checkInLiquid()) {
                 final Vec3 vector3d = new Vec3(this.wantedX - RadgillEntity.this.getX(), this.wantedY - RadgillEntity.this.getY(), this.wantedZ - RadgillEntity.this.getZ());

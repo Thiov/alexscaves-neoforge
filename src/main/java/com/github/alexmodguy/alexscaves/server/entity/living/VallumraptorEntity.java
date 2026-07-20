@@ -118,11 +118,13 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new AnimalFollowOwnerGoal(this, 1.0D, 5.0F, 2.0F, false) {
             
+            @Override
             public boolean shouldFollow() {
                 return VallumraptorEntity.this.getCommand() == 2;
             }
 
             
+            @Override
             public void tickDistance(float distanceTo) {
                 VallumraptorEntity.this.setRunning(distanceTo > 5);
             }
@@ -159,6 +161,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ACEntityRegistry.VALLUMRAPTOR.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }
@@ -168,6 +171,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(PUZZLED_HEAD_ROT, 0F);
@@ -417,26 +421,31 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_CALL_1, ANIMATION_CALL_2, ANIMATION_SCRATCH_1, ANIMATION_SCRATCH_2, ANIMATION_SHAKE, ANIMATION_STARTLEAP, ANIMATION_MELEE_BITE, ANIMATION_MELEE_SLASH_1, ANIMATION_MELEE_SLASH_2, ANIMATION_GRAB};
     }
@@ -502,26 +511,31 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public PackAnimal getPriorPackMember() {
         return this.priorPackMember;
     }
 
     
+    @Override
     public PackAnimal getAfterPackMember() {
         return afterPackMember;
     }
 
     
+    @Override
     public void setPriorPackMember(PackAnimal animal) {
         this.priorPackMember = (VallumraptorEntity) animal;
     }
 
     
+    @Override
     public void setAfterPackMember(PackAnimal animal) {
         this.afterPackMember = (VallumraptorEntity) animal;
     }
 
     
+    @Override
     public void afterSteal(BlockPos stealPos) {
         fleeFromPosition = Vec3.atCenterOf(stealPos);
         fleeTicks = 300 + random.nextInt(80);
@@ -534,11 +548,13 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public boolean isValidLeader(PackAnimal packLeader) {
         return packLeader instanceof VallumraptorEntity && ((VallumraptorEntity) packLeader).isAlive() && ((VallumraptorEntity) packLeader).isElder();
     }
 
     
+    @Override
     public boolean shouldLootItem(ItemStack stack) {
         return canTargetItem(stack);
     }
@@ -554,11 +570,13 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public boolean canPassThrough(BlockPos blockPos, BlockState blockState, VoxelShape voxelShape) {
         return blockState.getBlock() instanceof DoorBlock && blockState.getValue(DoorBlock.OPEN);
     }
 
     
+    @Override
     public boolean isColliding(BlockPos pos, BlockState blockState) {
         return !(blockState.getBlock() instanceof DoorBlock && blockState.getValue(DoorBlock.OPEN)) && super.isColliding(pos, blockState);
     }
@@ -568,6 +586,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public boolean canTargetItem(ItemStack stack) {
         return (stack.is(ACTagRegistry.VALLUMRAPTOR_STEALS) || stack.has(DataComponents.FOOD) && stack.is(ACTagRegistry.RAW_MEATS)) && !stack.is(ACBlockRegistry.VALLUMRAPTOR_EGG.get().asItem());
     }
@@ -577,6 +596,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public void onGetItem(ItemEntity e) {
         if (this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(ANIMATION_GRAB);
@@ -595,6 +615,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.VALLUMRAPTOR_EGG.get().defaultBlockState().setValue(MultipleDinosaurEggsBlock.EGGS, 1 + random.nextInt(3));
     }
@@ -641,6 +662,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
 
 
     
+    @Override
     public boolean onFeedMixture(ItemStack itemStack, Player player) {
         if (itemStack.is(ACItemRegistry.SERENE_SALAD.get()) && this.getRelaxedFor() > 0 && !this.isTame()) {
             this.heal(5);
@@ -665,6 +687,7 @@ public class VallumraptorEntity extends DinosaurEntity implements IAnimatedEntit
         }
 
         
+        @Override
         public boolean canUse() {
             return VallumraptorEntity.this.fleeTicks > 0 && VallumraptorEntity.this.fleeFromPosition != null;
         }

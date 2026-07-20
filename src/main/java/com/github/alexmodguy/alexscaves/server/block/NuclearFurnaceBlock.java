@@ -51,6 +51,7 @@ public class NuclearFurnaceBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new NuclearFurnaceBlockEntity(pos, state);
     }
@@ -73,6 +74,7 @@ public class NuclearFurnaceBlock extends BaseEntityBlock {
     }
 
     
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos blockPos, Player player, BlockHitResult result) {
         if(!player.isShiftKeyDown()){
             if (level.isClientSide()) {

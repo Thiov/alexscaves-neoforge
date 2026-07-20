@@ -64,11 +64,13 @@ public class DeepOneEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     protected ResourceKey<LootTable> getBarterLootTable() {
         return BARTER_LOOT;
     }
 
     
+    @Override
     public void startAttackBehavior(LivingEntity target) {
         double dist = this.distanceTo(target);
         float f = this.getBbWidth() + target.getBbWidth();
@@ -94,11 +96,13 @@ public class DeepOneEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation getTradingAnimation() {
         return ANIMATION_TRADE;
     }
 
     
+    @Override
     public SoundEvent getAdmireSound() {
         return ACSoundRegistry.DEEP_ONE_ADMIRE.get();
     }
@@ -116,6 +120,7 @@ public class DeepOneEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public boolean startDisappearBehavior(Player player) {
         this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ(), 20.0F, (float) this.getMaxHeadXRot());
         if (this.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
@@ -135,6 +140,7 @@ public class DeepOneEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_THROW, ANIMATION_BITE, ANIMATION_SCRATCH, ANIMATION_TRADE};
     }

@@ -30,6 +30,7 @@ public class MarineSnowItem extends Item {
     }
 
     
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         initGrowth();
         BlockState clickedState = context.getLevel().getBlockState(context.getClickedPos());

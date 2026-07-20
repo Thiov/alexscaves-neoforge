@@ -49,6 +49,7 @@ public class SodaBottleRocketEntity extends FireworkRocketEntity {
     private LivingEntity attachedToEntity;
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_FIREWORKS_ITEM, ItemStack.EMPTY);
@@ -102,16 +103,19 @@ public class SodaBottleRocketEntity extends FireworkRocketEntity {
     }
 
     
+    @Override
     public boolean isShotAtAngle() {
         return this.entityData.get(DATA_SHOT_AT_ANGLE);
     }
 
     
+    @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
         return distance < 4096.0 && !this.isAttachedToEntity();
     }
 
     
+    @Override
     public boolean shouldRender(double x, double y, double z) {
         return super.shouldRender(x, y, z) && !this.isAttachedToEntity();
     }
@@ -183,6 +187,7 @@ public class SodaBottleRocketEntity extends FireworkRocketEntity {
     }
 
     
+    @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
         if (!this.level().isClientSide()) {
@@ -191,6 +196,7 @@ public class SodaBottleRocketEntity extends FireworkRocketEntity {
     }
 
     
+    @Override
     protected void onHitBlock(BlockHitResult result) {
         BlockPos blockpos = new BlockPos(result.getBlockPos());
         this.level().getBlockState(blockpos).entityInside(this.level(), blockpos, this, net.minecraft.world.entity.InsideBlockEffectApplier.NOOP, false);

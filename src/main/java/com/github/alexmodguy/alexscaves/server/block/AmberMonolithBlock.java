@@ -36,6 +36,7 @@ public class AmberMonolithBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AmberMonolithBlockEntity(pos, state);
     }

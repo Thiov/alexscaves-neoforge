@@ -36,6 +36,7 @@ public class SugarStaffHexEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(LIFESPAN, 100);
         builder.define(HEX_SCALE, 1F);

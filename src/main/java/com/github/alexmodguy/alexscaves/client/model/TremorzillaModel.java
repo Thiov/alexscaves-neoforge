@@ -506,6 +506,7 @@ public class TremorzillaModel extends ACAdvancedEntityModel<TremorzillaEntity> {
     }
 
     
+    @Override
     public void setupAnim(TremorzillaEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -822,11 +823,13 @@ public class TremorzillaModel extends ACAdvancedEntityModel<TremorzillaEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, torso, torsoSpikes, rightLeg, leftLeg, chest, chestSpikes, neck, neckSlope, rightArm, leftArm, rightThumb, leftThumb, head, jaw, rightEar, leftEar, neckSpikes, tail1, tail1Spikes, tail2, tail2Spikes, tail3, tail3Spikes, tail4, torsoSpike1, torsoSpike2, torsoSpike3, tail1Spike1, tail1Spike2, cube_r6, chestSpike1, chestSpike2, chestSpike3);
     }

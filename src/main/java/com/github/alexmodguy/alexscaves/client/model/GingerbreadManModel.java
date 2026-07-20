@@ -91,11 +91,13 @@ public class GingerbreadManModel extends AdvancedEntityModel<GingerbreadManEntit
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, body, head, left_Arm, left_Leg, cube_r1, cube_r2, right_Arm, right_Leg);
     }
@@ -192,6 +194,7 @@ public class GingerbreadManModel extends AdvancedEntityModel<GingerbreadManEntit
     }
 
     
+    @Override
     public void setupAnim(GingerbreadManEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

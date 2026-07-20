@@ -10,6 +10,7 @@ import java.util.List;
 public class SpelunkeryTableJEIGuiHandler implements IGuiContainerHandler<SpelunkeryTableScreen> {
 
     
+    @Override
     public List<Rect2i> getGuiExtraAreas(SpelunkeryTableScreen tableScreen) {
         if (tableScreen.hasPaper()) {
             int i = tableScreen.getGuiLeft();

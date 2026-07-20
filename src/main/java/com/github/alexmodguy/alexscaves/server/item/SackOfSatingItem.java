@@ -75,11 +75,13 @@ public class SackOfSatingItem extends Item {
 
 
     
+    @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return Optional.of(new SackOfSatingTooltip(stack));
     }
 
     
+    @Override
     public boolean overrideOtherStackedOnMe(ItemStack sackStack, ItemStack foodStack, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
         if (clickAction != ClickAction.SECONDARY || foodStack.is(ACTagRegistry.RESTRICTED_FROM_SACK_OF_SATING)) {
             return false;

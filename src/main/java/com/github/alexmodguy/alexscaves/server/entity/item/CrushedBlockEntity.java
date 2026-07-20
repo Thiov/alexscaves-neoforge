@@ -23,6 +23,7 @@ public class CrushedBlockEntity  extends AbstractMovingBlockEntity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(CRUSH_PROGRESS, 0F);
@@ -83,6 +84,7 @@ public class CrushedBlockEntity  extends AbstractMovingBlockEntity {
     }
 
     
+    @Override
     public boolean movesEntities() {
         return false;
     }

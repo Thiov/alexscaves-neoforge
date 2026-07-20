@@ -64,6 +64,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HAS_BARREL, true);
@@ -92,6 +93,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         this.prevRaiseArmsAmount = raiseArmsAmount;
@@ -170,26 +172,31 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_THROW_BARREL, ANIMATION_DRINK_BARREL, ANIMATION_SMASH, ANIMATION_BITE};
     }
@@ -300,12 +307,14 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = BrainiacEntity.this.getTarget();
             return target != null && target.isAlive();
         }
 
         
+        @Override
         public void tick() {
             LivingEntity target = BrainiacEntity.this.getTarget();
             if (tongueCooldown > 0) {
@@ -380,6 +389,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
         }
 
         
+        @Override
         public boolean canUse() {
             if (BrainiacEntity.this.hasBarrel()) {
                 return false;
@@ -388,6 +398,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
         }
 
         
+        @Override
         public boolean canContinueToUse() {
             return super.canContinueToUse() && !BrainiacEntity.this.hasBarrel();
         }
@@ -397,6 +408,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
         }
 
         
+        @Override
         public void tick() {
             super.tick();
             if (blockPos != null) {
@@ -425,6 +437,7 @@ public class BrainiacEntity extends Monster implements IAnimatedEntity {
 
 
         
+        @Override
         protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
             return pos != null && worldIn.getBlockState(pos).is(ACBlockRegistry.WASTE_DRUM.get());
         }

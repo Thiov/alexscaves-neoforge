@@ -23,26 +23,31 @@ public class DinoBowlStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     protected StructurePiece createPiece(BlockPos offset, BlockPos center, int heightBlocks, int widthBlocks, RandomState randomState) {
         return new DinoBowlStructurePiece(offset, center, heightBlocks, widthBlocks);
     }
 
     
+    @Override
     public int getGenerateYHeight(WorldgenRandom random, int x, int y) {
         return BOWL_Y_CENTER;
     }
 
     
+    @Override
     public int getWidthRadius(WorldgenRandom random) {
         return BOWL_WIDTH_RADIUS;
     }
 
     
+    @Override
     public int getHeightRadius(WorldgenRandom random, int seaLevel) {
         return BOWL_HEIGHT_RADIUS;
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.DINO_BOWL.get();
     }

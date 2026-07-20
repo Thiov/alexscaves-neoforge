@@ -15,6 +15,7 @@ public class LicorootTreeWithSproutsFeature extends LicorootTreeFeature {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         BlockPos pos = context.origin();
         if (super.place(context)) {

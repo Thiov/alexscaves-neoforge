@@ -22,12 +22,14 @@ public class ACDummyBiomeSource extends BiomeSource {
     }
 
     
+    @Override
     protected Stream<Holder<Biome>> collectPossibleBiomes() {
         // Return empty stream - this is a dummy source
         return Stream.empty();
     }
 
     
+    @Override
     public Holder<Biome> getNoiseBiome(int p_204238_, int p_204239_, int p_204240_, Climate.Sampler p_204241_) {
         return null;
     }

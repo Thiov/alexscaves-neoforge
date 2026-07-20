@@ -82,6 +82,7 @@ public class BoundroidEntity extends Monster {
 
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(WINCH_UUID, Optional.empty());

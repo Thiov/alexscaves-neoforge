@@ -22,6 +22,7 @@ public class GrottoceratopsMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return grottoceratops.getTarget() != null && grottoceratops.getTarget().isAlive();
     }

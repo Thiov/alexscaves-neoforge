@@ -70,6 +70,7 @@ public class MagneticWeaponEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(ITEMSTACK, new ItemStack(Items.IRON_SWORD));
         builder.define(CONTROLLER_UUID, Optional.empty());

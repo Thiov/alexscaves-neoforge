@@ -97,12 +97,14 @@ public class TeslaBulbBlock extends BaseEntityBlock implements SimpleWaterlogged
 
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return state.getValue(DOWN) ? SHAPE_DOWN : SHAPE_UP;
     }
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new TeslaBulbBlockEntity(pos, state);
     }

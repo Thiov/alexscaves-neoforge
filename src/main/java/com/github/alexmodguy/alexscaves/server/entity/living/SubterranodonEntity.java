@@ -143,6 +143,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FLYING, false);
@@ -172,6 +173,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevFlyProgress = flyProgress;
@@ -479,27 +481,32 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     public PackAnimal getPriorPackMember() {
         return this.priorPackMember;
     }
 
     
+    @Override
     public PackAnimal getAfterPackMember() {
         return afterPackMember;
     }
 
     
+    @Override
     public void setPriorPackMember(PackAnimal animal) {
         this.priorPackMember = (SubterranodonEntity) animal;
     }
 
     
+    @Override
     public void setAfterPackMember(PackAnimal animal) {
         this.afterPackMember = (SubterranodonEntity) animal;
     }
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob) {
         return ACEntityRegistry.SUBTERRANODON.get().create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }
@@ -513,11 +520,13 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.SUBTERRANODON_EGG.get().defaultBlockState().setValue(MultipleDinosaurEggsBlock.EGGS, 1 + random.nextInt(3));
     }
 
     
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         InteractionResult prev = super.mobInteract(player, hand);
         if (prev != InteractionResult.SUCCESS) {
@@ -538,6 +547,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 0) {
@@ -552,6 +562,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
         }
     }
 
+    @Override
     public boolean shouldRiderSit() {
         return false;
     }
@@ -584,6 +595,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
     }
 
     
+    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
         return new Vec3(this.getX(), this.getBoundingBox().minY, this.getZ());
     }
@@ -671,6 +683,7 @@ public class SubterranodonEntity extends DinosaurEntity implements PackAnimal, F
             this.parentEntity = bird;
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.MOVE_TO) {
                 final Vec3 vector3d = new Vec3(this.wantedX - parentEntity.getX(), this.wantedY - parentEntity.getY(), this.wantedZ - parentEntity.getZ());

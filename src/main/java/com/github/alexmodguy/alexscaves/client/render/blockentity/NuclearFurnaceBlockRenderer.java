@@ -35,6 +35,7 @@ public class NuclearFurnaceBlockRenderer<T extends NuclearFurnaceBlockEntity> im
     }
 
     
+    @Override
     public void render(T furnace, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         poseStack.pushPose();
         BlockState state = furnace.getBlockState();

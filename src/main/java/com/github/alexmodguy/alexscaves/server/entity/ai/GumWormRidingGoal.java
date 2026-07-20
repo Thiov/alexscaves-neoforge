@@ -23,6 +23,7 @@ public class GumWormRidingGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return entity.isRidingMode();
     }
@@ -34,6 +35,7 @@ public class GumWormRidingGoal extends Goal {
     }
 
     
+    @Override
     public void tick() {
         Player ridingPlayer = entity.getRidingPlayer();
         if (ridingPlayer != null) {

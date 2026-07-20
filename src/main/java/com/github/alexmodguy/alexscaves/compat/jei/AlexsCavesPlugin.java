@@ -39,6 +39,7 @@ public class AlexsCavesPlugin implements IModPlugin {
     }
 
     
+    @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
@@ -47,6 +48,7 @@ public class AlexsCavesPlugin implements IModPlugin {
     }
 
     
+    @Override
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(SPELUNKERY_TABLE_RECIPE_TYPE, ACRecipeMaker.createSpelunkeryTableRecipes());
         registration.addRecipes(RecipeTypes.CRAFTING, ACRecipeMaker.createCaveMapRecipes());
@@ -65,6 +67,7 @@ public class AlexsCavesPlugin implements IModPlugin {
     }
 
     
+    @Override
     public void registerRuntime(IRuntimeRegistration registration) {
         // In 26.1 recipe lookup by key is only available server-side; use the integrated server when present.
         MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
@@ -80,17 +83,20 @@ public class AlexsCavesPlugin implements IModPlugin {
     }
 
     
+    @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiContainerHandler(SpelunkeryTableScreen.class, new SpelunkeryTableJEIGuiHandler());
     }
 
     
+    @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ACBlockRegistry.SPELUNKERY_TABLE.get()), SPELUNKERY_TABLE_RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ACBlockRegistry.NUCLEAR_FURNACE_COMPONENT.get()), NUCLEAR_FURNACE_RECIPE_TYPE);
     }
 
     
+    @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(ACItemRegistry.CAVE_TABLET.get(), CaveTabletSubtypeInterpreter.INSTANCE);
         registration.registerSubtypeInterpreter(ACItemRegistry.CAVE_CODEX.get(), CaveTabletSubtypeInterpreter.INSTANCE);

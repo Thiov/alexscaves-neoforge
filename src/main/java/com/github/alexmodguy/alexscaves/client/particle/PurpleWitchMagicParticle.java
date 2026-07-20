@@ -127,6 +127,7 @@ public class PurpleWitchMagicParticle extends AbstractTrailParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.15F;
     }
@@ -137,6 +138,7 @@ public class PurpleWitchMagicParticle extends AbstractTrailParticle {
     }
 
     
+    @Override
     public int sampleCount() {
         return 5;
     }

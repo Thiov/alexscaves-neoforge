@@ -65,6 +65,7 @@ public class DinosaurEggBlock extends Block {
     }
 
     
+    @Override
     public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn) {
         this.tryTrample(worldIn, pos, entityIn, 100);
         super.stepOn(worldIn, pos, state, entityIn);

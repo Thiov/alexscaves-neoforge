@@ -28,6 +28,7 @@ public class DeepOneKnightRenderer extends MobRenderer121X<DeepOneKnightEntity, 
     }
 
     
+    @Override
     protected void scale(DeepOneKnightEntity mob, PoseStack matrixStackIn, float partialTicks) {
         if (mob.isSummoned()) {
             matrixStackIn.translate(0, (mob.getBbHeight() + 1F) * (1F - mob.getSummonProgress(partialTicks)), 0);

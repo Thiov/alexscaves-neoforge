@@ -27,12 +27,14 @@ public class WatcherAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = watcher.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void tick() {
         LivingEntity target = watcher.getTarget();
         if (navigationCheckCooldown-- < 0) {

@@ -26,12 +26,14 @@ public class GumWormAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         return target != null && target.isAlive() && entity.timeBetweenAttacks <= 0 && !entity.isRidingMode();
     }
 
     
+    @Override
     public void stop() {
         entity.setBiting(false);
         entity.setLeaping(false);
@@ -39,6 +41,7 @@ public class GumWormAttackGoal extends Goal {
     }
 
     
+    @Override
     public void start() {
         leapTicks = 0;
         leapHeight = 0.2F + entity.getRandom().nextFloat() * 0.2F;

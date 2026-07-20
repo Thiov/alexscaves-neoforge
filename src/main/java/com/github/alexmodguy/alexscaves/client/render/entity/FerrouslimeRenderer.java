@@ -131,6 +131,7 @@ public class FerrouslimeRenderer extends EntityRenderer121X<FerrouslimeEntity> i
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         sepia = sepiaFlag;
     }

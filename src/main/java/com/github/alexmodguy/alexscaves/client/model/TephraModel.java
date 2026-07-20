@@ -20,11 +20,13 @@ public class TephraModel extends AdvancedEntityModel<TephraEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public void setupAnim(TephraEntity tephraEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         main.rotateAngleZ += ageInTicks * 0.2F;
@@ -32,6 +34,7 @@ public class TephraModel extends AdvancedEntityModel<TephraEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main);
     }

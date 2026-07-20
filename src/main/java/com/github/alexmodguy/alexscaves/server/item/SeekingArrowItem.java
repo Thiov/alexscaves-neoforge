@@ -16,6 +16,7 @@ public class SeekingArrowItem extends ArrowItem {
     }
 
     
+    @Override
     public AbstractArrow createArrow(Level level, ItemStack ammo, LivingEntity shooter, @Nullable ItemStack weapon) {
         return new SeekingArrowEntity(level, shooter);
     }

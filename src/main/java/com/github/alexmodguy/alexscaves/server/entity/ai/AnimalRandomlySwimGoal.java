@@ -32,12 +32,14 @@ public class AnimalRandomlySwimGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
         return mob.isInWater() && (target == null || !target.isAlive()) && (chance == 0 || mob.getRandom().nextInt(chance) == 0);
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return goal != null && mob.distanceToSqr(Vec3.atCenterOf(goal)) > 30 && !mob.getNavigation().isDone();
     }

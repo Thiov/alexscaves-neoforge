@@ -85,6 +85,7 @@ public class GummyBearRenderer extends MobRenderer121X<GummyBearEntity, GummyBea
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

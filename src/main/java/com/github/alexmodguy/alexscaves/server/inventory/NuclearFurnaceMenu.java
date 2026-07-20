@@ -48,6 +48,7 @@ public class NuclearFurnaceMenu extends AbstractContainerMenu {
     }
 
     
+    @Override
     public boolean stillValid(Player player) {
         return this.container.stillValid(player);
     }

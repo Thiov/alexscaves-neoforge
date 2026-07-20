@@ -20,6 +20,7 @@ public class TremorzillaAttackGoal  extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = tremorzilla.getTarget();
         return target != null && target.isAlive() && !tremorzilla.isDancing();

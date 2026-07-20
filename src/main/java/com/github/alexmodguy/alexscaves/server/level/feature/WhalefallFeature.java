@@ -31,6 +31,7 @@ public class WhalefallFeature extends Feature<WhalefallFeatureConfiguration> {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<WhalefallFeatureConfiguration> context) {
         RandomSource randomsource = context.random();
         WorldGenLevel level = context.level();

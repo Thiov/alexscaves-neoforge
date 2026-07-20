@@ -28,6 +28,7 @@ public class MeltedCaramelEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

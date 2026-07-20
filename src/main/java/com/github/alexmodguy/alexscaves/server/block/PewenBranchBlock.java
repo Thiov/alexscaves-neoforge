@@ -143,11 +143,13 @@ public class PewenBranchBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     
+    @Override
     public float getMaxHorizontalOffset() {
         return 0.0F;
     }
 
     
+    @Override
     public float getMaxVerticalOffset() {
         return 0.75F;
     }

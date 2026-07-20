@@ -74,16 +74,19 @@ public class RadgillModel extends AdvancedEntityModel<RadgillEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, tail, dorsal, dorsal2, tailfin, jaw, bottom_fin, rfin, lfin);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public void setupAnim(RadgillEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float swimSpeed = 0.5F;

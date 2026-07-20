@@ -44,11 +44,13 @@ public class MagnetronModel extends AdvancedEntityModel<MagnetronEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(wheel, headPivot);
     }
 
     
+    @Override
     public void setupAnim(MagnetronEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTick = ageInTicks - entity.tickCount;
@@ -80,6 +82,7 @@ public class MagnetronModel extends AdvancedEntityModel<MagnetronEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(wheel, headPivot, head, headExtra);
     }

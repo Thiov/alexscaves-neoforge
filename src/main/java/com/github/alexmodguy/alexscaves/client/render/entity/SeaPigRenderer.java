@@ -43,6 +43,7 @@ public class SeaPigRenderer extends MobRenderer121X<SeaPigEntity, SeaPigModel> i
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

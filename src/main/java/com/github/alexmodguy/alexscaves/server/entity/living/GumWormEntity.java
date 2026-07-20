@@ -114,6 +114,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new GumWormRidingGoal(this));
         this.goalSelector.addGoal(1, new GumWormAttackGoal(this));
@@ -132,6 +133,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(Z_ROT_DIRECTION, false);
@@ -176,6 +178,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevSurfacePosition = surfacePosition;
@@ -373,6 +376,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public float maxUpStep() {
         return isRidingMode() ? 5.0F : super.maxUpStep();
     }
@@ -383,6 +387,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     protected void dropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource) {
         boolean flag = this.getLastHurtByPlayer() != null;
         if (this.shouldDropLoot((net.minecraft.server.level.ServerLevel) this.level()) && serverLevel.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_DROPS)) {
@@ -553,6 +558,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         if (LEAPING.equals(dataAccessor)) {
             attemptPlayStopDiggingNoise();
@@ -669,6 +675,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public boolean canPassThrough(BlockPos blockPos, BlockState blockState, VoxelShape voxelShape) {
         return canDigBlock(blockState) && (!isRidingMode() || !level().getBlockState(blockPos.above()).isSolid() || !blockState.isSuffocating(level(), blockPos));
     }
@@ -688,11 +695,13 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public boolean isPushable() {
         return false;
     }
 
     
+    @Override
     public void push(Entity entity) {
         if (!this.isPassengerOfSameVehicle(entity) && !(entity instanceof GumWormSegmentEntity)) {
             if (!entity.noPhysics && !this.noPhysics) {
@@ -732,6 +741,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     public Vec3 getLightProbePosition(float f) {
         if (surfacePosition != null && prevSurfacePosition != null) {
             Vec3 difference = surfacePosition.subtract(prevSurfacePosition);
@@ -806,6 +816,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
     }
 
     
+    @Override
     protected float getSoundVolume() {
         return super.getSoundVolume() * 3.0F;
     }
@@ -857,6 +868,7 @@ public class GumWormEntity extends Monster implements ICustomCollisions, KaijuMo
             super(GumWormEntity.this);
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.MOVE_TO) {
                 Vec3 vector3d = new Vec3(this.wantedX - mob.getX(), this.wantedY - mob.getY(), this.wantedZ - mob.getZ());

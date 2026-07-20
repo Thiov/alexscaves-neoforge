@@ -118,10 +118,12 @@ public class ACParticleRegistry {
     private static ParticleType<BlockParticleOption> createBlockParticleType(){
         return new ParticleType<>(false) {
             
+            @Override
             public MapCodec<BlockParticleOption> codec() {
                 return BlockParticleOption.codec(this);
             }
             
+            @Override
             public StreamCodec<? super RegistryFriendlyByteBuf, BlockParticleOption> streamCodec() {
                 return BlockParticleOption.streamCodec(this);
             }
@@ -131,10 +133,12 @@ public class ACParticleRegistry {
     private static ParticleType<ItemParticleOption> createItemParticleType(){
         return new ParticleType<>(false) {
             
+            @Override
             public MapCodec<ItemParticleOption> codec() {
                 return ItemParticleOption.codec(this);
             }
             
+            @Override
             public StreamCodec<? super RegistryFriendlyByteBuf, ItemParticleOption> streamCodec() {
                 return ItemParticleOption.streamCodec(this);
             }

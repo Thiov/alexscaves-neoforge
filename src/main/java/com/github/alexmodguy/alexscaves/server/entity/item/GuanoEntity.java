@@ -50,6 +50,7 @@ public class GuanoEntity extends ThrowableItemProjectile {
     }
 
     
+    @Override
     protected Item getDefaultItem() {
         return ACItemRegistry.GUANO.get();
     }

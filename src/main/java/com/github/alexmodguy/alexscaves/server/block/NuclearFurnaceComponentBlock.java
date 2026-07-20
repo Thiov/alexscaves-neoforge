@@ -62,6 +62,7 @@ public class NuclearFurnaceComponentBlock extends Block implements WorldlyContai
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         if (state.getValue(ACTIVE)) {
             BlockPos corner = getCornerForFurnace(getter, pos, true);
@@ -202,6 +203,7 @@ public class NuclearFurnaceComponentBlock extends Block implements WorldlyContai
 
 
     
+    @Override
     public void playerDestroy(Level level, Player player, BlockPos blockPos, BlockState state, @javax.annotation.Nullable BlockEntity entity, ItemStack itemStack) {
         checkCriticalityExplosion(level, blockPos);
         super.playerDestroy(level, player, blockPos, state, entity, itemStack);
@@ -235,6 +237,7 @@ public class NuclearFurnaceComponentBlock extends Block implements WorldlyContai
     }
 
     
+    @Override
     public WorldlyContainer getContainer(BlockState state, LevelAccessor levelAccessor, BlockPos blockPos) {
         if(state.getValue(ACTIVE)){
             BlockPos corner = getCornerForFurnace(levelAccessor, blockPos, true);

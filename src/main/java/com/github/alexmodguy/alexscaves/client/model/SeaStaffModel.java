@@ -66,17 +66,20 @@ public class SeaStaffModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(bone);
     }
 
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(bone, cube_r1, cube_r2, cube_r3, cube_r4, sClaw, bClaw);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float explode, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
 

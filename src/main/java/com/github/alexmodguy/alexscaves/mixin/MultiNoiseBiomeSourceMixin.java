@@ -44,11 +44,13 @@ public class MultiNoiseBiomeSourceMixin implements MultiNoiseBiomeSourceAccessor
     }
 
     
+    @Override
     public void setLastSampledSeed(long seed) {
         lastSampledWorldSeed = seed;
     }
 
     
+    @Override
     public void setLastSampledDimension(ResourceKey<Level> dimension) {
         lastSampledDimension = dimension;
     }

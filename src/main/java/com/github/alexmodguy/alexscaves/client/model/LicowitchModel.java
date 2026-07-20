@@ -140,11 +140,13 @@ public class LicowitchModel extends AdvancedEntityModel<LicowitchEntity> impleme
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, body, left_Leg, right_Leg, dress, head, nose, hat, hat2, hat3, hat4, arms, armsCrossed, left_Arm, right_Arm, left_Hand, right_Hand);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
@@ -243,6 +245,7 @@ public class LicowitchModel extends AdvancedEntityModel<LicowitchEntity> impleme
     }
 
     
+    @Override
     public void setupAnim(LicowitchEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

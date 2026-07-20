@@ -72,6 +72,7 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     }
 
     
+    @Override
     protected void shootProjectile(LivingEntity shooter, Projectile projectile, int index, float velocity, float inaccuracy, float angle, @Nullable LivingEntity target) {
         projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot() + angle, 0.0F, velocity, inaccuracy);
     }
@@ -93,6 +94,7 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     }
 
     
+    @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }
@@ -368,11 +370,13 @@ public class DreadbowItem extends ProjectileWeaponItem implements UpdatesStackTa
     }
 
     
+    @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
         return ARROW_ONLY;
     }
 
     
+    @Override
     public int getDefaultProjectileRange() {
         return 64;
     }

@@ -23,11 +23,13 @@ public class OceanTrenchStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     protected StructurePiece createPiece(BlockPos offset, BlockPos center, int heightBlocks, int widthBlocks, RandomState randomState) {
         return new OceanTrenchStructurePiece(offset, center, heightBlocks, widthBlocks);
     }
 
     
+    @Override
     public void generatePieces(StructurePiecesBuilder builder, Structure.GenerationContext context) {
         int i = context.chunkPos().getMinBlockX();
         int j = context.chunkPos().getMinBlockZ();
@@ -53,26 +55,31 @@ public class OceanTrenchStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     public int getGenerateYHeight(WorldgenRandom random, int x, int y) {
         return -16;
     }
 
     
+    @Override
     public int getWidthRadius(WorldgenRandom random) {
         return BOWL_WIDTH_RADIUS;
     }
 
     
+    @Override
     public int getHeightRadius(WorldgenRandom random, int seaLevel) {
         return 64;
     }
 
     
+    @Override
     protected int getYExpandUp() {
         return 16;
     }
 
     
+    @Override
     protected int getYExpandDown() {
         return 16;
     }
@@ -82,6 +89,7 @@ public class OceanTrenchStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.OCEAN_TRENCH.get();
     }

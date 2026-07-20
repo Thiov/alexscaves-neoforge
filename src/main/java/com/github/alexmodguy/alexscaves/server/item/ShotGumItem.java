@@ -139,6 +139,7 @@ public class ShotGumItem extends Item implements UpdatesStackTags, AlwaysCombina
     }
 
     
+    @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }

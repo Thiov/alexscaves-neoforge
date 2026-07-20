@@ -51,6 +51,7 @@ public class LicowitchUseCrucibleGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
         if ((target == null || !target.isAlive()) && mob.getAnimation() == IAnimatedEntity.NO_ANIMATION) {
@@ -84,6 +85,7 @@ public class LicowitchUseCrucibleGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity target = mob.getTarget();
         return cruciblePos != null && canWitchUseCrucibleAt(mob.level(), cruciblePos, true) && (target == null || !target.isAlive()) && cookTime < 300;
@@ -106,6 +108,7 @@ public class LicowitchUseCrucibleGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         super.stop();
         cookTime = 0;
@@ -131,6 +134,7 @@ public class LicowitchUseCrucibleGoal extends Goal {
     }
 
     
+    @Override
     public void start() {
         super.start();
         mob.updateHeldItems = false;

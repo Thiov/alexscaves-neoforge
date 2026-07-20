@@ -285,6 +285,7 @@ public class BoundroidWinchEntity extends Monster {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HEAD_UUID, Optional.empty());
@@ -374,6 +375,7 @@ public class BoundroidWinchEntity extends Monster {
             }
         }
 
+        @Override
         public boolean canUse() {
             return super.canUse();
         }
@@ -382,6 +384,7 @@ public class BoundroidWinchEntity extends Monster {
             return super.canContinueToUse() && random.nextInt(100) != 0;
         }
 
+        @Override
         public void stop() {
             super.stop();
             this.wantedX = 0;
@@ -404,6 +407,7 @@ public class BoundroidWinchEntity extends Monster {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             if (!BoundroidWinchEntity.this.level().canSeeSky(BoundroidWinchEntity.this.blockPosition()) && BoundroidWinchEntity.this.getRandom().nextInt(20) != 0) {
                 return false;
@@ -486,6 +490,7 @@ public class BoundroidWinchEntity extends Monster {
         }
 
         
+        @Override
         public boolean canUse() {
             if (BoundroidWinchEntity.this.getHead() instanceof BoundroidEntity boundroid) {
                 Entity target = boundroid.getTarget();
@@ -495,6 +500,7 @@ public class BoundroidWinchEntity extends Monster {
         }
 
         
+        @Override
         public void stop() {
             if (BoundroidWinchEntity.this.getHead() instanceof BoundroidEntity boundroid) {
                 boundroid.setScared(false);

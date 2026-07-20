@@ -23,6 +23,7 @@ public abstract class ACMultipartEntity<T extends Entity> extends PartEntity<T> 
     }
 
     
+    @Override
     public boolean fireImmune() {
         return true;
     }
@@ -52,6 +53,7 @@ public abstract class ACMultipartEntity<T extends Entity> extends PartEntity<T> 
     }
 
     
+    @Override
     public boolean isPickable() {
         Entity parent = this.getParent();
         return parent != null && parent.isPickable();
@@ -75,6 +77,7 @@ public abstract class ACMultipartEntity<T extends Entity> extends PartEntity<T> 
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 

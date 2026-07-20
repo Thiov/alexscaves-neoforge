@@ -347,6 +347,7 @@ public abstract class SauropodBaseModel<T extends SauropodBaseEntity> extends AC
     }
 
     
+    @Override
     public void setupAnim(SauropodBaseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -548,6 +549,7 @@ public abstract class SauropodBaseModel<T extends SauropodBaseEntity> extends AC
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }

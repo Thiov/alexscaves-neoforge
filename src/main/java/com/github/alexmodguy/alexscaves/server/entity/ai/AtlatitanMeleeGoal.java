@@ -21,12 +21,14 @@ public class AtlatitanMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = atlatitan.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void stop() {
         atlatitan.turningFast = false;
     }

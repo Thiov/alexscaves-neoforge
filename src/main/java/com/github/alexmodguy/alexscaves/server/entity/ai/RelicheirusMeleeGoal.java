@@ -22,6 +22,7 @@ public class RelicheirusMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return relicheirus.getTarget() != null && relicheirus.getTarget().isAlive();
     }

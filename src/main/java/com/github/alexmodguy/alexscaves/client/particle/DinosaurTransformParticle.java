@@ -73,6 +73,7 @@ public class DinosaurTransformParticle extends AbstractTrailParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.5F;
     }

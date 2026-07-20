@@ -92,12 +92,14 @@ public class LuxtructosaurusModel extends SauropodBaseModel<LuxtructosaurusEntit
     }
 
     
+    @Override
     public void setupAnim(SauropodBaseEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
         this.walk(jaw, 0.05F, 0.1F, true, 1F, -0.1F, ageInTicks, 1);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return getListOfAllParts();
     }

@@ -22,12 +22,14 @@ public class CorrodentFearLightGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return this.entity.level().getBrightness(LightLayer.BLOCK, this.entity.blockPosition()) > CorrodentEntity.LIGHT_THRESHOLD && !this.entity.isDigging();
     }
 
 
     
+    @Override
     public void tick() {
         this.entity.fleeLightFor = 50;
         int light = this.entity.level().getBrightness(LightLayer.BLOCK, this.entity.blockPosition());
@@ -57,6 +59,7 @@ public class CorrodentFearLightGoal extends Goal {
 
 
     
+    @Override
     public void stop() {
         this.entity.setAfraid(false);
         if (entity.onGround()) {

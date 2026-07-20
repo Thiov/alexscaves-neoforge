@@ -52,6 +52,7 @@ public class DinosaurSpiritEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(PLAYER_ID, Optional.empty());
         builder.define(DINOSAUR_TYPE, 0);

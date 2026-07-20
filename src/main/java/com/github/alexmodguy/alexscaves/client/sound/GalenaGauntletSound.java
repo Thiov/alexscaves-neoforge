@@ -19,6 +19,7 @@ public class GalenaGauntletSound extends ItemTickableSound {
     }
 
     
+    @Override
     public boolean isValidItem(ItemStack itemStack) {
         return itemStack.is(ACItemRegistry.GALENA_GAUNTLET.get());
     }

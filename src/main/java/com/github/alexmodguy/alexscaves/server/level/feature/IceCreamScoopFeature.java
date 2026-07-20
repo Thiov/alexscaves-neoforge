@@ -21,6 +21,7 @@ public class IceCreamScoopFeature extends Feature<IceCreamScoopFeatureConfigurat
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<IceCreamScoopFeatureConfiguration> context) {
         RandomSource randomsource = context.random();
         WorldGenLevel level = context.level();

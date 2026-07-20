@@ -45,6 +45,7 @@ public class PlayerRainbowParticle extends RainbowParticle {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         this.alpha = Math.min(alpha, 0.75F);
@@ -62,6 +63,7 @@ public class PlayerRainbowParticle extends RainbowParticle {
 
 
     
+    @Override
     protected float processAngle(float angle, float partialTick, PoseStack posestack) {
         if(!stopFlag){
             Vec3 vec3 = calculatePlayerPos(partialTick);
@@ -72,6 +74,7 @@ public class PlayerRainbowParticle extends RainbowParticle {
     }
 
     
+    @Override
     public void scaleRainbow(float partialTick, PoseStack posestack) {
     }
 

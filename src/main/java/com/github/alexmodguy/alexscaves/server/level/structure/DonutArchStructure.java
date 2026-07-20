@@ -86,11 +86,13 @@ public class DonutArchStructure extends Structure {
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.DONUT_ARCH.get();
     }

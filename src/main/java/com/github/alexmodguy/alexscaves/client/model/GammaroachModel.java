@@ -145,11 +145,13 @@ public class GammaroachModel extends AdvancedEntityModel<GammaroachEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, head, lantennae, rantennae, carapace, mtail, rtail, ltail, bodyThing2, bodyThing, antenna1Thing, atenna2Thing, cube_r5, rleg, rleg2, rleg3, lleg, lleg2, lleg3);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
@@ -223,6 +225,7 @@ public class GammaroachModel extends AdvancedEntityModel<GammaroachEntity> {
     }
 
     
+    @Override
     public void setupAnim(GammaroachEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

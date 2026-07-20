@@ -176,17 +176,20 @@ public class MineGuardianModel extends AdvancedEntityModel<MineGuardianEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(head, head_r1, eye, spikepart0, spikepart1, spikepart2, spikepart3, spikepart4, spikepart5, spikepart6, spikepart7, spikepart8, spikepart9, spikepart10, spikepart11, spike0, spike1, spike2, spike3, spike4, spike5, spike6, spike7, spike8, spike9, spike10, spike11);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(head);
     }
 
 
     
+    @Override
     public void setupAnim(MineGuardianEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

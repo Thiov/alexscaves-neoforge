@@ -68,6 +68,7 @@ public class GloomothEntity extends PathfinderMob implements UnderzealotSacrific
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FLYING, false);
@@ -105,6 +106,7 @@ public class GloomothEntity extends PathfinderMob implements UnderzealotSacrific
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevFlyProgress = flyProgress;
@@ -307,12 +309,14 @@ public class GloomothEntity extends PathfinderMob implements UnderzealotSacrific
     }
 
     
+    @Override
     public void triggerSacrificeIn(int time) {
         isBeingSacrificed = true;
         sacrificeTime = time;
     }
 
     
+    @Override
     public boolean isValidSacrifice(int distanceFromGround) {
         return distanceFromGround < 4;
     }
@@ -352,6 +356,7 @@ public class GloomothEntity extends PathfinderMob implements UnderzealotSacrific
             super(gloomoth);
         }
 
+        @Override
         public void tick() {
             int maxRotChange = 10;
             boolean flag = false;

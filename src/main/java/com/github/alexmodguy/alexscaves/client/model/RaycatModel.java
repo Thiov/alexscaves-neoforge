@@ -84,16 +84,19 @@ public class RaycatModel extends ACAdvancedEntityModel<RaycatEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, tail, tail2, head, lleg, rleg, rarm, larm);
     }
 
     
+    @Override
     public void setupAnim(RaycatEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float walkSpeed = 0.7F;

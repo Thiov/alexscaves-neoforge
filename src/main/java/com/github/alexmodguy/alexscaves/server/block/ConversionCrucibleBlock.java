@@ -73,6 +73,7 @@ public class ConversionCrucibleBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ConversionCrucibleBlockEntity(pos, state);
     }

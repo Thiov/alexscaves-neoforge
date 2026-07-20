@@ -52,6 +52,7 @@ public class BeholderEyeEntity extends Entity implements PossessesCamera {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(USING_PLAYER_ID, Optional.empty());
         builder.define(X_ROT, 0F);
@@ -249,6 +250,7 @@ public class BeholderEyeEntity extends Entity implements PossessesCamera {
     }
 
     
+    @Override
     public float getPossessionStrength(float partialTicks) {
         float age = tickCount + partialTicks;
         if (age > 10) {
@@ -260,11 +262,13 @@ public class BeholderEyeEntity extends Entity implements PossessesCamera {
     }
 
     
+    @Override
     public boolean instant() {
         return true;
     }
 
     
+    @Override
     public boolean isPossessionBreakable() {
         return true;
     }

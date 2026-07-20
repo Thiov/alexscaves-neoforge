@@ -47,6 +47,7 @@ public class AnimalBreedEggsGoal extends BreedGoal {
     }
 
     
+    @Override
     protected void breed() {
         ServerPlayer serverplayer = this.animal.getLoveCause();
         if (serverplayer == null && this.partner.getLoveCause() != null) {

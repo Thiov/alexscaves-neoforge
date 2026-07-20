@@ -24,6 +24,7 @@ public class AncientSaplingBlock extends SaplingBlock {
     }
 
     
+    @Override
     public void advanceTree(ServerLevel level, BlockPos pos, BlockState state, RandomSource random) {
         if (state.getValue(STAGE) == 0) {
             level.setBlock(pos, state.cycle(STAGE), 4);

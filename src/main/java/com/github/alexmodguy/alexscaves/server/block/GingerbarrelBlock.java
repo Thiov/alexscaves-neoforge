@@ -85,6 +85,7 @@ public class GingerbarrelBlock extends BarrelBlock {
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING).getAxis()){
             case X:

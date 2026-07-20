@@ -76,6 +76,7 @@ public class ThrownWasteDrumEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(ON_GROUND_FOR, 0);
     }

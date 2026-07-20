@@ -182,11 +182,13 @@ public class HullbreakerModel extends AdvancedEntityModel<HullbreakerEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, body, body2, tail, head, tail, tail2, tail3, dorsal, dorsal2, jaw, rbarb, rbarb2, rbarbLure, lbarb, lbarb2, lbarbLure, teeth1, teeth2, teeth3, teeth4, teeth5, rflipper, lflipper);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
@@ -249,6 +251,7 @@ public class HullbreakerModel extends AdvancedEntityModel<HullbreakerEntity> {
     }
 
     
+    @Override
     public void setupAnim(HullbreakerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

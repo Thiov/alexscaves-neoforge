@@ -27,11 +27,13 @@ public class WaveModel extends AdvancedEntityModel<WaveEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public void setupAnim(WaveEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float f = (float) ((Math.sin(ageInTicks * 0.1F) + 1F) * 0.2F);
@@ -50,6 +52,7 @@ public class WaveModel extends AdvancedEntityModel<WaveEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, top);
     }

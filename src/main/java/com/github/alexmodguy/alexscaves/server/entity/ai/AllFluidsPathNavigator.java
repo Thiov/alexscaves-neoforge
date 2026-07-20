@@ -22,6 +22,7 @@ public class AllFluidsPathNavigator extends SemiAquaticPathNavigatorNoSpin {
     }
 
     
+    @Override
     protected Vec3 getTempMobPos() {
         return ACFluidHelper.isInAnyFluid(this.mob) ? super.getTempMobPos() :  new Vec3(this.mob.getX(), Math.floor(this.mob.getY() + 0.5D), this.mob.getZ());
     }

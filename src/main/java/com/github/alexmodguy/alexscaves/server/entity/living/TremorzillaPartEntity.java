@@ -41,6 +41,7 @@ public class TremorzillaPartEntity extends PartEntity<TremorzillaEntity> {
     }
 
     
+    @Override
     public boolean fireImmune() {
         return true;
     }
@@ -78,6 +79,7 @@ public class TremorzillaPartEntity extends PartEntity<TremorzillaEntity> {
 
 
     
+    @Override
     public boolean isPickable() {
         TremorzillaEntity parent = this.getParent();
         return parent != null && parent.isPickable();
@@ -106,6 +108,7 @@ public class TremorzillaPartEntity extends PartEntity<TremorzillaEntity> {
     }
 
     
+    @Override
     public boolean is(Entity entityIn) {
         return this == entityIn || this.getParent() == entityIn;
     }
@@ -115,6 +118,7 @@ public class TremorzillaPartEntity extends PartEntity<TremorzillaEntity> {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

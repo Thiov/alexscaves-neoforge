@@ -37,6 +37,7 @@ public class NuclearFurnaceRecipeCategory implements IRecipeCategory<AbstractCoo
     }
 
     
+    @Override
     public Component getTitle() {
         return Component.translatable("alexscaves.container.nuclear_furnace_blasting");
     }
@@ -52,11 +53,13 @@ public class NuclearFurnaceRecipeCategory implements IRecipeCategory<AbstractCoo
     }
 
     
+    @Override
     public IDrawable getIcon() {
         return icon;
     }
 
     
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AbstractCookingRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 62, 38).addIngredients(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ACTagRegistry.NUCLEAR_FURNACE_RODS)));
         builder.addSlot(RecipeIngredientRole.INPUT, 32, 38).addIngredients(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(ACTagRegistry.NUCLEAR_FURNACE_BARRELS)));
@@ -96,6 +99,7 @@ public class NuclearFurnaceRecipeCategory implements IRecipeCategory<AbstractCoo
     }
 
     
+    @Override
     public boolean isHandled(AbstractCookingRecipe recipe) {
         return true;
     }

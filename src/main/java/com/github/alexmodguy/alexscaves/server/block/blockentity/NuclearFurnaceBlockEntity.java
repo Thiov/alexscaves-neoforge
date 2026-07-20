@@ -338,11 +338,13 @@ public class NuclearFurnaceBlockEntity extends BaseContainerBlockEntity implemen
     }
 
     
+    @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction direction) {
         return canPlaceItem(slot, stack);
     }
 
     
+    @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction direction) {
         return true;
     }
@@ -389,6 +391,7 @@ public class NuclearFurnaceBlockEntity extends BaseContainerBlockEntity implemen
     }
 
     
+    @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
@@ -453,11 +456,13 @@ public class NuclearFurnaceBlockEntity extends BaseContainerBlockEntity implemen
     }
 
     
+    @Override
     protected NonNullList<ItemStack> getItems() {
         return this.items;
     }
 
     
+    @Override
     protected void setItems(NonNullList<ItemStack> items) {
         this.items = items;
     }

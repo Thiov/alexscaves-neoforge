@@ -40,16 +40,19 @@ public class SweetishFishModel extends AdvancedEntityModel<SweetishFishEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, bodySeg1, bodySeg2, tail);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public void setupAnim(SweetishFishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

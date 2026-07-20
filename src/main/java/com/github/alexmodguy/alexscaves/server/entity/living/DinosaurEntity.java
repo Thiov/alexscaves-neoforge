@@ -61,6 +61,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements IDancesToJ
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DANCING, false);
@@ -151,6 +152,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements IDancesToJ
     }
 
     
+    @Override
     public void setJukeboxPos(BlockPos blockPos) {
         this.jukeboxPosition = blockPos;
     }
@@ -168,6 +170,7 @@ public abstract class DinosaurEntity extends TamableAnimal implements IDancesToJ
     }
 
     
+    @Override
     public void travel(Vec3 vec3d) {
         if (this.isDancing() || this.isInSittingPose()) {
             if (this.getNavigation().getPath() != null) {

@@ -58,6 +58,7 @@ public class FloaterEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
@@ -88,6 +89,7 @@ public class FloaterEntity extends Entity {
     }
 
     
+    @Override
     public ItemStack getPickResult() {
         return new ItemStack(ACItemRegistry.FLOATER.get());
     }

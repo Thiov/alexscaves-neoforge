@@ -48,6 +48,7 @@ public class BurrowingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DUG_BLOCK_COUNT, 0);
@@ -113,6 +114,7 @@ public class BurrowingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     public void remove(Entity.RemovalReason removalReason) {
         if (hitPos != null) {
             this.level().destroyBlockProgress(this.getId(), hitPos, -1);
@@ -131,12 +133,14 @@ public class BurrowingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         hitPos = blockHitResult.getBlockPos();
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ACItemRegistry.BURROWING_ARROW.get());
     }

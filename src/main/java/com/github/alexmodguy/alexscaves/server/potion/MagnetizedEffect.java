@@ -27,11 +27,13 @@ public class MagnetizedEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration > 0;
     }
 
     
+    @Override
     public void onEffectStarted(LivingEntity entity, int amplifier) {
         if (!entity.level().isClientSide()) {
             MobEffectInstance instance = entity.getEffect(ACEffectRegistry.MAGNETIZING);

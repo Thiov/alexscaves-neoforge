@@ -98,6 +98,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
         this.goalSelector.addGoal(2, new TremorsaurusMeleeGoal(this));
         this.goalSelector.addGoal(3, new AnimalFollowOwnerGoal(this, 1.2D, 5.0F, 2.0F, false) {
             
+            @Override
             public boolean shouldFollow() {
                 return TremorsaurusEntity.this.getCommand() == 2;
             }
@@ -122,6 +123,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RUNNING, false);
@@ -383,11 +385,13 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ACEntityRegistry.TREMORSAURUS.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }
 
     
+    @Override
     public boolean wantsToAttack(LivingEntity living, LivingEntity owner) {
         if(living instanceof TremorsaurusEntity tremorsaurus && (tremorsaurus.getTameAttempts() > 0 || tremorsaurus.hasEffect(ACEffectRegistry.STUNNED))){
             return false;
@@ -436,26 +440,31 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SNIFF, ANIMATION_SPEAK, ANIMATION_ROAR, ANIMATION_BITE, ANIMATION_SHAKE_PREY};
     }
@@ -482,6 +491,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.TREMORSAURUS_EGG.get().defaultBlockState();
     }
@@ -552,6 +562,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
         return new Vec3(this.getX(), this.getBoundingBox().minY, this.getZ());
     }
@@ -569,6 +580,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     public boolean onFeedMixture(ItemStack itemStack, Player player) {
         if (itemStack.is(ACItemRegistry.SERENE_SALAD.get()) && this.hasEffect(ACEffectRegistry.STUNNED)) {
             this.removeEffect(ACEffectRegistry.STUNNED);
@@ -604,6 +616,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
         return true;
     }
 
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 2) {
@@ -647,6 +660,7 @@ public class TremorsaurusEntity extends DinosaurEntity implements KeybindUsingMo
     }
 
     
+    @Override
     public int getMaxNavigableDistanceToGround() {
         return 2;
     }

@@ -67,6 +67,7 @@ public class MagneticOrbitParticle extends AbstractTrailParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.25F;
     }

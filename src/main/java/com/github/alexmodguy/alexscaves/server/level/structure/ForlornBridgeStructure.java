@@ -83,11 +83,13 @@ public class ForlornBridgeStructure extends Structure {
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.FORLORN_BRIDGE.get();
     }

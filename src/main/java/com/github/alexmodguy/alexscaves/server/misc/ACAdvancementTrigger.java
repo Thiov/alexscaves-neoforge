@@ -17,6 +17,7 @@ import java.util.Optional;
 public class ACAdvancementTrigger extends SimpleCriterionTrigger<ACAdvancementTrigger.Instance> {
     
     
+    @Override
     public Codec<Instance> codec() {
         return Instance.CODEC;
     }
@@ -43,6 +44,7 @@ public class ACAdvancementTrigger extends SimpleCriterionTrigger<ACAdvancementTr
         }
 
         
+        @Override
         public Optional<ContextAwarePredicate> player() {
             return this.player;
         }

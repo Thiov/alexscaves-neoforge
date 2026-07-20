@@ -131,11 +131,13 @@ public class SeaPigModel extends AdvancedEntityModel<SeaPigEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, rleg1, rleg2, rleg3, rleg4, lleg1, lleg2, lleg3, lleg4, head, lfrontAntennae, lbackAntennae, rfrontAntennae, rbackAntennae, cube_r1, cube_r2, cube_r3, cube_r4);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
@@ -146,6 +148,7 @@ public class SeaPigModel extends AdvancedEntityModel<SeaPigEntity> {
 
 
     
+    @Override
     public void setupAnim(SeaPigEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float squish = entity.getSquishProgress(ageInTicks - entity.tickCount);

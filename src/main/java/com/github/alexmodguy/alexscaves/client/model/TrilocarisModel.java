@@ -129,16 +129,19 @@ public class TrilocarisModel extends AdvancedEntityModel<TrilocarisEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, head, tailFlipper, legs, legs2, legs3, legs4, rflipper, rflipper2, rflipper3, rflippers, lflipper, lflipper2, lflipper3, lflippers, lantennae, rantennae, lmandible, rmandible);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public void setupAnim(TrilocarisEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float walkSpeed = 1F;

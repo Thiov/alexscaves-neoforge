@@ -33,6 +33,7 @@ public class SirenLightBlockRenderer<T extends SirenLightBlockEntity> implements
     }
 
     
+    @Override
     public void render(T light, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         poseStack.pushPose();
         BlockState state = light.getBlockState();

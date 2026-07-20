@@ -156,6 +156,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
         this.goalSelector.addGoal(2, new GummyBearMeleeGoal(this));
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.0D) {
             
+            @Override
             public boolean shouldPanic() {
                 return GummyBearEntity.this.isBaby() && super.shouldPanic();
             }
@@ -209,6 +210,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public boolean isFood(ItemStack itemStack) {
         Item fishItem = ACItemRegistry.SWEETISH_FISH_RED.get();
         switch(this.getGummyColor()){
@@ -266,11 +268,13 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public void setPossessedByLicowitchId(int entityId) {
         this.entityData.set(POSSESSOR_LICOWITCH_ID, entityId);
     }
 
     
+    @Override
     public int getPossessedByLicowitchId() {
         return this.entityData.get(POSSESSOR_LICOWITCH_ID);
     }
@@ -281,6 +285,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public boolean canAttack(LivingEntity living) {
         if(this.getPossessedByLicowitchId() != -1){
             LicowitchEntity licowitch = this.getPossessingLicowitch(this.level());
@@ -342,6 +347,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob ageableMob) {
         GummyBearEntity gummyBear = ACEntityRegistry.GUMMY_BEAR.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
         gummyBear.setGummyColor(this.getGummyColor());
@@ -349,21 +355,25 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         boolean flag = currentAnimation != animation;
         currentAnimation = animation;
@@ -376,6 +386,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_FISH, ANIMATION_EAT, ANIMATION_BACKSCRATCH, ANIMATION_MAUL, ANIMATION_SWIPE};
     }
@@ -582,6 +593,7 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public void setJukeboxPos(BlockPos blockPos) {
         this.jukeboxPosition = blockPos;
     }
@@ -591,11 +603,13 @@ public class GummyBearEntity extends Animal implements IDancesToJukebox, IAnimat
     }
 
     
+    @Override
     public boolean isPushable() {
         return this.getHeldMobId() == -1;
     }
 
     
+    @Override
     public void travel(Vec3 vec3d) {
         if (this.isDancing() || this.isSitting() || this.isMovementBlocked()) {
             if (this.getNavigation().getPath() != null) {

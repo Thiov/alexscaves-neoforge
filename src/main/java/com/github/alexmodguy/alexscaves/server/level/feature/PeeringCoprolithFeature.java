@@ -28,6 +28,7 @@ public class PeeringCoprolithFeature extends Feature<NoneFeatureConfiguration> {
 
     
 
+    @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         RandomSource randomsource = context.random();
         BlockPos blockpos = context.origin();

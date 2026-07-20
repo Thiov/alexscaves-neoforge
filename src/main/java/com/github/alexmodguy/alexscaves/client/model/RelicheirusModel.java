@@ -294,11 +294,13 @@ public class RelicheirusModel extends ACAdvancedEntityModel<RelicheirusEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, chest, chestFeathers, tail, tail2, tailFeathers, neck, neckFeathers, head, jaw, hips, lwattle, rwattle, lleg, lleg2, rleg, rleg2, rfoot, lfoot, rarm, rarmFeathers, larm, larmFeathers, rhand, rhandClaw1, rhandClaw2, rhandClaw3, lhand, lhandClaw1, lhandClaw2, lhandClaw3, rclaw1, rclaw2, rclaw3, claw1, claw2, claw3);
     }
@@ -686,6 +688,7 @@ public class RelicheirusModel extends ACAdvancedEntityModel<RelicheirusEntity> {
     }
 
     
+    @Override
     public void setupAnim(RelicheirusEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

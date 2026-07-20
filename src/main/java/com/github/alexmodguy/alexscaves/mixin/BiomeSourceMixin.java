@@ -24,16 +24,19 @@ public class BiomeSourceMixin implements BiomeSourceAccessor {
     private Map<ResourceKey<Biome>, Holder<Biome>> map = new HashMap<>();
 
     
+    @Override
     public void setResourceKeyMap(Map<ResourceKey<Biome>, Holder<Biome>> map) {
         this.map = map;
     }
 
     
+    @Override
     public Map<ResourceKey<Biome>, Holder<Biome>> getResourceKeyMap() {
         return map;
     }
 
     
+    @Override
     public void expandBiomesWith(Set<Holder<Biome>> newGenBiomes) {
         if(!expanded){
             ImmutableSet.Builder<Holder<Biome>> builder = ImmutableSet.builder();

@@ -50,17 +50,20 @@ public class TeslaBulbModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(bulb);
     }
 
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(bulb, baseRing, center, outer, midRing, topRing);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float explode, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float intensity = 1F + explode;

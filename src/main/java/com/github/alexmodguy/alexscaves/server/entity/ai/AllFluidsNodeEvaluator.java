@@ -14,6 +14,7 @@ public class AllFluidsNodeEvaluator extends SwimNodeEvaluator {
     }
 
     
+    @Override
     public PathType getPathType(PathfindingContext context, int x, int y, int z) {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 

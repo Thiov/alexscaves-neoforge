@@ -89,6 +89,7 @@ public class NuclearBombEntity extends Entity {
     }
 
     
+    @Override
     protected void checkFallDamage(double y, boolean onGround, net.minecraft.world.level.block.state.BlockState state, BlockPos pos) {
         if (onGround && this.fallDistance > 20.0F) {
             this.discard();
@@ -100,6 +101,7 @@ public class NuclearBombEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(TIME, 0);
     }
@@ -135,6 +137,7 @@ public class NuclearBombEntity extends Entity {
     }
 
     
+    @Override
     public ItemStack getPickResult() {
         return new ItemStack(ACBlockRegistry.NUCLEAR_BOMB.get());
     }

@@ -18,6 +18,7 @@ public class MagnetBlockRenderer<T extends MagnetBlockEntity> implements com.git
     }
 
 
+    @Override
     public void render(T magnet, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         BlockState state = magnet.getBlockState();
         float ageInTicks = (magnet.age + partialTicks) * 3F;

@@ -12,11 +12,13 @@ public class SpelunkeryTableDrawable implements IDrawable {
     private static final Identifier TEXTURE_WIDGETS = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/gui/spelunkery_table_widgets.png");
 
     
+    @Override
     public int getWidth() {
         return 136;
     }
 
     
+    @Override
     public int getHeight() {
         return 27;
     }

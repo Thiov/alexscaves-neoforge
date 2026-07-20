@@ -94,6 +94,7 @@ public class DeepOneModel extends AdvancedEntityModel<DeepOneEntity> implements 
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
@@ -174,6 +175,7 @@ public class DeepOneModel extends AdvancedEntityModel<DeepOneEntity> implements 
     }
 
     
+    @Override
     public void setupAnim(DeepOneEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -240,6 +242,7 @@ public class DeepOneModel extends AdvancedEntityModel<DeepOneEntity> implements 
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, tail, head, jaw, rarm, larm, rleg, lleg, headFins);
     }

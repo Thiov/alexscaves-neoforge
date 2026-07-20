@@ -101,6 +101,7 @@ public class RaycatRenderer extends MobRenderer121X<RaycatEntity, RaycatModel> i
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

@@ -20,6 +20,7 @@ public class CaveSaplingBlock extends SaplingBlock {
     }
 
     
+    @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         if(growsNaturally){
             super.randomTick(blockState, serverLevel, blockPos, randomSource);
@@ -27,6 +28,7 @@ public class CaveSaplingBlock extends SaplingBlock {
     }
 
     
+    @Override
     protected boolean mayPlaceOn(BlockState blockState, BlockGetter getter, BlockPos pos) {
         return blockState.isFaceSturdy(getter, pos, Direction.UP, SupportType.FULL);
     }

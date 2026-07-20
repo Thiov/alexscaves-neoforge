@@ -18,6 +18,7 @@ class ProperBrewingRecipe extends BrewingRecipe {
     }
 
     
+    @Override
     public boolean isInput(@Nonnull ItemStack stack) {
         return !stack.isEmpty() && ItemStack.isSameItemSameComponents(this.inputStack, stack);
     }

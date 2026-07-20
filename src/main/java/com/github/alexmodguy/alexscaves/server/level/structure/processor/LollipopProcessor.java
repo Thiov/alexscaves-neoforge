@@ -69,6 +69,7 @@ public class LollipopProcessor extends StructureProcessor {
     }
 
     
+    @Override
     protected StructureProcessorType<?> getType() {
         return ACStructureProcessorRegistry.LOLLIPOP.get();
     }

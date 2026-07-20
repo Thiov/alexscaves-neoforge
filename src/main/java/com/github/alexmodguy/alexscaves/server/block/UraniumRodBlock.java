@@ -142,6 +142,7 @@ public class UraniumRodBlock extends RotatedPillarBlock implements SimpleWaterlo
     }
 
     
+    @Override
     public Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }

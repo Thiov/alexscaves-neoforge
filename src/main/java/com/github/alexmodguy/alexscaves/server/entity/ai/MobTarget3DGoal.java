@@ -25,6 +25,7 @@ public class MobTarget3DGoal<T extends LivingEntity> extends NearestAttackableTa
     }
 
     
+    @Override
     protected AABB getTargetSearchArea(double distance) {
         return this.mob.getBoundingBox().inflate(distance, distance, distance);
     }

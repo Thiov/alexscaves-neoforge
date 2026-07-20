@@ -74,6 +74,7 @@ public class RebarBlock extends Block implements BucketPickup, LiquidBlockContai
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return getRebarShape(state);
     }
@@ -154,6 +155,7 @@ public class RebarBlock extends Block implements BucketPickup, LiquidBlockContai
     }
 
     
+    @Override
     public Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }

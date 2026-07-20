@@ -80,6 +80,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(RIGHT_PROPELLER_ROT, 0.0F);
         builder.define(LEFT_PROPELLER_ROT, 0.0F);
@@ -118,6 +119,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         float leftPropellerRot = getLeftPropellerRot();
@@ -274,6 +276,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
     }
 
     
+    @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
         if (com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat.isControlledByLocalInstance(this) && this.lSteps > 0) {
@@ -352,6 +355,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
         this.entityData.set(DANGER_ALERT_TICKS, ticks);
     }
 
+    @Override
     public boolean canBeRiddenUnderFluidType(FluidType type, Entity rider) {
         return true;
     }
@@ -362,17 +366,20 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
 
     @Nullable
     
+    @Override
     public LivingEntity getControllingPassenger() {
         Entity entity = this.getFirstPassenger();
         return entity instanceof LivingEntity livingEntity ? livingEntity : null;
     }
 
     
+    @Override
     protected Entity.MovementEmission getMovementEmission() {
         return MovementEmission.EVENTS;
     }
 
     
+    @Override
     public boolean shouldRender(double x, double y, double z) {
         boolean prev = super.shouldRender(x, y, z);
         return prev || this.isVehicle() && this.getFirstPassenger() != null && this.getFirstPassenger().shouldRender(x, y, z);
@@ -609,6 +616,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
     }
 
     
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 0) {
@@ -632,6 +640,7 @@ public class SubmarineEntity extends Entity implements KeybindUsingMount, Render
     }
 
     
+    @Override
     public void onInsideBubbleColumn(boolean b) {
         if (!isVehicle()) {
             super.onAboveBubbleColumn(b, this.blockPosition());

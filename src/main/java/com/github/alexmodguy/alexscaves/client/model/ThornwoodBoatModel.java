@@ -67,11 +67,13 @@ public class ThornwoodBoatModel extends ACBoatModel {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(bottom, right, left, back, front, paddle_left, paddle_right);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(bottom, right, left, back, front, paddle_left, paddle_right, cull);
     }
@@ -83,6 +85,7 @@ public class ThornwoodBoatModel extends ACBoatModel {
 
 
     
+    @Override
     public void setupAnim(Boat entity, float partialTicks, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         setupPaddleAnims(entity, paddle_left, paddle_right, partialTicks);

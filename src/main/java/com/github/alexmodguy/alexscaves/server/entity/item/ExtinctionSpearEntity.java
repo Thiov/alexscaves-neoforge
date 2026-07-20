@@ -49,12 +49,14 @@ public class ExtinctionSpearEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(WIGGLING, false);
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         return spearItem;
     }

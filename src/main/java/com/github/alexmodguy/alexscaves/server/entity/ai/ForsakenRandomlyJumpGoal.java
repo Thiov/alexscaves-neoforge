@@ -26,6 +26,7 @@ public class ForsakenRandomlyJumpGoal extends Goal {
 
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         if (entity.onGround() && (target == null || !target.isAlive()) && entity.getRandom().nextInt(140) == 0 && entity.getAnimation() == IAnimatedEntity.NO_ANIMATION) {
@@ -52,6 +53,7 @@ public class ForsakenRandomlyJumpGoal extends Goal {
     }
 
     
+    @Override
     public void start() {
         hasPreformedJump = false;
         entity.getNavigation().stop();
@@ -62,11 +64,13 @@ public class ForsakenRandomlyJumpGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return (entity.getAnimation() == ForsakenEntity.ANIMATION_PREPARE_JUMP || entity.isLeaping()) && jumpTarget != null;
     }
 
     
+    @Override
     public void tick() {
         if (entity.isLeaping()) {
             if (!hasPreformedJump) {

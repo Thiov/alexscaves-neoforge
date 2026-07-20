@@ -33,6 +33,7 @@ public class VesperAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         return target != null && target.isAlive() && !entity.isPassenger();
@@ -96,6 +97,7 @@ public class VesperAttackGoal extends Goal {
     }
 
     
+    @Override
     public void start() {
         orbitTime = 0;
         maxOrbitTime = 80;

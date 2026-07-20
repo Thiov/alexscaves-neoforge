@@ -44,6 +44,7 @@ public class MagnetronPartEntity extends PartEntity<MagnetronEntity> {
     }
 
     
+    @Override
     public boolean fireImmune() {
         return true;
     }
@@ -84,6 +85,7 @@ public class MagnetronPartEntity extends PartEntity<MagnetronEntity> {
 
 
     
+    @Override
     public boolean isPickable() {
         MagnetronEntity parent = this.getParent();
         return parent != null && parent.isPickable();
@@ -110,11 +112,13 @@ public class MagnetronPartEntity extends PartEntity<MagnetronEntity> {
     }
 
     
+    @Override
     public boolean is(Entity entityIn) {
         return this == entityIn || this.getParent() == entityIn;
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

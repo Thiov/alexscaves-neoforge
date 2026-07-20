@@ -70,6 +70,7 @@ public class BiomeTreatItem extends CaveInfoItem {
     }
 
     
+    @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         if (getCaveBiome(stack) == null && livingEntity instanceof Player player && (player.getFoodData().getFoodLevel() == 0 || player.isCreative())) {
             ItemStack map = create(this, level.getBiome(livingEntity.blockPosition()).unwrapKey().orElseThrow());
@@ -94,6 +95,7 @@ public class BiomeTreatItem extends CaveInfoItem {
     }
 
     
+    @Override
     public void onUseTick(Level level, LivingEntity living, ItemStack stack, int useDir) {
         Vec3 vec3 = new Vec3(((double) level.getRandom().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
         vec3 = vec3.xRot(-living.getXRot() * ((float) Math.PI / 180F));

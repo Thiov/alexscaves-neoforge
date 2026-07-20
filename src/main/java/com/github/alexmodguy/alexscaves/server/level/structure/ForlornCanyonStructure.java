@@ -22,26 +22,31 @@ public class ForlornCanyonStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     protected StructurePiece createPiece(BlockPos offset, BlockPos center, int heightBlocks, int widthBlocks, RandomState randomState) {
         return new ForlornCanyonStructurePiece(offset, center, heightBlocks, widthBlocks);
     }
 
     
+    @Override
     public int getGenerateYHeight(WorldgenRandom random, int x, int y) {
         return BOWL_Y_CENTER;
     }
 
     
+    @Override
     public int getWidthRadius(WorldgenRandom random) {
         return 100;
     }
 
     
+    @Override
     public int getHeightRadius(WorldgenRandom random, int seaLevel) {
         return 90;
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.FORLORN_CANYON.get();
     }

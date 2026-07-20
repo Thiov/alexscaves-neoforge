@@ -37,11 +37,13 @@ public class GumWormSegmentModel extends AdvancedEntityModel<GumWormSegmentEntit
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, segment, gum_back, gum_front);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
@@ -52,6 +54,7 @@ public class GumWormSegmentModel extends AdvancedEntityModel<GumWormSegmentEntit
     }
 
     
+    @Override
     public void setupAnim(GumWormSegmentEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

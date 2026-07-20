@@ -26,6 +26,7 @@ public class BeholderBlockRenderer<T extends BeholderBlockEntity> implements com
     }
 
     
+    @Override
     public void render(T beholder, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         poseStack.pushPose();
         poseStack.translate(0.5F, 1.5F, 0.5F);
