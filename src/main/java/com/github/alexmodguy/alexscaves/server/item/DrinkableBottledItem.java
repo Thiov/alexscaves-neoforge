@@ -41,6 +41,7 @@ public class DrinkableBottledItem extends Item {
     }
 
     
+    @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity entity) {
         return 40;
     }

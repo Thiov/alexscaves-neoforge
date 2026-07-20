@@ -124,6 +124,7 @@ public class WatcherEntity extends Monster implements IAnimatedEntity, Possesses
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RUNNING, false);
@@ -154,6 +155,7 @@ public class WatcherEntity extends Monster implements IAnimatedEntity, Possesses
     }
 
     
+    @Override
     public boolean instant() {
         return false;
     }
@@ -378,26 +380,31 @@ public class WatcherEntity extends Monster implements IAnimatedEntity, Possesses
 
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_ATTACK_0, ANIMATION_ATTACK_1};
     }

@@ -20,6 +20,7 @@ public class GingerbreadManAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = gingerbreadMan.getTarget();
         return target != null && target.isAlive() && gingerbreadMan.getFleeFor() <= 0 && !gingerbreadMan.isMovementBlocked();

@@ -28,12 +28,14 @@ public class LuxtructosaurusMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = luxtructosaurus.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void start() {
         navigationCheckCooldown = 0;
         flamesCooldown = 0;
@@ -41,6 +43,7 @@ public class LuxtructosaurusMeleeGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         luxtructosaurus.turningFast = false;
     }

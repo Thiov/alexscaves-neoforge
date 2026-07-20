@@ -31,6 +31,7 @@ public class DeepOneRenderer extends MobRenderer121X<DeepOneEntity, DeepOneModel
     }
 
     
+    @Override
     protected void scale(DeepOneEntity mob, PoseStack matrixStackIn, float partialTicks) {
         if (mob.isSummoned()) {
             matrixStackIn.translate(0, (mob.getBbHeight() + 1F) * (1F - mob.getSummonProgress(partialTicks)), 0);
@@ -43,6 +44,7 @@ public class DeepOneRenderer extends MobRenderer121X<DeepOneEntity, DeepOneModel
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

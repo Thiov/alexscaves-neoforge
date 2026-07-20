@@ -52,11 +52,13 @@ public class GobthumperModel extends AdvancedEntityModel<Entity> {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float f, float f1, float ageInTicks, float unused0, float unused1) {
         this.resetToDefaultPose();
         float jiggle1 = (float)(Math.sin(ageInTicks * 0.7F) + 1F) * 0.5F;
@@ -67,6 +69,7 @@ public class GobthumperModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, main, stick, cube_r1, upper_gel, gumballs);
     }

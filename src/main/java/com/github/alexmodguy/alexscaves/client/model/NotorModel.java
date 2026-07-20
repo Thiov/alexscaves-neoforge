@@ -67,16 +67,19 @@ public class NotorModel extends AdvancedEntityModel<NotorEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, propeller, cube_r1, blades, rarm, larm, rleg, lleg);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public void setupAnim(NotorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTick = ageInTicks - entity.tickCount;

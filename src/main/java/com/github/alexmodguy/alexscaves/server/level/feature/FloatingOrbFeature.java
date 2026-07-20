@@ -17,6 +17,7 @@ public class FloatingOrbFeature extends Feature<FloatingOrbFeatureConfig> {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<FloatingOrbFeatureConfig> context) {
         BlockPos pos = context.origin();
         WorldGenLevel level = context.level();

@@ -38,6 +38,7 @@ public class RelicheirusNibblePewensGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isReachedTarget() {
         BlockPos target = getMoveToTarget();
         return target != null && relicheirus.distanceToSqr(target.getX() + 0.5F, relicheirus.getY(), target.getZ() + 0.5F) < acceptedDistance();
@@ -48,6 +49,7 @@ public class RelicheirusNibblePewensGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -128,6 +130,7 @@ public class RelicheirusNibblePewensGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos).is(ACTagRegistry.RELICHEIRUS_NIBBLES) && highEnough(worldIn, pos);
     }

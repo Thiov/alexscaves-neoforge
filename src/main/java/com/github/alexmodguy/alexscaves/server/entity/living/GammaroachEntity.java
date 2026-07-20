@@ -88,6 +88,7 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SPRAY_COOLDOWN, 0);
@@ -130,6 +131,7 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
         return 0.5F - Math.max(worldIn.getBrightness(LightLayer.BLOCK, pos), worldIn.getBrightness(LightLayer.SKY, pos));
     }
 
+    @Override
     public void tick() {
         super.tick();
         if (this.getSprayCooldown() > 0) {
@@ -156,26 +158,31 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SPRAY, ANIMATION_RAM};
     }
@@ -225,6 +232,7 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
     }
 
     
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         InteractionResult prev = super.mobInteract(player, hand);
         if (prev != InteractionResult.SUCCESS) {
@@ -282,6 +290,7 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = GammaroachEntity.this.getTarget();
             return target != null && target.isAlive();
@@ -298,6 +307,7 @@ public class GammaroachEntity extends PathfinderMob implements IAnimatedEntity {
         }
 
         
+        @Override
         public void tick() {
             checkForMobsTime--;
             LivingEntity target = GammaroachEntity.this.getTarget();

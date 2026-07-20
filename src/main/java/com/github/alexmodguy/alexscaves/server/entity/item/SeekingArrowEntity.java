@@ -33,6 +33,7 @@ public class SeekingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ARC_TOWARDS_ENTITY_ID, -1);
@@ -79,6 +80,7 @@ public class SeekingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ACItemRegistry.SEEKING_ARROW.get());
     }
@@ -92,6 +94,7 @@ public class SeekingArrowEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected SoundEvent getDefaultHitGroundSoundEvent() {
         return ACSoundRegistry.SEEKING_ARROW_HIT.get();
     }

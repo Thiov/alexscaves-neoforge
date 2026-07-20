@@ -43,11 +43,13 @@ public class AbyssalRuinsStructure extends Structure {
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.ABYSSAL_RUINS.get();
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }

@@ -230,6 +230,7 @@ public class ConfectionOvenBlockEntity extends BlockEntity {
     }
 
     
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }

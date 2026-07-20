@@ -15,6 +15,7 @@ public class LookForwardsGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return true;
     }

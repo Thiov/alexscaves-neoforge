@@ -42,16 +42,19 @@ public class FrostmintSpearModel extends AdvancedEntityModel<FrostmintSpearEntit
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(spear);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(spear, cube_r1, cube_r2, cube_r3);
     }
 
     
+    @Override
     public void setupAnim(FrostmintSpearEntity entity, float limbSwing, float explode, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }

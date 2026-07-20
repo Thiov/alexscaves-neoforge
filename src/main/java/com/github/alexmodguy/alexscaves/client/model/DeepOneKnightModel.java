@@ -211,11 +211,13 @@ public class DeepOneKnightModel extends AdvancedEntityModel<DeepOneKnightEntity>
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, tail, head, jaw, rarm, larm, rleg, lleg, lfin, rfin, lure, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5, cube_r6, cube_r7, cube_r7, cube_r8, cube_r9, cube_r10, cube_r11, cube_r12, cube_r13, cube_r14, cube_r15);
     }
@@ -311,6 +313,7 @@ public class DeepOneKnightModel extends AdvancedEntityModel<DeepOneKnightEntity>
 
 
     
+    @Override
     public void setupAnim(DeepOneKnightEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

@@ -107,17 +107,20 @@ public class NucleeperModel extends AdvancedEntityModel<NucleeperEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(base);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(base, coreBottom, coreTop, head, rpupil, lpupil, lleg, lleg2, rleg, rleg2, rfoot, rfoot2, lfoot2, lfoot1);
     }
 
 
     
+    @Override
     public void setupAnim(NucleeperEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float walkSpeed = 0.8F;

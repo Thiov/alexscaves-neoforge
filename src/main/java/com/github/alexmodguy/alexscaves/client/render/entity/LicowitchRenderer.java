@@ -125,6 +125,7 @@ public class LicowitchRenderer extends MobRenderer121X<LicowitchEntity, Licowitc
         }
 
         
+        @Override
         protected void renderArmWithItem(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext displayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
             if (!itemStack.isEmpty() && livingEntity instanceof LicowitchEntity licowitch) {
                 float partialTicks = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);

@@ -198,11 +198,13 @@ public class CandicornModel extends ACAdvancedEntityModel<CandicornEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, body, head, tail1, tail2, left_frontLeg, left_backLeg, left_Ear, right_frontLeg, right_backLeg, right_Ear, left_Rein, left_headTuft, right_Rein, right_headTuft, saddle, saddle_head, horn, mane1, mane2, mane3, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5);
     }

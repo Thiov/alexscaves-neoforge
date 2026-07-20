@@ -18,26 +18,31 @@ public class FerrocaveStructure extends AbstractCaveGenerationStructure {
     }
 
     
+    @Override
     protected StructurePiece createPiece(BlockPos offset, BlockPos center, int heightBlocks, int widthBlocks, RandomState randomState) {
         return new FerrocaveStructurePiece(offset, center, heightBlocks, widthBlocks);
     }
 
     
+    @Override
     public int getGenerateYHeight(WorldgenRandom random, int x, int y) {
         return random.nextInt(40) - 20;
     }
 
     
+    @Override
     public int getWidthRadius(WorldgenRandom random) {
         return 45 + random.nextInt(25);
     }
 
     
+    @Override
     public int getHeightRadius(WorldgenRandom random, int seaLevel) {
         return 80 + random.nextInt(25);
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.FERROCAVE.get();
     }

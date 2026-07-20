@@ -35,11 +35,13 @@ public class BoundroidModel extends AdvancedEntityModel<BoundroidEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(head);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(head, bump2, bump1);
     }
@@ -55,6 +57,7 @@ public class BoundroidModel extends AdvancedEntityModel<BoundroidEntity> {
     }
 
     
+    @Override
     public void setupAnim(BoundroidEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float offGroundAmount = 1F - entity.getGroundProgress(ageInTicks - entity.tickCount);

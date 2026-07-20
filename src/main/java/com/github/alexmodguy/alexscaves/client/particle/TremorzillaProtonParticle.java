@@ -36,6 +36,7 @@ public class TremorzillaProtonParticle extends ProtonParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.5F;
     }
@@ -54,6 +55,7 @@ public class TremorzillaProtonParticle extends ProtonParticle {
     }
 
     
+    @Override
     public Vec3 getOrbitPosition(float angle) {
         Vec3 center = new Vec3(orbitX, orbitY, orbitZ);
         Vec3 add = orbitOffset.scale(orbitDistance).yRot((float)Math.toRadians(initialYRot)).xRot((float)Math.toRadians(initialXRot));

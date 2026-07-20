@@ -26,6 +26,7 @@ public class NuclearFurnaceSound extends BlockEntityTickableSound<NuclearFurnace
     }
 
     
+    @Override
     public boolean isSameBlockEntity(NuclearFurnaceBlockEntity blockEntity) {
         return super.isSameBlockEntity(blockEntity) && criticality == blockEntity.getCriticality();
     }

@@ -142,6 +142,7 @@ public class StunStarParticle extends AbstractTrailParticle {
     }
 
     
+    @Override
     public float getTrailHeight() {
         return 0.4F;
     }
@@ -153,6 +154,7 @@ public class StunStarParticle extends AbstractTrailParticle {
 
 
     
+    @Override
     public int sampleCount() {
         return Math.min(10, lifetime - age);
     }

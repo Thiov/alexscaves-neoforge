@@ -31,6 +31,7 @@ public class AmberMonolithBlockRenderer<T extends AmberMonolithBlockEntity> impl
     }
 
     
+    @Override
     public void render(T amber, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity currentEntity = amber.getDisplayEntity(Minecraft.getInstance().level);
         float age = amber.tickCount + partialTicks;

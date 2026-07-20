@@ -45,11 +45,13 @@ public class UndergroundCabinStructure extends Structure {
     }
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.UNDERGROUND_CABIN.get();
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }

@@ -22,6 +22,7 @@ public class GalenaHexagonFeature extends Feature<GalenaHexagonFeatureConfigurat
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<GalenaHexagonFeatureConfiguration> context) {
         BlockPos pos = context.origin();
         WorldGenLevel level = context.level();

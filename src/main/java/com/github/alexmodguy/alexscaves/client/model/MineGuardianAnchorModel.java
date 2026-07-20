@@ -41,16 +41,19 @@ public class MineGuardianAnchorModel extends AdvancedEntityModel<MineGuardianAnc
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(anchor);
     }
 
     
+    @Override
     public void setupAnim(MineGuardianAnchorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(cube_r1, cube_r2, anchor);
     }

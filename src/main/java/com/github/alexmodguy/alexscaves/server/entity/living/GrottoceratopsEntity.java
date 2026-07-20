@@ -57,6 +57,7 @@ public class GrottoceratopsEntity extends DinosaurEntity implements IAnimatedEnt
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(TAIL_SWING_ROT, 0F);
@@ -148,37 +149,44 @@ public class GrottoceratopsEntity extends DinosaurEntity implements IAnimatedEnt
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.GROTTOCERATOPS_EGG.get().defaultBlockState();
     }
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ACEntityRegistry.GROTTOCERATOPS.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SPEAK_1, ANIMATION_SPEAK_2, ANIMATION_CHEW_FROM_GROUND, ANIMATION_CHEW, ANIMATION_MELEE_RAM, ANIMATION_MELEE_TAIL_1, ANIMATION_MELEE_TAIL_2};
     }
@@ -213,6 +221,7 @@ public class GrottoceratopsEntity extends DinosaurEntity implements IAnimatedEnt
 
 
     
+    @Override
     public void setInLove(@javax.annotation.Nullable Player player) {
         super.setInLove(player);
         if (this.getAnimation() == null || this.getAnimation() == NO_ANIMATION) {

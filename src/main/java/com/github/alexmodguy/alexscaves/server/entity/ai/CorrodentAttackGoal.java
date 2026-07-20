@@ -27,6 +27,7 @@ public class CorrodentAttackGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return entity.getTarget() != null && entity.getTarget().isAlive() && entity.fleeLightFor <= 0;
     }

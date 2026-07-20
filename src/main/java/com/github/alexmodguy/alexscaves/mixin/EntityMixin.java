@@ -328,40 +328,47 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     }
 
 
+    @Override
     public float getMagneticDeltaX() {
         MagneticEntityData data = getMagneticData();
         return data != null ? data.getDeltaX() : 0F;
     }
 
 
+    @Override
     public float getMagneticDeltaY() {
         MagneticEntityData data = getMagneticData();
         return data != null ? data.getDeltaY() : 0F;
     }
 
 
+    @Override
     public float getMagneticDeltaZ() {
         MagneticEntityData data = getMagneticData();
         return data != null ? data.getDeltaZ() : 0F;
     }
 
 
+    @Override
     public Direction getMagneticAttachmentFace() {
         MagneticEntityData data = getMagneticData();
         return data != null ? data.getAttachmentDirection() : Direction.DOWN;
     }
 
 
+    @Override
     public Direction getPrevMagneticAttachmentFace() {
         return prevAttachDir;
     }
 
 
+    @Override
     public float getAttachmentProgress(float partialTicks) {
         return prevAttachChangeProgress + (attachChangeProgress - prevAttachChangeProgress) * partialTicks;
     }
 
 
+    @Override
     public void setMagneticDeltaX(float f) {
         MagneticEntityData data = getMagneticData();
         if (data != null) {
@@ -371,6 +378,7 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     }
 
 
+    @Override
     public void setMagneticDeltaY(float f) {
         MagneticEntityData data = getMagneticData();
         if (data != null) {
@@ -380,6 +388,7 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     }
 
 
+    @Override
     public void setMagneticDeltaZ(float f) {
         MagneticEntityData data = getMagneticData();
         if (data != null) {
@@ -389,6 +398,7 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     }
 
 
+    @Override
     public void setMagneticAttachmentFace(Direction dir) {
         MagneticEntityData data = getMagneticData();
         if (data != null) {
@@ -410,16 +420,19 @@ public abstract class EntityMixin implements MagneticEntityAccessor {
     }
 
 
+    @Override
     public void postMagnetJump() {
         this.jumpFlipCooldown = 20;
     }
 
 
+    @Override
     public boolean canChangeDirection() {
         return jumpFlipCooldown <= 0 && getAttachmentProgress(1.0F) == 1.0F;
     }
 
 
+    @Override
     public void stepOnMagnetBlock(BlockPos pos) {
         if (lastStepPos == null || lastStepPos.distSqr(pos) > 2) {
             this.lastStepPos = pos;

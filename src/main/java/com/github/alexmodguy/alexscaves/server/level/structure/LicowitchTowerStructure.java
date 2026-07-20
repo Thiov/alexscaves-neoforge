@@ -60,11 +60,13 @@ public class LicowitchTowerStructure extends Structure {
 
 
     
+    @Override
     public StructureType<?> type() {
         return ACStructureRegistry.LICOWITCH_TOWER.get();
     }
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
     }

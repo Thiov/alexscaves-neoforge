@@ -62,6 +62,7 @@ public class GumballEntity extends ThrowableProjectile {
         }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(MAXIMUM_BOUNCES, 5);
         builder.define(BOUNCES, 0);
@@ -92,6 +93,7 @@ public class GumballEntity extends ThrowableProjectile {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevExplodeProgress = explodeProgress;

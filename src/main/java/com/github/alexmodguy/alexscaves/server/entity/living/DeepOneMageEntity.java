@@ -70,11 +70,13 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
         this.goalSelector.addGoal(4, new DeepOneWanderGoal(this, 12, 1D));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 1.0D, 45) {
             
+            @Override
             public boolean canUse() {
                 return !DeepOneMageEntity.this.isInWater() && super.canUse() && DeepOneMageEntity.this.getAnimation() != DeepOneMageEntity.ANIMATION_TRADE;
             }
 
             
+            @Override
             public boolean canContinueToUse() {
                 return !DeepOneMageEntity.this.isInWater() && DeepOneMageEntity.this.getAnimation() != DeepOneMageEntity.ANIMATION_TRADE && super.canContinueToUse();
             }
@@ -91,6 +93,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     protected void switchNavigator(boolean onLand) {
         if (onLand) {
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.1, 0));
@@ -105,12 +108,14 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level) {
         return level().getBlockState(pos).isAir() ? 10.0F : super.getWalkTargetValue(pos, level);
     }
 
 
     
+    @Override
     public void tick() {
         super.tick();
         if (!this.isInWater() && !this.hasEffect(ACEffectRegistry.BUBBLED)) {
@@ -157,6 +162,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     protected ResourceKey<LootTable> getBarterLootTable() {
         return BARTER_LOOT;
     }
@@ -199,6 +205,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public void startAttackBehavior(LivingEntity target) {
         this.yBodyRot = this.getYRot();
         double distance = this.distanceTo(target);
@@ -239,6 +246,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_DISAPPEAR, ANIMATION_ATTACK, ANIMATION_SPIN, ANIMATION_TRADE};
     }
@@ -248,6 +256,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation getTradingAnimation() {
         return ANIMATION_TRADE;
     }
@@ -265,6 +274,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public boolean startDisappearBehavior(Player player) {
         this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ(), 20.0F, (float) this.getMaxHeadXRot());
         this.getNavigation().stop();
@@ -311,6 +321,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public SoundEvent getAdmireSound() {
         return ACSoundRegistry.DEEP_ONE_MAGE_ADMIRE.get();
     }
@@ -336,6 +347,7 @@ public class DeepOneMageEntity extends DeepOneBaseEntity {
             this.parentEntity = DeepOneMageEntity.this;
         }
 
+        @Override
         public void tick() {
             parentEntity.setDeltaMovement(parentEntity.getDeltaMovement().add(0, Math.sin(tickCount * 0.1) * 0.005F, 0));
             if (this.operation == MoveControl.Operation.MOVE_TO) {

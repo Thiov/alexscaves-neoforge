@@ -20,6 +20,7 @@ public class ResistorShieldSound extends ItemTickableSound {
     }
 
     
+    @Override
     public boolean isValidItem(ItemStack itemStack) {
         if(itemStack.getItem() instanceof ResistorShieldItem){
             return ResistorShieldItem.isScarlet(itemStack) == !azure;

@@ -81,6 +81,7 @@ public class CaveBookScreen extends Screen {
     }
 
     
+    @Override
     public boolean isPauseScreen() {
         return false;
     }
@@ -93,6 +94,7 @@ public class CaveBookScreen extends Screen {
     }
 
     
+    @Override
     public void tick() {
         prevFlipProgress = flipProgress;
         prevOpenBookProgress = openBookProgress;

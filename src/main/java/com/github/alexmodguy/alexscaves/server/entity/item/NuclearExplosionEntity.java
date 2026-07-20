@@ -136,6 +136,7 @@ public class NuclearExplosionEntity extends Entity {
     }
 
     
+    @Override
     public void remove(Entity.RemovalReason removalReason) {
         if (!level().isClientSide() && loadingChunks) {
             loadingChunks = false;
@@ -235,6 +236,7 @@ public class NuclearExplosionEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SIZE, 1.0F);
         builder.define(NO_GRIEFING, false);

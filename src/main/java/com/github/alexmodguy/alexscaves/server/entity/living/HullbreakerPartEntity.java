@@ -37,6 +37,7 @@ public class HullbreakerPartEntity extends PartEntity<HullbreakerEntity> {
     }
 
     
+    @Override
     public boolean fireImmune() {
         return true;
     }
@@ -69,6 +70,7 @@ public class HullbreakerPartEntity extends PartEntity<HullbreakerEntity> {
 
 
     
+    @Override
     public boolean isPickable() {
         HullbreakerEntity parent = this.getParent();
         return parent != null && parent.isPickable();
@@ -98,11 +100,13 @@ public class HullbreakerPartEntity extends PartEntity<HullbreakerEntity> {
     }
 
     
+    @Override
     public boolean is(Entity entityIn) {
         return this == entityIn || this.getParent() == entityIn;
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

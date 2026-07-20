@@ -57,6 +57,7 @@ public class BioluminescentWallTorch extends WallTorchBlock implements SimpleWat
     }
 
     
+    @Override
     public void animateTick(BlockState state, Level level, BlockPos blockPos, RandomSource randomSource) {
         Direction direction = state.getValue(FACING);
         double d0 = (double)blockPos.getX() + 0.5D;

@@ -21,17 +21,20 @@ public class GummyBearMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = gummyBear.getTarget();
         return target != null && target.isAlive();
     }
 
     
+    @Override
     public void stop() {
         gummyBear.setSprinting(false);
     }
 
     
+    @Override
     public void start() {
     }
 

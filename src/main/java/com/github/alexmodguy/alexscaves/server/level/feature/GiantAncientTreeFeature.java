@@ -22,6 +22,7 @@ public class GiantAncientTreeFeature extends Feature<NoneFeatureConfiguration> {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         RandomSource randomsource = context.random();
         WorldGenLevel level = context.level();

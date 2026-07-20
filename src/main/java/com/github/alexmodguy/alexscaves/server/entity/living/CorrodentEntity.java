@@ -84,6 +84,7 @@ public class CorrodentEntity extends Monster implements ICustomCollisions, IAnim
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DIGGING, false);
@@ -360,15 +361,18 @@ public class CorrodentEntity extends Monster implements ICustomCollisions, IAnim
         this.entityData.set(AFRAID, bool);
     }
 
+    @Override
     public boolean isMultipartEntity() {
         return true;
     }
 
+    @Override
     public PartEntity<?>[] getParts() {
         return allParts;
     }
 
     
+    @Override
     public boolean canPassThrough(BlockPos blockPos, BlockState blockState, VoxelShape voxelShape) {
         return this.isDigging() && canDigBlock(blockState);
     }
@@ -383,6 +387,7 @@ public class CorrodentEntity extends Monster implements ICustomCollisions, IAnim
     }
 
     
+    @Override
     public Vec3 getLightProbePosition(float f) {
         if (surfacePosition != null && prevSurfacePosition != null) {
             Vec3 difference = surfacePosition.subtract(prevSurfacePosition);
@@ -433,26 +438,31 @@ public class CorrodentEntity extends Monster implements ICustomCollisions, IAnim
 
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_BITE};
     }
@@ -479,6 +489,7 @@ public class CorrodentEntity extends Monster implements ICustomCollisions, IAnim
 
         // evaluateBlockPathType signature changed in 1.21 - use getPathType with PathfindingContext
         
+        @Override
         public PathType getPathType(PathfindingContext context, int x, int y, int z) {
             BlockPos pos = new BlockPos(x, y, z);
             PathType def = super.getPathType(context, x, y, z);

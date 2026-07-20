@@ -51,11 +51,13 @@ public class WaterBoltModel extends AdvancedEntityModel<WaterBoltEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(bb_main);
     }
 
     
+    @Override
     public void setupAnim(WaterBoltEntity waterBoltEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float stretch = Math.min(20F, ageInTicks) / 20F;
@@ -65,6 +67,7 @@ public class WaterBoltModel extends AdvancedEntityModel<WaterBoltEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(bb_main, cube_r1, cube_r2, cube_r3, cube_r4);
     }

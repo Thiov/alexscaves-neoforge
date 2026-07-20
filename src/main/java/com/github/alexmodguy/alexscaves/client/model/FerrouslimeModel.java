@@ -23,16 +23,19 @@ public class FerrouslimeModel extends AdvancedEntityModel<FerrouslimeEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(ferrouslime);
     }
 
     
+    @Override
     public void setupAnim(FerrouslimeEntity ferrouslimeEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(ferrouslime);
     }

@@ -29,17 +29,20 @@ public class SirenLightModel extends AdvancedEntityModel<Entity> {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float rotation, float f, float f1, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         this.siren.rotateAngleY += Math.toRadians(rotation);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, siren);
     }

@@ -68,6 +68,7 @@ public class UndergroundCabinProcessor extends StructureProcessor {
     }
 
     
+    @Override
     protected StructureProcessorType<?> getType() {
         return ACStructureProcessorRegistry.UNDERGROUND_CABIN.get();
     }

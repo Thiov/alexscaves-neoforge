@@ -63,6 +63,7 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, RaycatEntity.class, 10.0F, 1.0D, 1.2D) {
+            @Override
             public void tick() {
                 super.tick();
                 NucleeperEntity.this.catScareTime = 20;
@@ -85,6 +86,7 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(TRIGGERED, false);
@@ -159,6 +161,7 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevCloseProgress = closeProgress;
@@ -269,6 +272,7 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
     }
 
     
+    @Override
     protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
         super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         if (damageSource.getEntity() instanceof TremorzillaEntity && damageSource.is(ACDamageTypes.TREMORZILLA_BEAM)) {
@@ -277,11 +281,13 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
     }
 
     
+    @Override
     public boolean shouldStopBlaringSirens() {
         return !this.isTriggered() && !this.isExploding() || this.isRemoved();
     }
 
     
+    @Override
     public boolean isPowered() {
         return this.isCharged();
     }
@@ -293,12 +299,14 @@ public class NucleeperEntity extends Monster implements ActivatesSirens, Powerab
         }
 
         
+        @Override
         public boolean canUse() {
             LivingEntity target = NucleeperEntity.this.getTarget();
             return target != null && target.isAlive();
         }
 
         
+        @Override
         public void tick() {
             LivingEntity target = NucleeperEntity.this.getTarget();
             if (target != null && target.isAlive()) {

@@ -70,6 +70,7 @@ public class HologramProjectorBlockRenderer<T extends HologramProjectorBlockEnti
     }
 
 
+    @Override
     public void render(T hologram, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (!hologram.isRemoved()) {
             allOnScreen.put(hologram.getBlockPos(), hologram);

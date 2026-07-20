@@ -129,6 +129,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RUNNING, false);
@@ -147,22 +148,26 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
         this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
         this.goalSelector.addGoal(2, new AnimalFollowOwnerGoal(this, 1.0D, 8.0F, 1.4F, false) {
             
+            @Override
             public boolean shouldFollow() {
                 return CandicornEntity.this.getCommand() == 2;
             }
 
             
+            @Override
             public void tickDistance(float distanceTo) {
                 CandicornEntity.this.setRunning(distanceTo > 5);
             }
         });
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.0D) {
             
+            @Override
             public boolean shouldPanic() {
                 return CandicornEntity.this.isBaby() && super.shouldPanic();
             }
 
             
+            @Override
             public void start() {
                 super.start();
                 CandicornEntity.this.setRunning(true);
@@ -188,6 +193,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         CandicornEntity candicornEntity = ACEntityRegistry.CANDICORN.get().create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.EVENT);
         candicornEntity.setVariant(this.getVariant());
@@ -195,21 +201,25 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
@@ -239,11 +249,13 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public boolean isSaddleable() {
         return this.isAlive() && !this.isBaby() && this.isTame() ;
     }
 
     
+    @Override
     public void equipSaddle(ItemStack saddle, @Nullable SoundSource soundSource) {
         this.setSaddled(true);
         if (soundSource != null) {
@@ -307,6 +319,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
         com.github.alexmodguy.alexscaves.server.entity.util.EntityCompat.updateWalkAnimation(this.walkAnimation, f2, 0.4F);
     }
 
+    @Override
     public void tick() {
         super.tick();
         // Face the body along the actual travel direction on the wild path — vanilla BodyRotationControl only
@@ -532,6 +545,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if (keyPresser.isPassengerOfSameVehicle(this)) {
             if (type == 2) {
@@ -545,6 +559,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public boolean isFood(ItemStack itemStack) {
         return itemStack.is(ACBlockRegistry.CANDY_CANE.get().asItem());
     }
@@ -604,6 +619,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_BUCK, ANIMATION_TAIL_FLICK_1, ANIMATION_TAIL_FLICK_2, ANIMATION_NIBBLE_IDLE, ANIMATION_STAB};
     }
@@ -625,6 +641,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
 
 
     
+    @Override
     public void onPlayerJump(int i) {
         this.setLeaping(true);
         if(this.onGround()){
@@ -636,16 +653,19 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public boolean canJump() {
         return this.isSaddled() && !this.isLeaping();
     }
 
     
+    @Override
     public void handleStartJump(int i) {
 
     }
 
     
+    @Override
     public void handleStopJump() {
 
     }
@@ -722,6 +742,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         if (CHARGING.equals(dataAccessor)) {
             if(this.isCharging()){
@@ -796,6 +817,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity p_20123_) {
         return new Vec3(this.getX(), this.getBoundingBox().minY, this.getZ());
     }
@@ -822,11 +844,13 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public void setPossessedByLicowitchId(int entityId) {
         this.entityData.set(POSSESSOR_LICOWITCH_ID, entityId);
     }
 
     
+    @Override
     public int getPossessedByLicowitchId() {
         return this.entityData.get(POSSESSOR_LICOWITCH_ID);
     }
@@ -837,6 +861,7 @@ public class CandicornEntity extends TamableAnimal implements KeybindUsingMount,
     }
 
     
+    @Override
     public boolean canAttack(LivingEntity living) {
         if(this.getPossessedByLicowitchId() != -1){
             LicowitchEntity licowitch = this.getPossessingLicowitch(this.level());

@@ -68,6 +68,7 @@ public class CaveBiomeMapWorldWorker implements WorldWorkerManager.IWorker {
     }
 
     
+    @Override
     public boolean hasWork() {
         boolean ret = !complete && samples < AlexsCaves.COMMON_CONFIG.caveMapSearchAttempts.get() && !this.serverLevel.getServer().isStopped();
         if(!ret){
@@ -77,6 +78,7 @@ public class CaveBiomeMapWorldWorker implements WorldWorkerManager.IWorker {
     }
 
     
+    @Override
     public boolean doWork() {
         if (hasWork()) {
             samples++;

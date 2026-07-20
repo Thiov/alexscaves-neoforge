@@ -103,11 +103,13 @@ public class SubmarineModel extends AdvancedEntityModel<SubmarineEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(hull);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(hull, rarm, larm, seat, leftpropeller, rightpropeller, llever, rlever, watermask, motor, backpropeller, periscope);
     }
@@ -117,6 +119,7 @@ public class SubmarineModel extends AdvancedEntityModel<SubmarineEntity> {
     }
 
     
+    @Override
     public void setupAnim(SubmarineEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

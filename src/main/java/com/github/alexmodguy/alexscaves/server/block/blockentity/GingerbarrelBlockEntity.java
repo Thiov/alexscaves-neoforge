@@ -102,11 +102,13 @@ public class GingerbarrelBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     
+    @Override
     public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
     
+    @Override
     public Component getDisplayName() {
         return this.getName();
     }

@@ -69,11 +69,13 @@ public class GingerbreadHousePiece extends UndergroundTemplateStructurePiece {
     }
 
     
+    @Override
     public int minimumDepthBeneathSurface() {
         return 35;
     }
 
     
+    @Override
     protected void handleDataMarker(String string, BlockPos pos, ServerLevelAccessor accessor, RandomSource random, BoundingBox box) {
         if (string.equals("loot_chest")) {
             if (accessor.getBlockEntity(pos.below()) instanceof RandomizableContainerBlockEntity container) {
@@ -90,6 +92,7 @@ public class GingerbreadHousePiece extends UndergroundTemplateStructurePiece {
     }
 
     
+    @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos structurePos) {
         super.postProcess(level, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, structurePos);
         BlockPos center = this.boundingBox.getCenter().atY(this.boundingBox.minY());
@@ -141,21 +144,25 @@ public class GingerbreadHousePiece extends UndergroundTemplateStructurePiece {
     }
 
     
+    @Override
     public boolean placeInHighestCave() {
         return true;
     }
 
     
+    @Override
     public boolean discardIfNotOnGround() {
         return true;
     }
 
     
+    @Override
     public boolean sinkByEdges() {
         return false;
     }
 
     
+    @Override
     protected BlockPos getCaveHeight(BlockPos currentStructureCenter, WorldGenLevel level, RandomSource randomSource) {
         return currentStructureCenter.atY((int) CakeCaveStructurePiece.calculatePlateauHeight(currentStructureCenter.getX(), currentStructureCenter.getZ(), 7, true));
     }

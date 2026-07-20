@@ -89,16 +89,19 @@ public class TripodfishModel extends AdvancedEntityModel<TripodfishEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(mainBody, bfin, btailFin, tail, dorsalfin, ttailFin, rpectoralFin, lpectoralFin, lpelvicFin, rpelvicFin, cube_r1, cube_r2);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(mainBody);
     }
 
     
+    @Override
     public void setupAnim(TripodfishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;

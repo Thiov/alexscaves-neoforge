@@ -225,6 +225,7 @@ public class MetalScaffoldingBlock extends Block implements BucketPickup, Liquid
     }
 
     
+    @Override
     public Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }

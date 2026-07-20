@@ -110,6 +110,7 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ENRAGED, false);
@@ -136,17 +137,20 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return Blocks.AIR.defaultBlockState();
     }
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob) {
         return null;
     }
 
     
+    @Override
     public boolean isFood(ItemStack stack) {
         return false;
     }
@@ -380,6 +384,7 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     public void aiStep() {
         super.aiStep();
         if (!this.level().isClientSide()) {
@@ -411,6 +416,7 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     protected void onStep() {
         if (screenShakeAmount <= 1.0F) {
             this.playSound(ACSoundRegistry.LUXTRUCTOSAURUS_STEP.get(), 4, 1);
@@ -436,11 +442,13 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     public boolean isPushable() {
         return false;
     }
 
     
+    @Override
     public void push(Entity entity) {
         if (!this.isPassengerOfSameVehicle(entity)) {
             if (!entity.noPhysics && !this.noPhysics) {
@@ -642,11 +650,13 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     public float getProjectileDamageReduction() {
         return 0.55F;
     }
 
     
+    @Override
     public int getAltSkinForItem(ItemStack stack) {
         return 0;
     }
@@ -676,6 +686,7 @@ public class LuxtructosaurusEntity extends SauropodBaseEntity implements Enemy {
     }
 
     
+    @Override
     protected void createWitherRose(@javax.annotation.Nullable LivingEntity living) {
         if (living != null) {
             ACWorldData worldData = ACWorldData.get(level());

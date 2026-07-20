@@ -170,6 +170,7 @@ public class SirenLightBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SirenLightBlockEntity(pos, state);
     }

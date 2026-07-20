@@ -34,6 +34,7 @@ public class DeepOneBarterGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
         if ((target == null || !target.isAlive()) && mob.getAnimation() == IAnimatedEntity.NO_ANIMATION) {
@@ -69,6 +70,7 @@ public class DeepOneBarterGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity target = mob.getTarget();
         return altarPos != null && (hasPearls(mob.level(), altarPos, false) || mob.getAnimation() == mob.getTradingAnimation()) && (target == null || !target.isAlive());

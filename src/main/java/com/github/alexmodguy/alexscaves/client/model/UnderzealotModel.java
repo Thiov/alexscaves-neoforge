@@ -82,11 +82,13 @@ public class UnderzealotModel extends AdvancedEntityModel<UnderzealotEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, body, head, nose, cube_r1, rleg, lleg, rarm, larm);
     }
@@ -133,6 +135,7 @@ public class UnderzealotModel extends AdvancedEntityModel<UnderzealotEntity> {
 
 
     
+    @Override
     public void setupAnim(UnderzealotEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

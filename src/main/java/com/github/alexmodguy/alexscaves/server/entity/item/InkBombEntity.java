@@ -38,6 +38,7 @@ public class InkBombEntity extends ThrowableItemProjectile {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(GLOWING_BOMB, false);
@@ -125,6 +126,7 @@ public class InkBombEntity extends ThrowableItemProjectile {
     }
 
     
+    @Override
     protected Item getDefaultItem() {
         return ACItemRegistry.INK_BOMB.get();
     }

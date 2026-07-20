@@ -92,6 +92,7 @@ public class FissurePrimalMagmaBlock extends Block {
     }
 
     
+    @Override
     protected void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         this.tick(blockState, serverLevel, blockPos, randomSource);
     }
@@ -150,6 +151,7 @@ public class FissurePrimalMagmaBlock extends Block {
     }
 
     
+    @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
         // Schedule a tick to check for regeneration when the block is placed
@@ -176,10 +178,12 @@ public class FissurePrimalMagmaBlock extends Block {
         return false;
     }
 
+    @Override
     public boolean isBurning(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
     }
 
+    @Override
     public PathType getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, PathType originalType) {
         return PathType.FIRE_IN_NEIGHBOR;
     }

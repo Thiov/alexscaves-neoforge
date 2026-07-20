@@ -32,16 +32,19 @@ public class SplashModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(base);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(base, ripple, highSplash);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float lifetime, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float progress = Math.min(ageInTicks / lifetime, 1F);

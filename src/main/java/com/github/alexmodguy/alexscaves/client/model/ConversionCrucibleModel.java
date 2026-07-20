@@ -99,6 +99,7 @@ public class ConversionCrucibleModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float splashProgress, float conversionProgress, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float f1 = (float)Math.sin(splashProgress * Math.PI * 3F + ageInTicks * 0.3F) * 0.15F + 0.85F;
@@ -115,11 +116,13 @@ public class ConversionCrucibleModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(crucible);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(crucible, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5, cube_r6, beam, sauce);
     }

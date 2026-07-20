@@ -25,6 +25,7 @@ public class ClientSackOfSatingTooltip implements ClientTooltipComponent {
     }
 
     
+    @Override
     public int getWidth(Font font) {
         return isTruncated() ? font.width(getHungerValueMultiplierText()) + 9 : Mth.ceil(tooltipComponent.getHungerValue() / 2.0D) * 9;
     }

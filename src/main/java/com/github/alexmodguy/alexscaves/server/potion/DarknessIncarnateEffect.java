@@ -53,6 +53,7 @@ public class DarknessIncarnateEffect extends MobEffect {
     }
 
     
+    @Override
     public void removeAttributeModifiers(AttributeMap attributeMap) {
         lastDuration = -1;
         firstDuration = -1;
@@ -60,6 +61,7 @@ public class DarknessIncarnateEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         lastDuration = duration;
         if (duration <= 0) {

@@ -65,6 +65,7 @@ public class RelicheirusEntity extends DinosaurEntity implements IAnimatedEntity
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(PECK_Y, 0);
@@ -106,6 +107,7 @@ public class RelicheirusEntity extends DinosaurEntity implements IAnimatedEntity
     }
 
     
+    @Override
     public boolean onFeedMixture(ItemStack itemStack, Player player) {
         if (itemStack.is(ACItemRegistry.PRIMORDIAL_SOUP.get())) {
             this.setPushingTreesFor(1200);
@@ -200,6 +202,7 @@ public class RelicheirusEntity extends DinosaurEntity implements IAnimatedEntity
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return ACEntityRegistry.RELICHEIRUS.get().create(level, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }
@@ -282,26 +285,31 @@ public class RelicheirusEntity extends DinosaurEntity implements IAnimatedEntity
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SPEAK_1, ANIMATION_SPEAK_2, ANIMATION_EAT_TREE, ANIMATION_EAT_TRILOCARIS, ANIMATION_PUSH_TREE, ANIMATION_SCRATCH_1, ANIMATION_SCRATCH_2, ANIMATION_SHAKE, ANIMATION_MELEE_SLASH_1, ANIMATION_MELEE_SLASH_2};
     }
@@ -354,6 +362,7 @@ public class RelicheirusEntity extends DinosaurEntity implements IAnimatedEntity
     }
 
     
+    @Override
     public BlockState createEggBlockState() {
         return ACBlockRegistry.RELICHEIRUS_EGG.get().defaultBlockState();
     }

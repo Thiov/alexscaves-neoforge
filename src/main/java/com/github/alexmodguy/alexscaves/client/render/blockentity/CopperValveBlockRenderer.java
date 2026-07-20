@@ -26,6 +26,7 @@ public class CopperValveBlockRenderer<T extends CopperValveBlockEntity> implemen
     }
 
     
+    @Override
     public void render(T valve, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         poseStack.pushPose();
         BlockState state = valve.getBlockState();

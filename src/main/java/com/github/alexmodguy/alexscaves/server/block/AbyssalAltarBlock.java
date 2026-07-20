@@ -60,6 +60,7 @@ public class AbyssalAltarBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
@@ -74,6 +75,7 @@ public class AbyssalAltarBlock extends BaseEntityBlock implements SimpleWaterlog
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AbyssalAltarBlockEntity(pos, state);
     }
@@ -133,6 +135,7 @@ public class AbyssalAltarBlock extends BaseEntityBlock implements SimpleWaterlog
     }
 
     
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof AbyssalAltarBlockEntity altarBlockEntity && !player.isShiftKeyDown()) {
             if (!altarBlockEntity.getItem(0).isEmpty()) {

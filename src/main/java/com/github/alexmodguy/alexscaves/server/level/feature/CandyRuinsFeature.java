@@ -21,6 +21,7 @@ public class CandyRuinsFeature extends UndergroundRuinsFeature {
     }
 
     
+    @Override
     protected boolean canGenerateAt(WorldGenLevel level, BlockPos blockpos) {
         return level.getBlockState(blockpos).is(ACBlockRegistry.BLOCK_OF_CHOCOLATE.get()) || level.getBlockState(blockpos).is(ACBlockRegistry.BLOCK_OF_FROSTED_CHOCOLATE.get());
     }

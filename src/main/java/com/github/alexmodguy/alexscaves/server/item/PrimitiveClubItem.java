@@ -111,6 +111,7 @@ public class PrimitiveClubItem extends Item {
     }
 
     
+    @Override
     public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
         int swift = ACEnchantmentHelper.getEnchantmentLevelFromStack(ACEnchantmentRegistry.SWIFTWOOD, stack);
         if (swift > 0) {
@@ -123,6 +124,7 @@ public class PrimitiveClubItem extends Item {
         consumer.accept((IClientItemExtensions) AlexsCaves.PROXY.getISTERProperties());
     }
 
+    @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         return player.getAttackStrengthScale(0) < 0.95 || player.attackAnim != 0;
     }

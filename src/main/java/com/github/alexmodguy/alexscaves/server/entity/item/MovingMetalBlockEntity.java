@@ -12,6 +12,7 @@ public class MovingMetalBlockEntity extends AbstractMovingBlockEntity {
     }
 
     
+    @Override
     public boolean movesEntities() {
         return true;
     }

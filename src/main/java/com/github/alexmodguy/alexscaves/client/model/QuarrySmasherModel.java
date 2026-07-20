@@ -95,11 +95,13 @@ public class QuarrySmasherModel extends AdvancedEntityModel<QuarrySmasherEntity>
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public void setupAnim(QuarrySmasherEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTick = ageInTicks - entity.tickCount;
@@ -118,6 +120,7 @@ public class QuarrySmasherModel extends AdvancedEntityModel<QuarrySmasherEntity>
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, cube_r1, cube_r2, cube_r3, cube_r4, lleg, larm, rleg, rarm, arm2, coil);
     }

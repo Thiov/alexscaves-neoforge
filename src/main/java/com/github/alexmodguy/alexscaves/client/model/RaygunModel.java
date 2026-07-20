@@ -85,16 +85,19 @@ public class RaygunModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float useAmount, float ageInTicks, float unused, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, handle, grip, ball, barrel, nose, trigger, main, ring, ring2, ring3);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }

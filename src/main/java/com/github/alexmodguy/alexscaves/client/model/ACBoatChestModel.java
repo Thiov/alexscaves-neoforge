@@ -22,16 +22,19 @@ public class ACBoatChestModel extends AdvancedEntityModel {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(chest);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float v, float v1, float v2, float v3, float v4) {
         this.resetToDefaultPose();
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(chest);
     }

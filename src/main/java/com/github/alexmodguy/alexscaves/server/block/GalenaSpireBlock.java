@@ -42,6 +42,7 @@ public class GalenaSpireBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         Vec3 vec3 = state.getOffset(pos);
         VoxelShape shape = SHAPE_0;

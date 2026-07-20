@@ -85,6 +85,7 @@ public class ACDamageTypes {
         }
 
         
+        @Override
         public Component getLocalizedDeathMessage(LivingEntity attacked) {
             int type = attacked.getRandom().nextInt(this.messageCount);
             String translationKey = "death.attack." + this.getMsgId() + "_" + type;

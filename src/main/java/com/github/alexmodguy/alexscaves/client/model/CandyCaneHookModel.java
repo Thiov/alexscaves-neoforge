@@ -41,16 +41,19 @@ public class CandyCaneHookModel extends AdvancedEntityModel<CandyCaneHookEntity>
     }
 
     
+    @Override
     public void setupAnim(CandyCaneHookEntity entity, float splashProgress, float conversionProgress, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, cube_r1, cube_r2, hook);
     }

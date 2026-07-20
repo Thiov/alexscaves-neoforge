@@ -156,6 +156,7 @@ public class GingerbreadManRenderer extends MobRenderer121X<GingerbreadManEntity
         }
 
         
+        @Override
         protected void renderArmWithItem(LivingEntity livingEntity, ItemStack itemStack, ItemDisplayContext displayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int packedLight) {
             if (!itemStack.isEmpty() && livingEntity instanceof GingerbreadManEntity gingerbreadMan) {
                 float partialTicks = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);

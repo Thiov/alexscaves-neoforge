@@ -111,6 +111,7 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FROM_BUCKET, false);
@@ -206,11 +207,13 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public SoundEvent getPickupSound() {
         return SoundEvents.BUCKET_FILL_FISH;
     }
 
     
+    @Override
     public void saveToBucketTag(@Nonnull ItemStack bucket) {
         if (this.hasCustomName()) {
             bucket.set(DataComponents.CUSTOM_NAME, this.getCustomName());
@@ -219,22 +222,26 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void loadFromBucketTag(@Nonnull CompoundTag compound) {
         Bucketable.loadDefaultDataFromBucketTag(this, compound);
     }
 
     
     @Nonnull
+    @Override
     protected InteractionResult mobInteract(@Nonnull Player player, @Nonnull InteractionHand hand) {
         return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
     }
 
     
+    @Override
     public boolean fromBucket() {
         return this.entityData.get(FROM_BUCKET);
     }
 
     
+    @Override
     public void setFromBucket(boolean bucket) {
         this.entityData.set(FROM_BUCKET, bucket);
     }
@@ -284,6 +291,7 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             if (TrilocarisEntity.this.getRandom().nextInt(20) != 0 && TrilocarisEntity.this.crawling) {
                 return false;
@@ -358,6 +366,7 @@ public class TrilocarisEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public boolean canUse() {
             return TrilocarisEntity.this.getTarget() != null && TrilocarisEntity.this.getTarget().isAlive() && duration < 300;
         }

@@ -38,11 +38,13 @@ public class NotorHologramGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return notor.getHologramUUID() != null;
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return canUse() && (this.monster == null || monster.isAlive() && monster.distanceTo(notor) < 40);
     }

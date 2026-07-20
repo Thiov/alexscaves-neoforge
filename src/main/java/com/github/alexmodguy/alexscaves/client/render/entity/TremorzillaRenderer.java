@@ -229,6 +229,7 @@ public class TremorzillaRenderer extends MobRenderer121X<TremorzillaEntity, Trem
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

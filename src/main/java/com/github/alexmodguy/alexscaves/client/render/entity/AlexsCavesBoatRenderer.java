@@ -42,6 +42,7 @@ public class AlexsCavesBoatRenderer<T extends Boat & AlexsCavesBoat> extends Ent
     }
 
     
+    @Override
     public void render(T entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         ACBoatModel model = modelMap.get(entity.getACBoatType());
         poseStack.pushPose();

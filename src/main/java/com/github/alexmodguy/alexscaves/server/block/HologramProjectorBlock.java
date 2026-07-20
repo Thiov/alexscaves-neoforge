@@ -104,12 +104,14 @@ public class HologramProjectorBlock extends BaseEntityBlock implements SimpleWat
 
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new HologramProjectorBlockEntity(pos, state);
     }

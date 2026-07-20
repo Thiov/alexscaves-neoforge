@@ -78,16 +78,19 @@ public class CaramelCubeModel extends AdvancedEntityModel<CaramelCubeEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, caramel_Core, Caramel_Layer, left_Eye, right_Eye, wrapper, left_wrapperTie, right_wrapperTie, cube_r1, cube_r2);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public void setupAnim(CaramelCubeEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         Entity look = Minecraft.getInstance().getCameraEntity();

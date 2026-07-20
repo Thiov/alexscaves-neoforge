@@ -160,16 +160,19 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     public int getContainerSize() {
         return this.stacks.size();
     }
 
     
+    @Override
     public ItemStack getItem(int index) {
         return this.stacks.get(index);
     }
 
     
+    @Override
     public ItemStack removeItem(int index, int count) {
         if (!this.stacks.get(index).isEmpty()) {
             ItemStack itemstack;
@@ -203,6 +206,7 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     public void setItem(int index, ItemStack stack) {
         boolean flag = !stack.isEmpty() && ItemStack.isSameItemSameComponents(stack, this.stacks.get(index));
         this.stacks.set(index, stack);
@@ -213,11 +217,13 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     protected NonNullList<ItemStack> getItems() {
         return this.stacks;
     }
 
     
+    @Override
     protected void setItems(NonNullList<ItemStack> items) {
         this.stacks = items;
     }
@@ -263,46 +269,55 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
 
     
+    @Override
     public int getMaxStackSize() {
         return 64;
     }
 
     
+    @Override
     public boolean stillValid(Player player) {
         return true;
     }
 
     
+    @Override
     public void clearContent() {
         this.stacks.clear();
     }
 
     
+    @Override
     public int[] getSlotsForFace(Direction side) {
         return slotsTop;
     }
 
     
+    @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return false;
     }
 
     
+    @Override
     public boolean hasCustomName() {
         return false;
     }
 
     
+    @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return true;
     }
 
     
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
@@ -316,11 +331,13 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
     }
 
     
+    @Override
     public ItemStack removeItemNoUpdate(int index) {
         ItemStack lvt_2_1_ = this.stacks.get(index);
         if (lvt_2_1_.isEmpty()) {
@@ -332,21 +349,25 @@ public class AbyssalAltarBlockEntity extends BaseContainerBlockEntity implements
     }
 
     
+    @Override
     public Component getDisplayName() {
         return getDefaultName();
     }
 
     
+    @Override
     protected Component getDefaultName() {
         return Component.translatable("block.alexsmobs.capsid");
     }
 
     
+    @Override
     protected AbstractContainerMenu createMenu(int id, Inventory player) {
         return null;
     }
 
     
+    @Override
     public boolean isEmpty() {
         for (int i = 0; i < this.getContainerSize(); i++) {
             if (!this.getItem(i).isEmpty()) {

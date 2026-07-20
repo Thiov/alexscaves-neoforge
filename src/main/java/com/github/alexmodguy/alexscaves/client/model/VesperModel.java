@@ -236,11 +236,13 @@ public class VesperModel extends AdvancedEntityModel<VesperEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, head, nose, jaw, tail, torso, lleg, rleg, lfoot, rfoot, lear, rear, lwing, lwingTip, lfinger, rwing, rwingTip, rfinger, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5, cube_r6, cube_r7, cube_r8, cube_r9, cube_r10, cube_r11, cube_r12, cube_r13, cube_r14);
     }
@@ -264,6 +266,7 @@ public class VesperModel extends AdvancedEntityModel<VesperEntity> {
     }
 
     
+    @Override
     public void setupAnim(VesperEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

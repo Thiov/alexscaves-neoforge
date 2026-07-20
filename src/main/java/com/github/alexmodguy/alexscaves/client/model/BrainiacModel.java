@@ -214,6 +214,7 @@ public class BrainiacModel extends AdvancedEntityModel<BrainiacEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(torso);
     }
@@ -227,6 +228,7 @@ public class BrainiacModel extends AdvancedEntityModel<BrainiacEntity> {
     }
 
     
+    @Override
     public void setupAnim(BrainiacEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -298,6 +300,7 @@ public class BrainiacModel extends AdvancedEntityModel<BrainiacEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(torso, chest, lleg, rleg, rarm, larm, handMaw, handMaw3, head, brain, tongue, tongue2);
     }

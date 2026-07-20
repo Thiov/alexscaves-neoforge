@@ -53,6 +53,7 @@ public class RelicheirusPushTreesGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isReachedTarget() {
         BlockPos target = getMoveToTarget();
         return target != null && relicheirus.distanceToSqr(target.getX() + 0.5F, relicheirus.getY(), target.getZ() + 0.5F) < acceptedDistance();
@@ -63,6 +64,7 @@ public class RelicheirusPushTreesGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -137,6 +139,7 @@ public class RelicheirusPushTreesGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         if (worldIn.getBlockState(pos).is(ACTagRegistry.RELICHEIRUS_KNOCKABLE_LOGS)) {
             BlockPos treeTop = new BlockPos(pos);

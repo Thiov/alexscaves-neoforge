@@ -118,11 +118,13 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
 
 
     
+    @Override
     public boolean fromBucket() {
         return this.entityData.get(FROM_BUCKET);
     }
 
     
+    @Override
     public void setFromBucket(boolean sit) {
         this.entityData.set(FROM_BUCKET, sit);
     }
@@ -138,6 +140,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevLandProgress = landProgress;
@@ -194,6 +197,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void saveToBucketTag(@Nonnull ItemStack bucket) {
         if (this.hasCustomName()) {
             bucket.set(DataComponents.CUSTOM_NAME, this.getCustomName());
@@ -206,6 +210,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void loadFromBucketTag(@Nonnull CompoundTag compound) {
         if (com.github.alexmodguy.alexscaves.server.misc.NbtCompat.contains(compound, "FishBucketTag")) {
             this.readAdditionalSaveData(com.github.alexmodguy.alexscaves.server.misc.NbtCompat.asValueInput(this.registryAccess(), com.github.alexmodguy.alexscaves.server.misc.NbtCompat.getCompound(compound, "FishBucketTag")));
@@ -214,12 +219,14 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public ItemStack getBucketItemStack() {
         return new ItemStack(ACItemRegistry.LANTERNFISH_BUCKET.get());
     }
 
     
     @Nonnull
+    @Override
     public SoundEvent getPickupSound() {
         return SoundEvents.BUCKET_FILL_FISH;
     }
@@ -349,10 +356,12 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public boolean canUse() {
             return this.fish.isGroupLeader() || fish.hasNoLeader() || fish.hasGroupLeader() && fish.groupLeader.circlePos != null;
         }
 
+        @Override
         public void tick() {
             if (fish.circleTime > fish.maxCircleTime) {
                 fish.circleTime = 0;
@@ -446,6 +455,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
             return reducedTickDelay(100 + fish.getRandom().nextInt(100) % 20);
         }
 
+        @Override
         public boolean canUse() {
             if (this.mob.isGroupLeader() || this.mob.isCircling()) {
                 return false;
@@ -480,6 +490,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
             this.mob.leaveGroup();
         }
 
+        @Override
         public void tick() {
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = this.adjustedTickDelay(10);
@@ -493,6 +504,7 @@ public class LanternfishEntity extends WaterAnimal implements Bucketable {
             super(LanternfishEntity.this);
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.MOVE_TO && mob.isInWater()) {
                 final Vec3 vector3d = new Vec3(this.wantedX - mob.getX(), this.wantedY - mob.getY(), this.wantedZ - mob.getZ());

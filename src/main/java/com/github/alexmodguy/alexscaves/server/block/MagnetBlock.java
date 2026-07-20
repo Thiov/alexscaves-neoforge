@@ -184,6 +184,7 @@ public class MagnetBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MagnetBlockEntity(pos, state);
     }

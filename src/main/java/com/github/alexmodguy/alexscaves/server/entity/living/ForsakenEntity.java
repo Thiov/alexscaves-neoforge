@@ -96,6 +96,7 @@ public class ForsakenEntity extends Monster implements IAnimatedEntity, ShakesSc
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(RUNNING, false);
@@ -414,21 +415,25 @@ public class ForsakenEntity extends Monster implements IAnimatedEntity, ShakesSc
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
@@ -478,11 +483,13 @@ public class ForsakenEntity extends Monster implements IAnimatedEntity, ShakesSc
     }
 
         
+    @Override
     public float getScreenShakeAmount(float partialTicks) {
         return prevScreenShakeAmount + (screenShakeAmount - prevScreenShakeAmount) * partialTicks;
     }
 
     
+    @Override
     public boolean canFeelShake(Entity player) {
         return true;
     }
@@ -500,6 +507,7 @@ public class ForsakenEntity extends Monster implements IAnimatedEntity, ShakesSc
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_SUMMON, ANIMATION_PREPARE_JUMP, ANIMATION_BITE, ANIMATION_LEFT_SLASH, ANIMATION_RIGHT_SLASH, ANIMATION_GROUND_SMASH, ANIMATION_SONIC_ATTACK, ANIMATION_SONIC_BLAST, ANIMATION_LEFT_PICKUP, ANIMATION_RIGHT_PICKUP};
     }
@@ -525,6 +533,7 @@ public class ForsakenEntity extends Monster implements IAnimatedEntity, ShakesSc
     }
 
     
+    @Override
     public float getSoundVolume() {
         return 2.5F;
     }

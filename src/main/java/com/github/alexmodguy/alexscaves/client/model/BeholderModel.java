@@ -39,11 +39,13 @@ public class BeholderModel extends AdvancedEntityModel {
 	}
 
 	
+	@Override
 	public Iterable<BasicModelPart> parts() {
 		return ImmutableList.of(main);
 	}
 
 	
+	@Override
 	public void setupAnim(Entity entity, float eyeXRot, float eyeYRot, float ageInTicks, float unused0, float unused1) {
 		this.resetToDefaultPose();
 		this.eye.rotationPointY += Math.sin(ageInTicks * 0.2F) * 0.5F;
@@ -52,6 +54,7 @@ public class BeholderModel extends AdvancedEntityModel {
 	}
 
 	
+	@Override
 	public Iterable<AdvancedModelBox> getAllParts() {
 		return ImmutableList.of(main, stand, cube_r1, eye);
 	}

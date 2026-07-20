@@ -32,6 +32,7 @@ public class LimestoneSpearEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ACItemRegistry.LIMESTONE_SPEAR.get());
     }

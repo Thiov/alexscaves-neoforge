@@ -36,6 +36,7 @@ public class UnderzealotRenderer extends MobRenderer121X<UnderzealotEntity, Unde
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

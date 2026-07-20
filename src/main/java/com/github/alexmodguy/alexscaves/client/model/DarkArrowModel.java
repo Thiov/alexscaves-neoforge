@@ -46,11 +46,13 @@ public class DarkArrowModel extends AdvancedEntityModel<DarkArrowEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public void setupAnim(DarkArrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float invFade = 1.0F - entity.getFadeOut(ageInTicks - entity.tickCount);
@@ -59,6 +61,7 @@ public class DarkArrowModel extends AdvancedEntityModel<DarkArrowEntity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, head, cube_r1, cube_r2, stick);
     }

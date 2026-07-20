@@ -35,6 +35,7 @@ public class IrradiatedEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int tick1, int level) {
         if (level <= 0) {
             return false;

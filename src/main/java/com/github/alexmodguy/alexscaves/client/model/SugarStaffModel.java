@@ -30,17 +30,20 @@ public class SugarStaffModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(staff);
     }
 
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(staff, mint);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float unused1, float unused2, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         mint.bob(0.2F, 0.5F, false, ageInTicks, 1);

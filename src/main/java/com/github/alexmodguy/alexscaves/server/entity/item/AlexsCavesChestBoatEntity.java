@@ -41,6 +41,7 @@ public class AlexsCavesChestBoatEntity extends ChestBoat implements AlexsCavesBo
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_ID_AC_BOAT_TYPE, 0);
@@ -61,6 +62,7 @@ public class AlexsCavesChestBoatEntity extends ChestBoat implements AlexsCavesBo
     }
 
     
+    @Override
     protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
         this.lastYd = this.getDeltaMovement().y;
         if (!this.isPassenger()) {

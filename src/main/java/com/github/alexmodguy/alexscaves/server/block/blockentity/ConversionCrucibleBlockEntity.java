@@ -470,6 +470,7 @@ public class ConversionCrucibleBlockEntity extends BlockEntity {
     }
 
     
+    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }

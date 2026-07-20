@@ -43,6 +43,7 @@ public class PewenPinesBlock extends BushBlock {
     }
 
     
+    @Override
     public float getMaxHorizontalOffset() {
         return 0.1F;
     }

@@ -57,6 +57,7 @@ public class BioluminescentTorch extends TorchBlock implements SimpleWaterlogged
     }
 
     
+    @Override
     public void animateTick(BlockState state, Level level, BlockPos blockPos, RandomSource randomSource) {
         double d0 = (double)blockPos.getX() + 0.5D;
         double d1 = (double)blockPos.getY() + 0.7D;

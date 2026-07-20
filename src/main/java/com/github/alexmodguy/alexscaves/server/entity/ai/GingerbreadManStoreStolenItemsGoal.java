@@ -42,6 +42,7 @@ public class GingerbreadManStoreStolenItemsGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
         if ((target == null || !target.isAlive()) && (mob.getItemInHand(InteractionHand.OFF_HAND).is(ACTagRegistry.GINGERBREAD_MAN_STEALS) || mob.isOvenSpawned() && !mob.getItemInHand(InteractionHand.OFF_HAND).isEmpty())) {
@@ -76,6 +77,7 @@ public class GingerbreadManStoreStolenItemsGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity target = mob.getTarget();
         return barrelPos != null && !mob.getItemInHand(InteractionHand.OFF_HAND).isEmpty() && doesBarrelHaveSpace(mob.level(), barrelPos, mob.getItemInHand(InteractionHand.OFF_HAND)) && (target == null || !target.isAlive());

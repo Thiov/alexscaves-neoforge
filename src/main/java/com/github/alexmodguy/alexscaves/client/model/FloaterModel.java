@@ -40,16 +40,19 @@ public class FloaterModel extends AdvancedEntityModel<FloaterEntity> {
 	}
 
 	
+	@Override
 	public Iterable<BasicModelPart> parts() {
 		return ImmutableList.of(root);
 	}
 
 	
+	@Override
 	public Iterable<AdvancedModelBox> getAllParts() {
 		return ImmutableList.of(root, cube_r1, propellor);
 	}
 
 	
+	@Override
 	public void setupAnim(FloaterEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.resetToDefaultPose();
 		this.propellor.rotateAngleY += ageInTicks * 0.5F;

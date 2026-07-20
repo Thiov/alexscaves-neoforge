@@ -79,6 +79,7 @@ public class WaveEntity extends Entity {
 
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SLAMMING, false);
         builder.define(LIFESPAN, 10);
@@ -241,6 +242,7 @@ public class WaveEntity extends Entity {
     }
 
     
+    @Override
     public EntityDimensions getDimensions(Pose pose) {
         return super.getDimensions(pose).scale(this.getWaveScale());
     }

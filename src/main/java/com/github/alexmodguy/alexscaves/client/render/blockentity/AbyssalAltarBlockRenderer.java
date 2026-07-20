@@ -20,6 +20,7 @@ public class AbyssalAltarBlockRenderer<T extends AbyssalAltarBlockEntity> implem
     }
 
 
+    @Override
     public void render(T altar, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ItemStack itemStack = altar.getDisplayStack();
         if (!itemStack.isEmpty()) {

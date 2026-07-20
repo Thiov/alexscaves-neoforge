@@ -21,17 +21,20 @@ public class QuarryGrinderModel extends AdvancedEntityModel {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(spinner);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float spin, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         spinner.rotateAngleX -= spin * 0.5F;
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(spinner);
     }

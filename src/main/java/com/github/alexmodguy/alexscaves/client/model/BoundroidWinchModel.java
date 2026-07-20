@@ -83,16 +83,19 @@ public class BoundroidWinchModel extends AdvancedEntityModel<BoundroidWinchEntit
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, coil, rarm, rleg, larm, lleg, cube_r1, cube_r2);
     }
 
     
+    @Override
     public void setupAnim(BoundroidWinchEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTick = ageInTicks - entity.tickCount;

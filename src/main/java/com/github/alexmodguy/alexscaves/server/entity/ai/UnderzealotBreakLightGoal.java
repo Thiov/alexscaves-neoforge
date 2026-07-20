@@ -27,6 +27,7 @@ public class UnderzealotBreakLightGoal extends MoveToBlockGoal {
 
 
     
+    @Override
     public boolean canUse() {
         return super.canUse() && !isTargetBlocked(blockPos.getCenter());
     }
@@ -37,6 +38,7 @@ public class UnderzealotBreakLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return super.canContinueToUse() && this.underzealot.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && !this.underzealot.isPackFollower() && !this.underzealot.isCarrying();
     }
@@ -46,6 +48,7 @@ public class UnderzealotBreakLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -67,6 +70,7 @@ public class UnderzealotBreakLightGoal extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         return pos != null && worldIn.getBlockState(pos).is(ACTagRegistry.UNDERZEALOT_LIGHT_SOURCES) && worldIn.getLightEmission(pos) > 0;
     }

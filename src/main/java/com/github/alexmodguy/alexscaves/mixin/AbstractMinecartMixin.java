@@ -225,8 +225,14 @@ public abstract class AbstractMinecartMixin extends VehicleEntity implements Min
     }
 
     @Override
+    public float getMagLevHoverAmount(float partialTick) {
+        // NB: the old expression here dropped the partial-tick factor entirely - algebraically it was just
+        // ac_magLevProgress. The renderer needs the real interpolated value.
+        return ac_prevMagLevProgress + (ac_magLevProgress - ac_prevMagLevProgress) * partialTick;
+    }
+
+    @Override
     public boolean isOnMagLevRail() {
-        double amount = ac_prevMagLevProgress + (ac_magLevProgress - ac_prevMagLevProgress);
-        return amount >= 0.5F;
+        return getMagLevHoverAmount(1.0F) >= 0.5F;
     }
 }

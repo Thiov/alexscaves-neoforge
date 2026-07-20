@@ -24,6 +24,7 @@ public class DeepsightEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
@@ -37,11 +38,13 @@ public class DeepsightEffect extends MobEffect {
     }
 
     
+    @Override
     public void removeAttributeModifiers(AttributeMap map) {
         super.removeAttributeModifiers(map);
     }
 
     
+    @Override
     public void onEffectStarted(LivingEntity entity, int amplifier) {
         MobEffectInstance instance = entity.getEffect(ACEffectRegistry.DEEPSIGHT);
         if (instance != null) {

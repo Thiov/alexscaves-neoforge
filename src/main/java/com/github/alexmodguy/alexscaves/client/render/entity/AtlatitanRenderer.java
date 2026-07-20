@@ -59,6 +59,7 @@ public class AtlatitanRenderer extends MobRenderer121X<AtlatitanEntity, Atlatita
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

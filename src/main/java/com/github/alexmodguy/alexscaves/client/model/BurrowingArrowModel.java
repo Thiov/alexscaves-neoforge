@@ -65,11 +65,13 @@ public class BurrowingArrowModel extends AdvancedEntityModel<BurrowingArrowEntit
 	}
 
 	
+	@Override
 	public Iterable<BasicModelPart> parts() {
 		return ImmutableList.of(main);
 	}
 
 	
+	@Override
 	public void setupAnim(BurrowingArrowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.resetToDefaultPose();
 		float burrow = entity.getDiggingAmount(ageInTicks - entity.tickCount);
@@ -79,6 +81,7 @@ public class BurrowingArrowModel extends AdvancedEntityModel<BurrowingArrowEntit
 	}
 
 	
+	@Override
 	public Iterable<AdvancedModelBox> getAllParts() {
 		return ImmutableList.of(main, arrow, cube_r1, cube_r2, cube_r3, tjaw, ljaw, arrow_head);
 	}

@@ -124,6 +124,7 @@ public class MagicConchItem extends Item {
     }
 
     
+    @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 1200;
     }

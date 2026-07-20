@@ -31,6 +31,7 @@ public class NuclearFurnaceResultSlot extends FurnaceResultSlot {
     }
 
     
+    @Override
     protected void checkTakeAchievements(ItemStack itemStack) {
         itemStack.onCraftedBy(this.player, this.removeCountNuclear);
         Player player = this.player;

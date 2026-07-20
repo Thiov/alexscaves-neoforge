@@ -87,11 +87,13 @@ public class ShotGumModel extends AdvancedEntityModel {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(shot_gum);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float shootProgress, float gumballsLeft, float crankAngle, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         gum_layer4.showModel = gumballsLeft > 0;
@@ -105,6 +107,7 @@ public class ShotGumModel extends AdvancedEntityModel {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(shot_gum, handle, gum_layers, gum_layer, gum_layer2, gum_layer3, gum_layer4, stock, cube_r1, barrels, crank);
     }

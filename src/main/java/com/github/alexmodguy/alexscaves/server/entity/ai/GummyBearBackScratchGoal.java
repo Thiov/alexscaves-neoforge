@@ -55,6 +55,7 @@ public class GummyBearBackScratchGoal  extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isReachedTarget() {
         BlockPos target = getMoveToTarget();
         return target != null && gummyBear.distanceToSqr(target.getX() + 0.5F, gummyBear.getY(), target.getZ() + 0.5F) < acceptedDistance();
@@ -65,6 +66,7 @@ public class GummyBearBackScratchGoal  extends MoveToBlockGoal {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         BlockPos target = getMoveToTarget();
@@ -103,6 +105,7 @@ public class GummyBearBackScratchGoal  extends MoveToBlockGoal {
     }
 
     
+    @Override
     protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
         if (worldIn.getBlockState(pos).is(ACBlockRegistry.LICOROOT.get())) {
             for(Direction direction : ACMath.HORIZONTAL_DIRECTIONS){

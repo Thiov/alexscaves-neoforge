@@ -35,6 +35,7 @@ public class MagnetSound extends BlockEntityTickableSound<MagnetBlockEntity> {
     }
 
     
+    @Override
     public boolean isSameBlockEntity(MagnetBlockEntity blockEntity) {
         return super.isSameBlockEntity(blockEntity) && this.blockEntity.isAzure() == blockEntity.isAzure();
     }

@@ -62,11 +62,13 @@ public class BubbledEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return true;
     }
 
     
+    @Override
     public void onEffectStarted(LivingEntity entity, int amplifier) {
         // Send initial sync to clients when effect starts
         if (!entity.level().isClientSide()) {

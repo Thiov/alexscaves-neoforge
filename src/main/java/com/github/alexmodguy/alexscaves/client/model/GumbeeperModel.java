@@ -125,11 +125,13 @@ public class GumbeeperModel extends AdvancedEntityModel<GumbeeperEntity> {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, body, head, gum_layer, gum_layers, gum_layer2, gum_layer3, gum_layer4, gum_layer5, gum_layer6, gum_layerFinal, coin_Wheel, left_backLeg, left_frontLeg, right_backLeg, right_frontLeg);
     }

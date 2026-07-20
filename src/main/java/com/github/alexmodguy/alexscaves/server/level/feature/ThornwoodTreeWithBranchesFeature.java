@@ -15,6 +15,7 @@ public class ThornwoodTreeWithBranchesFeature extends ThornwoodTreeFeature {
     }
 
     
+    @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         BlockPos pos = context.origin();
         if (super.place(context)) {

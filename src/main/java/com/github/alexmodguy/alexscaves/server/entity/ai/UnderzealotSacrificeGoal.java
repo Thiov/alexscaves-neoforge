@@ -25,6 +25,7 @@ public class UnderzealotSacrificeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (entity.sacrificeCooldown > 0) {
             return false;
@@ -125,6 +126,7 @@ public class UnderzealotSacrificeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         if (center == null) {
             return false;

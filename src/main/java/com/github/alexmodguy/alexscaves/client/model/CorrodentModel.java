@@ -148,11 +148,13 @@ public class CorrodentModel extends AdvancedEntityModel<CorrodentEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, rarmPivot, larmPivot, rarm, larm, chest, hips, hipsPivot, llegPivot, rlegPivot, lleg, rleg, head, snout, nose, tail, lwhisker, lwhisker_S, rwhisker, rwhisker_S, jaw);
     }
@@ -179,6 +181,7 @@ public class CorrodentModel extends AdvancedEntityModel<CorrodentEntity> {
     }
 
     
+    @Override
     public void setupAnim(CorrodentEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

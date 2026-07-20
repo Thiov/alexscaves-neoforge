@@ -78,6 +78,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(HEAD_ENTITY_UUID, Optional.empty());
         builder.define(HEAD_ENTITY_ID, -1);
@@ -228,6 +229,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public boolean isPickable() {
         Entity head = this.getHeadEntity();
         return head != null && head.isPickable();
@@ -251,6 +253,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         this.prevZRot = zRot;
@@ -393,11 +396,13 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public boolean isPushable() {
         return false;
     }
 
     
+    @Override
     public void push(Entity entity) {
         if (!this.isPassengerOfSameVehicle(entity) && !(entity instanceof GumWormSegmentEntity)) {
             if (!entity.noPhysics && !this.noPhysics) {
@@ -426,6 +431,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public boolean canPassThrough(BlockPos blockPos, BlockState blockState, VoxelShape voxelShape) {
         boolean ridingMode = this.getHeadEntity() instanceof GumWormEntity gumWorm && gumWorm.isRidingMode();
         return GumWormEntity.canDigBlock(blockState) && (!ridingMode || !level().getBlockState(blockPos.above()).isSolid() || !blockState.isSuffocating(level(), blockPos));
@@ -440,6 +446,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public Vec3 getLightProbePosition(float f) {
         if (surfacePosition != null && prevSurfacePosition != null) {
             Vec3 difference = surfacePosition.subtract(prevSurfacePosition);
@@ -512,6 +519,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
         return prevZRot + (zRot - prevZRot) * partialTicks;
     }
 
+    @Override
     public boolean shouldRiderSit() {
         return false;
     }
@@ -538,6 +546,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
     
     
+    @Override
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
         if (this.isPassengerOfSameVehicle(passenger) && passenger instanceof LivingEntity living && !this.touchingUnloadedChunk()) {
             clampRotation(living);
@@ -562,6 +571,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public void onKeyPacket(Entity keyPresser, int type) {
         if(type == 0){
             keyPresser.stopRiding();
@@ -575,6 +585,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public LivingEntity getControllingPassenger() {
         Entity entity = this.getFirstPassenger();
         if (entity instanceof Player) {
@@ -590,6 +601,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         // Return the surface position so the player dismounts on the ground instead of at the entity's bounding box top
         return new Vec3(this.getX(), surfaceY, this.getZ());
@@ -609,15 +621,18 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public void onPlayerJump(int i) {
     }
 
     
+    @Override
     public boolean canJump() {
         return this.getHeadEntity() instanceof GumWormEntity gumWorm && !gumWorm.isLeaping() && !gumWorm.recentlyLeapt();
     }
 
     
+    @Override
     public void handleStartJump(int i) {
         if(this.getHeadEntity() instanceof GumWormEntity gumWorm){
             gumWorm.onPlayerJump(i);
@@ -625,6 +640,7 @@ public class GumWormSegmentEntity extends Entity implements ICustomCollisions, K
     }
 
     
+    @Override
     public void handleStopJump() {
 
     }

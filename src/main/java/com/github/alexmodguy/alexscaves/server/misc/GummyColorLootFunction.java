@@ -28,6 +28,7 @@ public class GummyColorLootFunction extends LootItemConditionalFunction {
     }
 
     
+    @Override
     protected ItemStack run(ItemStack stack, @NotNull LootContext context) {
         if(stack.is(ACTagRegistry.GUMMY_ITEMS) && context.hasParameter(LootContextParams.THIS_ENTITY) && context.getParameter(LootContextParams.THIS_ENTITY) instanceof HasGummyColors hasGummyColors){
             GummyColors color = hasGummyColors.getGummyColor();

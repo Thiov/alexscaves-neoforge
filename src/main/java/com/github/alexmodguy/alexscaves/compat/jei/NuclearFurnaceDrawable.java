@@ -11,11 +11,13 @@ public class NuclearFurnaceDrawable implements IDrawable {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(AlexsCaves.MODID, "textures/gui/nuclear_furnace.png");
 
     
+    @Override
     public int getWidth() {
         return 150;
     }
 
     
+    @Override
     public int getHeight() {
         return 60;
     }

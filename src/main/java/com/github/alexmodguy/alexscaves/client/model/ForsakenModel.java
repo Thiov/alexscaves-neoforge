@@ -434,6 +434,7 @@ public class ForsakenModel extends AdvancedEntityModel<ForsakenEntity> {
     }
 
     
+    @Override
     public void setupAnim(ForsakenEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float partialTicks = ageInTicks - entity.tickCount;
@@ -712,11 +713,13 @@ public class ForsakenModel extends AdvancedEntityModel<ForsakenEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, chest, cube_r1, cube_r2, larm, lforeArm, lhand, lfinger, lfinger2, lfinger3, lthumb, lthumb2, rarm, rforeArm, rhand, rfinger, rfinger2, rfinger3, rthumb, rthumb2, lupperArm, lupperForeArm, lupperHand, lupperFinger, lupperThumb, lupperThumb2, lupperFinger2, lupperFinger3, rupperArm, rupperForeArm, rupperHand, rupperFinger, rupperThumb, rupperThumb2, rupperFinger2, rupperFinger3, hips, cube_r3, lthigh, lcalf, lfoot, ltoe, ltoe2, ltoe3, rthigh, rcalf, rfoot, rtoe, rtoe2, rtoe3, tail, tail2, neck, cube_r4, cube_r5, cube_r6, skull, rBigear, lBigear, rear, lear, jaw);
     }

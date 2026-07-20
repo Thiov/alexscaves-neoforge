@@ -16,6 +16,7 @@ public class TremorzillaEggBlock extends DinosaurEggBlock {
     }
 
     
+    @Override
     public boolean canHatchAt(BlockGetter reader, BlockPos pos){
         return false;
     }
@@ -28,6 +29,7 @@ public class TremorzillaEggBlock extends DinosaurEggBlock {
     }
 
     
+    @Override
     public void spawnDinosaurs(Level level, BlockPos pos, BlockState state) {
         super.spawnDinosaurs(level, pos, state);
         if(!level.isClientSide()){

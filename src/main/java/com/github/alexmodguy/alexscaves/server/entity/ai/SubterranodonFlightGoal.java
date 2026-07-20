@@ -27,6 +27,7 @@ public class SubterranodonFlightGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (entity.isVehicle() || (entity.getTarget() != null && entity.getTarget().isAlive()) || entity.isPassenger() || entity.isDancing() || entity.isInSittingPose()) {
             return false;

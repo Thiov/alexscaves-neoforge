@@ -109,6 +109,7 @@ public abstract class AbstractCaveGenerationStructure extends Structure {
     public abstract int getHeightRadius(WorldgenRandom random, int seaLevel);
 
     
+    @Override
     public GenerationStep.Decoration step() {
         return GenerationStep.Decoration.RAW_GENERATION;
     }

@@ -37,6 +37,7 @@ public class DeepOneReactToPlayerGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = deepOne.getTarget();
         long worldTime = deepOne.level().getGameTime() % 20;
@@ -62,6 +63,7 @@ public class DeepOneReactToPlayerGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity attackTarget = deepOne.getTarget();
         return player != null && !player.isSpectator() && reaction != null && deepOne.getCorneringPlayer() == null && deepOne.distanceTo(player) >= reaction.getMinDistance() && deepOne.distanceTo(player) <= reaction.getMaxDistance() && (attackTarget == null || !attackTarget.isAlive()) && (reaction != DeepOneReaction.AGGRESSIVE || !player.isCreative() || deepOne.isSummoned()) && !deepOne.isTradingLocked() && reaction.validPlayer(deepOne, player);
@@ -69,6 +71,7 @@ public class DeepOneReactToPlayerGoal extends Goal {
 
 
     
+    @Override
     public void start() {
         chaseTime = 0;
         executionTime = 0;
@@ -76,6 +79,7 @@ public class DeepOneReactToPlayerGoal extends Goal {
     }
 
     
+    @Override
     public void stop() {
         chaseTime = 0;
         executionTime = 0;
@@ -97,6 +101,7 @@ public class DeepOneReactToPlayerGoal extends Goal {
     }
 
     
+    @Override
     public void tick() {
         executionTime++;
         if (refreshReactionTime-- < 0) {

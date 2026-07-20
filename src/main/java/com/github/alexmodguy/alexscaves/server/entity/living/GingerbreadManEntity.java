@@ -280,6 +280,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public void setJukeboxPos(BlockPos blockPos) {
         this.jukeboxPosition = blockPos;
     }
@@ -383,21 +384,25 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
@@ -421,6 +426,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_IDLE_WAVE_LEFT, ANIMATION_IDLE_WAVE_RIGHT, ANIMATION_IDLE_FALL_OVER, ANIMATION_IDLE_JUMP, ANIMATION_SWING_RIGHT};
     }
@@ -459,16 +465,19 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public void setPossessedByLicowitchId(int entityId) {
         this.entityData.set(POSSESSOR_LICOWITCH_ID, entityId);
     }
 
     
+    @Override
     public int getPossessedByLicowitchId() {
         return this.entityData.get(POSSESSOR_LICOWITCH_ID);
     }
 
     
+    @Override
     public boolean canAttack(LivingEntity living) {
         if(this.getPossessedByLicowitchId() != -1){
             LicowitchEntity licowitch = this.getPossessingLicowitch(this.level());
@@ -488,6 +497,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public void onGetItem(ItemEntity e) {
         if (this.getAnimation() == NO_ANIMATION) {
             this.setAnimation(getAnimationForHand(false));
@@ -525,6 +535,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public boolean canTargetItem(ItemStack stack) {
         return (isOvenSpawned() || stack.is(ACTagRegistry.GINGERBREAD_MAN_STEALS)) && !hasLostLimb(this.isLeftHanded(), true);
     }
@@ -549,6 +560,7 @@ public class GingerbreadManEntity extends Monster implements IAnimatedEntity, ID
     }
 
     
+    @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         super.onSyncedDataUpdated(dataAccessor);
         if (LOST_LEFT_ARM.equals(dataAccessor)) {

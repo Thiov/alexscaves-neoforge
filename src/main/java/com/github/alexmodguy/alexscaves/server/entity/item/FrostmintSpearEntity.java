@@ -45,11 +45,13 @@ public class FrostmintSpearEntity extends AbstractArrow {
     }
 
     
+    @Override
     protected ItemStack getDefaultPickupItem() {
         return new ItemStack(ACItemRegistry.FROSTMINT_SPEAR.get());
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(OWNER_ID, -1);
@@ -61,6 +63,7 @@ public class FrostmintSpearEntity extends AbstractArrow {
     }
 
     
+    @Override
     public void tick(){
         super.tick();
         Entity owner = this.getOwner();

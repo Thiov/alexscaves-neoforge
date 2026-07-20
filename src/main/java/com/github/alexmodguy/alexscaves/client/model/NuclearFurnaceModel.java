@@ -39,11 +39,13 @@ public class NuclearFurnaceModel extends AdvancedEntityModel<Entity> {
   }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, main, waste);
     }

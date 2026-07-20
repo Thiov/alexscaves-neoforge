@@ -166,11 +166,13 @@ public class VallumraptorModel extends ACAdvancedEntityModel<VallumraptorEntity>
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, tail, tailTip, lleg2, rleg2, lleg, rleg, neck, head, jaw, lhand, rhand, lfoot, lclaw, rfoot, rclaw, larm, rarm, headquill, tailQuill, lquill, rquill);
     }
@@ -456,6 +458,7 @@ public class VallumraptorModel extends ACAdvancedEntityModel<VallumraptorEntity>
     }
 
     
+    @Override
     public void setupAnim(VallumraptorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

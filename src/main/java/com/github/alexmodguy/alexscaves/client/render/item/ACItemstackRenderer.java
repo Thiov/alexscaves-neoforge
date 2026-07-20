@@ -82,6 +82,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
 
+    @Override
     public void renderByItem(ItemStack itemStackIn, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ClientLevel level = Minecraft.getInstance().level;
         float partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);

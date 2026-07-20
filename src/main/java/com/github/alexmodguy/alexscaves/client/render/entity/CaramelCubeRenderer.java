@@ -63,6 +63,7 @@ public class CaramelCubeRenderer extends MobRenderer121X<CaramelCubeEntity, Cara
 
     @Nullable
     
+    @Override
     protected RenderType getRenderType(CaramelCubeEntity caramelCubeEntity, boolean normal, boolean translucent, boolean outline) {
         Identifier resourcelocation = this.getTextureLocation(caramelCubeEntity);
         if (translucent) {
@@ -75,6 +76,7 @@ public class CaramelCubeRenderer extends MobRenderer121X<CaramelCubeEntity, Cara
     }
 
     
+    @Override
     public void setSepiaFlag(boolean sepiaFlag) {
         this.sepia = sepiaFlag;
     }

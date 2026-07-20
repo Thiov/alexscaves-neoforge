@@ -81,6 +81,7 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
 
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(SIZE, 0);
@@ -162,11 +163,13 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
     }
 
     
+    @Override
     public void setPossessedByLicowitchId(int entityId) {
         this.entityData.set(POSSESSOR_LICOWITCH_ID, entityId);
     }
 
     
+    @Override
     public int getPossessedByLicowitchId() {
         return this.entityData.get(POSSESSOR_LICOWITCH_ID);
     }
@@ -177,6 +180,7 @@ public class CaramelCubeEntity extends Monster implements PossessedByLicowitch {
     }
 
     
+    @Override
     public boolean canAttack(LivingEntity living) {
         if(this.getPossessedByLicowitchId() != -1){
             LicowitchEntity licowitch = this.getPossessingLicowitch(this.level());

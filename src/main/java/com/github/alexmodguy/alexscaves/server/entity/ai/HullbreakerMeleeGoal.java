@@ -23,6 +23,7 @@ public class HullbreakerMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         return hullbreaker.getTarget() != null && hullbreaker.getTarget().isAlive();
     }

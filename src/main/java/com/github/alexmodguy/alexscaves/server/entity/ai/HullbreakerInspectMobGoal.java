@@ -32,6 +32,7 @@ public class HullbreakerInspectMobGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         long worldTime = entity.level().getGameTime() % 10;
@@ -54,6 +55,7 @@ public class HullbreakerInspectMobGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         LivingEntity target = entity.getTarget();
         return inspectingTarget != null && inspectingTarget.isAlive() && (target == null || !target.isAlive());

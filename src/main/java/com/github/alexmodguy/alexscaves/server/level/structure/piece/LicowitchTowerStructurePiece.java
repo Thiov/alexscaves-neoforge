@@ -52,11 +52,13 @@ public class LicowitchTowerStructurePiece extends UndergroundTemplateStructurePi
     }
 
     
+    @Override
     public int minimumDepthBeneathSurface() {
         return 35;
     }
 
     
+    @Override
     protected void handleDataMarker(String string, BlockPos pos, ServerLevelAccessor accessor, RandomSource random, BoundingBox box) {
         if (string.equals("loot_chest")) {
             if (accessor.getBlockEntity(pos.below()) instanceof RandomizableContainerBlockEntity container) {
@@ -71,6 +73,7 @@ public class LicowitchTowerStructurePiece extends UndergroundTemplateStructurePi
     }
 
     
+    @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomSource, BoundingBox boundingBox, ChunkPos chunkPos, BlockPos structurePos) {
         super.postProcess(level, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, structurePos);
         BoundingBox box = new BoundingBox(this.boundingBox.minX(), this.boundingBox.minY(), this.boundingBox.minZ(), this.boundingBox.maxX(), this.boundingBox.minY() + 1, this.boundingBox.maxZ());
@@ -100,21 +103,25 @@ public class LicowitchTowerStructurePiece extends UndergroundTemplateStructurePi
     }
 
     
+    @Override
     public boolean placeInHighestCave() {
         return true;
     }
 
     
+    @Override
     public boolean discardIfNotOnGround() {
         return true;
     }
 
     
+    @Override
     public boolean sinkByEdges() {
         return false;
     }
 
     
+    @Override
     protected BlockPos getCaveHeight(BlockPos currentStructureCenter, WorldGenLevel level, RandomSource randomSource) {
         return currentStructureCenter.atY((int) CakeCaveStructurePiece.calculatePlateauHeight(currentStructureCenter.getX(), currentStructureCenter.getZ(), 7, true));
     }

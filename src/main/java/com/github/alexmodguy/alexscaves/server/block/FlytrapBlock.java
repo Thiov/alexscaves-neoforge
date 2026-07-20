@@ -69,6 +69,7 @@ class FlytrapBlock extends BushBlock implements BonemealableBlock {
     }
 
     
+    @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos blockPos, BlockState blockState) {
         return true;
     }

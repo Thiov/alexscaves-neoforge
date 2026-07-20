@@ -58,6 +58,7 @@ public class CycadBlock extends BushBlock implements BonemealableBlock {
     }
 
     
+    @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         Vec3 vec3 = state.getOffset(pos);
         VoxelShape shape = state.getValue(TOP) ? SHAPE_TOP : SHAPE;
@@ -65,16 +66,19 @@ public class CycadBlock extends BushBlock implements BonemealableBlock {
     }
 
     
+    @Override
     public long getSeed(BlockState blockState, BlockPos pos) {
         return Mth.getSeed(pos.getX(), 0, pos.getZ());
     }
 
     
+    @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
         return super.mayPlaceOn(state, level, pos) || state.getBlock() == this;
     }
 
     
+    @Override
     public float getMaxHorizontalOffset() {
         return 0.2F;
     }

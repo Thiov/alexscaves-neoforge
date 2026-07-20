@@ -107,16 +107,19 @@ public class TremorzillaBeamModel extends AdvancedEntityModel<Entity> {
     }
     
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, cube_r1, cube_r2, cube_r3, cube_r4, cube_r5, cube_r6, cube_r7, cube_r8, base, flame, flame2, flame3, flame4);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float v, float v1, float v2, float v3, float v4) {
         this.resetToDefaultPose();
     }

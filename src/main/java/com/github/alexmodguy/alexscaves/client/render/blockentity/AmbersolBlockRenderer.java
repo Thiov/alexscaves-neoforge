@@ -62,6 +62,7 @@ public class AmbersolBlockRenderer<T extends AmbersolBlockEntity> implements com
     }
 
 
+    @Override
     public void render(T ambersol, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         if (!ambersol.isRemoved()) {
             allOnScreen.put(ambersol.getBlockPos(), ambersol);

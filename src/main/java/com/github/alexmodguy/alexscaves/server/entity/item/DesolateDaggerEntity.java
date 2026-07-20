@@ -55,6 +55,7 @@ public class DesolateDaggerEntity extends Entity {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevStab = this.getStab();
@@ -152,6 +153,7 @@ public class DesolateDaggerEntity extends Entity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(TARGET_ID, -1);
         builder.define(PLAYER_ID, -1);

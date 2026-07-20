@@ -147,6 +147,7 @@ public class CopperValveBlock extends BaseEntityBlock implements SimpleWaterlogg
 
 
     
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
         if (worldIn.getBlockEntity(pos) instanceof CopperValveBlockEntity copperValve && !player.isShiftKeyDown()) {
             if (state.getValue(TURNED)) {
@@ -161,6 +162,7 @@ public class CopperValveBlock extends BaseEntityBlock implements SimpleWaterlogg
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CopperValveBlockEntity(pos, state);
     }

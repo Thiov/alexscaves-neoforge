@@ -67,6 +67,7 @@ public class GalenaGauntletModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float openAmount, float switchProgress, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         float closeAmount = 1F - openAmount;
@@ -95,11 +96,13 @@ public class GalenaGauntletModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(base, fingers, thumb, finger, finger2, finger3);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(base);
     }

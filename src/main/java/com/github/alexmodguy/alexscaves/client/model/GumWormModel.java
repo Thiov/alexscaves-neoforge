@@ -111,11 +111,13 @@ public class GumWormModel extends AdvancedEntityModel<GumWormEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, head, bottom_Eye, top_Eye, left_Eye, right_Eye, top_Jaw, bottom_Jaw, gum_Strand1, gum_Strand2, gum_Strand3, cube_r1, cube_r2);
     }

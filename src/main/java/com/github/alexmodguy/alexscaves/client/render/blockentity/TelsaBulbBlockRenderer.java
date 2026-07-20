@@ -25,6 +25,7 @@ public class TelsaBulbBlockRenderer<T extends TeslaBulbBlockEntity> implements c
     }
 
     
+    @Override
     public void render(T teslaBulb, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         poseStack.pushPose();
         boolean down = teslaBulb.getBlockState().getValue(TeslaBulbBlock.DOWN);

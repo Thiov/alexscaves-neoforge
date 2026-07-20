@@ -127,11 +127,13 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
     }
 
     
+    @Override
     public boolean fromBucket() {
         return this.entityData.get(FROM_BUCKET);
     }
 
     
+    @Override
     public void setFromBucket(boolean sit) {
         this.entityData.set(FROM_BUCKET, sit);
     }
@@ -170,6 +172,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
     }
 
     
+    @Override
     public void saveToBucketTag(@Nonnull ItemStack bucket) {
         if (this.hasCustomName()) {
             bucket.set(DataComponents.CUSTOM_NAME, this.getCustomName());
@@ -182,6 +185,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
     }
 
     
+    @Override
     public void loadFromBucketTag(@Nonnull CompoundTag compound) {
         if (com.github.alexmodguy.alexscaves.server.misc.NbtCompat.contains(compound, "FishBucketTag")) {
             this.readAdditionalSaveData(com.github.alexmodguy.alexscaves.server.misc.NbtCompat.asValueInput(this.registryAccess(), com.github.alexmodguy.alexscaves.server.misc.NbtCompat.getCompound(compound, "FishBucketTag")));
@@ -195,6 +199,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
     }
 
     
+    @Override
     public ItemStack getBucketItemStack() {
         ItemStack stack;
         switch (this.getGummyColor()){
@@ -221,6 +226,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
     }
 
     
+    @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         InteractionResult type = super.mobInteract(player, hand);
@@ -304,6 +310,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
 
     
     @Nonnull
+    @Override
     public SoundEvent getPickupSound() {
         return SoundEvents.BUCKET_FILL_FISH;
     }
@@ -357,6 +364,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
         }
 
         
+        @Override
         public boolean canUse() {
             if (!SweetishFishEntity.this.isInLiquidInternal()) {
                 return false;
@@ -371,6 +379,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
         }
 
         
+        @Override
         public boolean canContinueToUse() {
             return SweetishFishEntity.this.isInLiquidInternal() && !SweetishFishEntity.this.navigation.isDone() && timeout < 40;
         }
@@ -385,6 +394,7 @@ public class SweetishFishEntity extends WaterAnimal implements Bucketable, HasGu
         }
 
         
+        @Override
         public void tick() {
             timeout++;
         }

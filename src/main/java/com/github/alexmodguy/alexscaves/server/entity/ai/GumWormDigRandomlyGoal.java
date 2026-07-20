@@ -23,6 +23,7 @@ public class GumWormDigRandomlyGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         if (entity.isVehicle() || entity.isPassenger()) {
             return false;

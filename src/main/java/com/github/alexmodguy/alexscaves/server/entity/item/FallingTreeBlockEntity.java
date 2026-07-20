@@ -25,6 +25,7 @@ public class FallingTreeBlockEntity extends AbstractMovingBlockEntity {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FALL_DIRECTION, Direction.NORTH);
@@ -106,6 +107,7 @@ public class FallingTreeBlockEntity extends AbstractMovingBlockEntity {
     }
 
     
+    @Override
     public boolean movesEntities() {
         return false;
     }

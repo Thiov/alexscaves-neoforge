@@ -212,6 +212,7 @@ public class TotemOfPossessionItem extends Item implements UpdatesStackTags {
     }
 
     
+    @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 72000;
     }

@@ -32,6 +32,7 @@ public class SpelunkeryTableRecipeCategory implements IRecipeCategory<Spelunkery
     }
 
     
+    @Override
     public Component getTitle() {
         return Component.translatable("alexscaves.container.spelunkery_table_translation");
     }
@@ -47,6 +48,7 @@ public class SpelunkeryTableRecipeCategory implements IRecipeCategory<Spelunkery
     }
 
     
+    @Override
     public IDrawable getIcon() {
         return icon;
     }
@@ -57,6 +59,7 @@ public class SpelunkeryTableRecipeCategory implements IRecipeCategory<Spelunkery
     }
 
     
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SpelunkeryTableRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 14, 6).addItemStack(CaveInfoItem.create(ACItemRegistry.CAVE_TABLET.get(), recipe.getBiomeResourceKey()));
         builder.addSlot(RecipeIngredientRole.INPUT, 34, 6).addIngredients(Ingredient.of(Items.PAPER));
@@ -64,6 +67,7 @@ public class SpelunkeryTableRecipeCategory implements IRecipeCategory<Spelunkery
     }
 
     
+    @Override
     public boolean isHandled(SpelunkeryTableRecipe recipe) {
         return true;
     }

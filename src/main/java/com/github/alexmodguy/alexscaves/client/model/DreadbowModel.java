@@ -67,6 +67,7 @@ public class DreadbowModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float pullAmount, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         this.bowstring.rotationPointZ += pullAmount * 9;
@@ -81,11 +82,13 @@ public class DreadbowModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(main, bowstring, bow, cube_r1, tArm, bArm, bString, tString);
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(main, bowstring);
     }

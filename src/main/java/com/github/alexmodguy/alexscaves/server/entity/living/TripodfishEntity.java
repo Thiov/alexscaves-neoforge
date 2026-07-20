@@ -74,6 +74,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(STANDING, Boolean.valueOf(false));
@@ -85,12 +86,14 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
         this.goalSelector.addGoal(2, new WanderGoal());
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this) {
             
+            @Override
             public boolean canUse() {
                 return super.canUse() && !TripodfishEntity.this.isStanding();
             }
         });
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F) {
             
+            @Override
             public boolean canUse() {
                 return super.canUse() && !TripodfishEntity.this.isStanding();
             }
@@ -144,6 +147,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevStandProgress = standProgress;
@@ -263,6 +267,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void saveToBucketTag(@Nonnull ItemStack bucket) {
         if (this.hasCustomName()) {
             bucket.set(DataComponents.CUSTOM_NAME, this.getCustomName());
@@ -282,11 +287,13 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public boolean fromBucket() {
         return this.entityData.get(FROM_BUCKET);
     }
 
     
+    @Override
     public void setFromBucket(boolean sit) {
         this.entityData.set(FROM_BUCKET, sit);
     }
@@ -296,18 +303,21 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
     }
 
     
+    @Override
     public void loadFromBucketTag(@Nonnull CompoundTag compound) {
         this.readAdditionalSaveData(com.github.alexmodguy.alexscaves.server.misc.NbtCompat.asValueInput(this.registryAccess(), compound));
         this.setAirSupply(2000);
     }
 
     
+    @Override
     public ItemStack getBucketItemStack() {
         return new ItemStack(ACItemRegistry.TRIPODFISH_BUCKET.get());
     }
 
     
     @Nonnull
+    @Override
     public SoundEvent getPickupSound() {
         return SoundEvents.BUCKET_FILL_FISH;
     }
@@ -333,16 +343,19 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
         private Vec3 fleeTarget = null;
 
         
+        @Override
         public boolean canUse() {
             return TripodfishEntity.this.hurtPos != null && TripodfishEntity.this.fleeFor > 0;
         }
 
         
+        @Override
         public void start() {
             TripodfishEntity.this.setStanding(false);
             fleeTarget = null;
         }
 
+        @Override
         public void tick() {
             if ((fleeTarget == null || TripodfishEntity.this.distanceToSqr(fleeTarget) < 6) && TripodfishEntity.this.hurtPos != null) {
                 fleeTarget = DefaultRandomPos.getPosAway(TripodfishEntity.this, 16, 7, Vec3.atCenterOf(TripodfishEntity.this.hurtPos));
@@ -364,6 +377,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
 
+        @Override
         public boolean canUse() {
             if (TripodfishEntity.this.getRandom().nextInt(100) != 0 && TripodfishEntity.this.isStanding() && TripodfishEntity.this.timeStanding < TripodfishEntity.this.navigateTypeLength) {
                 return false;
@@ -389,6 +403,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
             return !TripodfishEntity.this.getNavigation().isDone() && dist > 9;
         }
 
+        @Override
         public void start() {
             TripodfishEntity.this.setStanding(false);
             TripodfishEntity.this.getNavigation().moveTo(this.x, this.y, this.z, 1F);
@@ -467,6 +482,7 @@ public class TripodfishEntity extends WaterAnimal implements Bucketable {
         }
 
         
+        @Override
         public void tick() {
             if (!TripodfishEntity.this.isStanding()) {
                 super.tick();

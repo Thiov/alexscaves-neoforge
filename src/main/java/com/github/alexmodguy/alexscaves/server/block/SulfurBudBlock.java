@@ -153,6 +153,7 @@ public class SulfurBudBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     
+    @Override
     public Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }

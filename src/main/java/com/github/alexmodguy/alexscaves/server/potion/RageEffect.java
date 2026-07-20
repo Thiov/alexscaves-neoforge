@@ -55,6 +55,7 @@ public class RageEffect extends MobEffect {
     }
 
     
+    @Override
     public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return duration > 0;
     }

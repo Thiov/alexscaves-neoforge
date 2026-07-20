@@ -38,11 +38,13 @@ public class CopperValveModel extends AdvancedEntityModel<Entity> {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public void setupAnim(Entity entity, float limbSwing, float lifetime, float down, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         this.wheel.rotationPointY += 4 * down;
@@ -50,6 +52,7 @@ public class CopperValveModel extends AdvancedEntityModel<Entity> {
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, wheel, cube_r1);
     }

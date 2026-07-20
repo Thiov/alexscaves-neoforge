@@ -17,6 +17,7 @@ public class VesperTargetUnderneathEntities<T extends LivingEntity> extends Near
     }
 
     
+    @Override
     protected AABB getTargetSearchArea(double distance) {
         if (entity.isHanging()) {
             AABB aabb = this.entity.getBoundingBox();

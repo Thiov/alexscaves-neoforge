@@ -55,6 +55,7 @@ public abstract class PlayerMixin extends LivingEntity implements IModifiesTime 
     }
 
     
+    @Override
     public boolean isTimeModificationValid(TickRateModifier tickRateModifier){
         return !(tickRateModifier instanceof LocalEntityTickRateModifier) || this.hasEffect(ACEffectRegistry.SUGAR_RUSH);
     }

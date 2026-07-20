@@ -26,12 +26,14 @@ public class CandicornMeleeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = candicorn.getTarget();
         return target != null && target.isAlive() && !candicorn.isBaby();
     }
 
     
+    @Override
     public void stop() {
         candicorn.setRunning(false);
         candicorn.setCharging(false);

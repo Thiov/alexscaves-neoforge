@@ -24,6 +24,7 @@ public class UnderzealotCaptureSacrificeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canUse() {
         LivingEntity target = entity.getTarget();
         long worldTime = entity.level().getGameTime() % 10;
@@ -67,6 +68,7 @@ public class UnderzealotCaptureSacrificeGoal extends Goal {
     }
 
     
+    @Override
     public boolean canContinueToUse() {
         return sacrifice != null && sacrifice.isAlive() && !sacrifice.isPassenger() && !entity.isPackFollower() && entity.distanceTo(sacrifice) < 32 && entity.sacrificeCooldown <= 0;
     }

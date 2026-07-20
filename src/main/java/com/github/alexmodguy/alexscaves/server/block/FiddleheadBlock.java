@@ -40,6 +40,7 @@ public class FiddleheadBlock extends CavePlantBlock {
     }
 
     
+    @Override
     protected boolean mayPlaceOn(BlockState blockState, BlockGetter getter, BlockPos pos) {
         return blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.MOSS_BLOCK);
     }

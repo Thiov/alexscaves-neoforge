@@ -36,17 +36,20 @@ public class ExtinctionSpearModel extends AdvancedEntityModel<ExtinctionSpearEnt
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(spear);
     }
 
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(spear, spear2);
     }
 
     
+    @Override
     public void setupAnim(ExtinctionSpearEntity entity, float limbSwing, float explode, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         if(entity.isWiggling()){

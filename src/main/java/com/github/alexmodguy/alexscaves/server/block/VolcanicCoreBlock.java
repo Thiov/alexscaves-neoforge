@@ -104,6 +104,7 @@ public class VolcanicCoreBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new VolcanicCoreBlockEntity(pos, state);
     }

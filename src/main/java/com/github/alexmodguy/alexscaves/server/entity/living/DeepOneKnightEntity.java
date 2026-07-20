@@ -56,11 +56,13 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
         this.goalSelector.addGoal(1, new DeepOneBarterGoal(this));
         this.goalSelector.addGoal(2, new DeepOneReactToPlayerGoal(this) {
             
+            @Override
             public boolean canUse() {
                 return super.canUse() && lastThrownTrident == null;
             }
 
             
+            @Override
             public boolean canContinueToUse() {
                 return super.canContinueToUse() && lastThrownTrident == null;
             }
@@ -87,6 +89,7 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         LivingEntity target = getTarget();
@@ -96,11 +99,13 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     protected ResourceKey<LootTable> getBarterLootTable() {
         return BARTER_LOOT;
     }
 
     
+    @Override
     public boolean startDisappearBehavior(Player player) {
         this.getLookControl().setLookAt(player.getX(), player.getEyeY(), player.getZ(), 20.0F, (float) this.getMaxHeadXRot());
         if (!this.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
@@ -140,6 +145,7 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public void startAttackBehavior(LivingEntity target) {
         double distance = this.distanceTo(target);
         float f = this.getBbWidth() + target.getBbWidth();
@@ -184,6 +190,7 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation getTradingAnimation() {
         return ANIMATION_TRADE;
     }
@@ -226,6 +233,7 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public SoundEvent getAdmireSound() {
         return ACSoundRegistry.DEEP_ONE_KNIGHT_ADMIRE.get();
     }
@@ -243,6 +251,7 @@ public class DeepOneKnightEntity extends DeepOneBaseEntity {
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_THROW, ANIMATION_BITE, ANIMATION_SCRATCH, ANIMATION_TRADE};
     }

@@ -40,6 +40,7 @@ public class SauropodPartEntity extends PartEntity<SauropodBaseEntity> {
     }
 
     
+    @Override
     public boolean fireImmune() {
         return true;
     }
@@ -72,6 +73,7 @@ public class SauropodPartEntity extends PartEntity<SauropodBaseEntity> {
 
 
     
+    @Override
     public boolean isPickable() {
         SauropodBaseEntity parent = this.getParent();
         return parent != null && parent.isPickable();
@@ -91,6 +93,7 @@ public class SauropodPartEntity extends PartEntity<SauropodBaseEntity> {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

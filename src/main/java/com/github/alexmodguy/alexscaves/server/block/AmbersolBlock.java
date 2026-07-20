@@ -73,6 +73,7 @@ public class AmbersolBlock extends BaseEntityBlock {
 
     @Nullable
     
+    @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AmbersolBlockEntity(pos, state);
     }

@@ -38,6 +38,7 @@ public class FrostmintBlock extends SlabBlock implements Fallable {
     }
 
     
+    @Override
     public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
         BlockPos blockPos = blockHitResult.getBlockPos();
         while(level.getBlockState(blockPos.below()).is(this) && blockPos.getY() > level.getMinY()){
@@ -48,6 +49,7 @@ public class FrostmintBlock extends SlabBlock implements Fallable {
     }
 
     
+    @Override
     public void tick(BlockState state, ServerLevel level, BlockPos blockPos, RandomSource randomSource) {
         if ((isFree(level.getBlockState(blockPos.below())) || state.getValue(TYPE) == SlabType.TOP) && blockPos.getY() >= level.getMinY()) {
             FallingFrostmintEntity.fall(level, blockPos, state);
@@ -84,6 +86,7 @@ public class FrostmintBlock extends SlabBlock implements Fallable {
     }
 
     
+    @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 

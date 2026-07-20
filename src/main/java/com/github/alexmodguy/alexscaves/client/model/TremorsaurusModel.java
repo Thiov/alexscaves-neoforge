@@ -211,6 +211,7 @@ public class TremorsaurusModel extends ACAdvancedEntityModel<TremorsaurusEntity>
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
@@ -341,6 +342,7 @@ public class TremorsaurusModel extends ACAdvancedEntityModel<TremorsaurusEntity>
     }
 
     
+    @Override
     public void setupAnim(TremorsaurusEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -435,6 +437,7 @@ public class TremorsaurusModel extends ACAdvancedEntityModel<TremorsaurusEntity>
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, neck, head, jaw, glasses, tail, tailTip, rarm, larm, rleg, rleg2, rfoot, rclaw1, rclaw2, rclaw3, lleg, lleg2, lfoot, lclaw1, lclaw2, lclaw3);
     }

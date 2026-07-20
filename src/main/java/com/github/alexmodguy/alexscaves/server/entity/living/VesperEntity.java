@@ -99,11 +99,13 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D, 15, false) {
 
             
+            @Override
             public boolean canUse() {
                 return !VesperEntity.this.isFlying() && !VesperEntity.this.isHanging() && super.canUse();
             }
 
             
+            @Override
             public boolean canContinueToUse() {
                 return !VesperEntity.this.isFlying() && !VesperEntity.this.isHanging() && super.canContinueToUse();
             }
@@ -118,6 +120,7 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
     }
 
     
+    @Override
     public void tick() {
         super.tick();
         prevFlyProgress = flyProgress;
@@ -263,6 +266,7 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FLYING, false);
@@ -322,26 +326,31 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
 
 
     
+    @Override
     public int getAnimationTick() {
         return animationTick;
     }
 
     
+    @Override
     public void setAnimationTick(int tick) {
         animationTick = tick;
     }
 
     
+    @Override
     public Animation getAnimation() {
         return currentAnimation;
     }
 
     
+    @Override
     public void setAnimation(Animation animation) {
         currentAnimation = animation;
     }
 
     
+    @Override
     public Animation[] getAnimations() {
         return new Animation[]{ANIMATION_BITE};
     }
@@ -402,12 +411,14 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
     }
 
     
+    @Override
     public void triggerSacrificeIn(int time) {
         isBeingSacrificed = true;
         sacrificeTime = time;
     }
 
     
+    @Override
     public boolean isValidSacrifice(int distanceFromGround) {
         return distanceFromGround < (isHanging() ? 3 : 9);
     }
@@ -437,6 +448,7 @@ public class VesperEntity extends Monster implements IAnimatedEntity, Underzealo
             this.parentEntity = VesperEntity.this;
         }
 
+        @Override
         public void tick() {
             if (this.operation == MoveControl.Operation.MOVE_TO) {
                 Vec3 vector3d = new Vec3(this.wantedX - parentEntity.getX(), this.wantedY - parentEntity.getY(), this.wantedZ - parentEntity.getZ());

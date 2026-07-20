@@ -92,6 +92,7 @@ public class DepthChargeEntity extends ThrowableItemProjectile {
     }
 
     
+    @Override
     protected Item getDefaultItem() {
         return ACItemRegistry.DEPTH_CHARGE.get();
     }

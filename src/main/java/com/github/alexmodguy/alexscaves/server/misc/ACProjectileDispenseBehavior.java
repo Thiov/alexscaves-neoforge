@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 public abstract class ACProjectileDispenseBehavior extends DefaultDispenseItemBehavior {
     
     
+    @Override
     public ItemStack execute(BlockSource source, ItemStack stack) {
         Level level = source.level();
         Position position = DispenserBlock.getDispensePosition(source);
@@ -29,6 +30,7 @@ public abstract class ACProjectileDispenseBehavior extends DefaultDispenseItemBe
     }
     
     
+    @Override
     protected void playSound(BlockSource source) {
         source.level().levelEvent(1002, source.pos(), 0);
     }

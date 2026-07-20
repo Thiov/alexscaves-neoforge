@@ -74,6 +74,7 @@ public class FerrouslimeEntity extends Monster {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(HEADS, 1);
@@ -236,6 +237,7 @@ public class FerrouslimeEntity extends Monster {
     }
 
     
+    @Override
     public EntityDimensions getDefaultDimensions(Pose poseIn) {
         return super.getDefaultDimensions(poseIn).scale(getSlimeSize(1.0F));
     }
@@ -370,6 +372,7 @@ public class FerrouslimeEntity extends Monster {
         }
 
         
+        @Override
         public boolean canUse() {
             return FerrouslimeEntity.this.getTarget() != null && FerrouslimeEntity.this.getTarget().isAlive();
         }
@@ -404,6 +407,7 @@ public class FerrouslimeEntity extends Monster {
         }
 
         
+        @Override
         public boolean canUse() {
             if (!FerrouslimeEntity.this.canForm()) {
                 return false;
@@ -423,6 +427,7 @@ public class FerrouslimeEntity extends Monster {
         }
 
         
+        @Override
         public boolean canContinueToUse() {
             return otherslime != null && FerrouslimeEntity.this.canForm() && otherslime.canForm() && FerrouslimeEntity.this.distanceTo(otherslime) < 32;
         }

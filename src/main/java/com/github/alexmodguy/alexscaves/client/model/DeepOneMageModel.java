@@ -147,11 +147,13 @@ public class DeepOneMageModel extends AdvancedEntityModel<DeepOneMageEntity> imp
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, eye, smTentacleback, smTentaclefront, smTentacleleft, smTentacleright, bigTentaclebottom, bigTentaclebottom2, bigTentaclebottom3, bigTentaclebottom4, bigTentaclerightFront, bigTentaclerightBack, bigTentacleleftBack, bigTentacleleftFront, bigTentaclerightArm, bigTentacleleftArm, fin, bTendrilLeft, bTendrilRight);
     }
@@ -268,6 +270,7 @@ public class DeepOneMageModel extends AdvancedEntityModel<DeepOneMageEntity> imp
     }
 
     
+    @Override
     public void setupAnim(DeepOneMageEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);

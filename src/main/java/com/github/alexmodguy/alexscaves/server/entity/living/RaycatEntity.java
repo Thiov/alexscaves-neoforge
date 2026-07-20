@@ -60,6 +60,7 @@ public class RaycatEntity extends TamableAnimal implements IComandableMob {
         this.goalSelector.addGoal(2, new TemptGoal(this, 1.0D, Ingredient.of(Items.COD), false));
         this.goalSelector.addGoal(3, new AnimalFollowOwnerGoal(this, 1.2D, 5.0F, 2.0F, false) {
             
+            @Override
             public boolean shouldFollow() {
                 return RaycatEntity.this.getCommand() == 2;
             }
@@ -90,6 +91,7 @@ public class RaycatEntity extends TamableAnimal implements IComandableMob {
     }
 
     
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ABSORB_TARGET_ID, -1);
@@ -285,6 +287,7 @@ public class RaycatEntity extends TamableAnimal implements IComandableMob {
 
     @Nullable
     
+    @Override
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob mob) {
         return ACEntityRegistry.RAYCAT.get().create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.EVENT);
     }

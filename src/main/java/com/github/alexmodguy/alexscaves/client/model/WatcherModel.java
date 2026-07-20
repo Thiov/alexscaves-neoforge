@@ -111,6 +111,7 @@ public class WatcherModel extends AdvancedEntityModel<WatcherEntity> {
     }
 
     
+    @Override
     public void setupAnim(WatcherEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         animate(entity);
@@ -162,11 +163,13 @@ public class WatcherModel extends AdvancedEntityModel<WatcherEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, cube_r1, cube_r2, cube_r3, body, larm, lleg, rarm, rleg, lhorn, rhorn, head, rwing, lwing);
     }

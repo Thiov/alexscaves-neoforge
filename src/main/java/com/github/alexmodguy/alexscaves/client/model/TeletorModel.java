@@ -82,16 +82,19 @@ public class TeletorModel extends AdvancedEntityModel<TeletorEntity> {
 
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(body);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(body, head, larm, lleg, llegcrossed, rarm, rleg, rlegcrossed, rarmPivot, larmPivot);
     }
 
     
+    @Override
     public void setupAnim(TeletorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.resetToDefaultPose();
         if (entity.areLegsCrossed(limbSwingAmount)) {

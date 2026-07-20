@@ -125,11 +125,13 @@ public class CaniacModel extends AdvancedEntityModel<CaniacEntity> {
     }
 
     
+    @Override
     public Iterable<BasicModelPart> parts() {
         return ImmutableList.of(root);
     }
 
     
+    @Override
     public Iterable<AdvancedModelBox> getAllParts() {
         return ImmutableList.of(root, body, pelvis, chest, spine, chest, neck, head, right_Eye, right_Arm, left_Eye, left_Arm, right_Leg, left_Leg, cube_r1, cube_r2);
     }
