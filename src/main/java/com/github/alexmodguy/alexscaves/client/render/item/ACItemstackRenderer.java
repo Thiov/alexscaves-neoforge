@@ -82,8 +82,26 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
 
-    private static final java.util.concurrent.atomic.AtomicBoolean ALEXSCAVES$LOGGED_THIRD_PERSON_MAP =
-            new java.util.concurrent.atomic.AtomicBoolean(false);
+    /**
+     * Restores a sprite stack's own item model after {@code applyComponents} copied the source stack's
+     * components onto it.
+     *
+     * <p>26.1 introduced the {@code ITEM_MODEL} data component, and {@code Item.Properties} writes it into
+     * EVERY item's prototype map. {@code ItemStack.getComponents()} returns prototype + patch, so copying the
+     * source stack's components overwrites the sprite's model with the ORIGINAL item's. The sprite then
+     * resolves back through {@code items/&lt;original&gt;.json}, hits the bewlr fallback in hand contexts, and
+     * re-enters {@link #renderByItem} with a stack that matches none of its {@code is(...)} checks - so
+     * nothing is drawn at all. That is why an unfilled cave map was invisible in hand while still fine in the
+     * inventory (the GUI display context routes to a flat model instead of the bewlr renderer).
+     *
+     * <p>1.21.1 had no such component - models were resolved from the Item itself - so the identical upstream
+     * line was harmless. Do NOT "fix" this with {@code remove()}: on a PatchedDataComponentMap that records
+     * Optional.empty() and makes the component ABSENT, which fails model resolution just as badly.
+     */
+    private static void alexscaves$restoreSpriteModel(ItemStack spriteItem) {
+        spriteItem.set(net.minecraft.core.component.DataComponents.ITEM_MODEL,
+                net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(spriteItem.getItem()));
+    }
 
     @Override
     public void renderByItem(ItemStack itemStackIn, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -96,6 +114,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.CAVE_MAP_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             boolean done = CaveMapItem.isFilled(itemStackIn) && !CaveMapItem.isLoading(itemStackIn);
             if(done){
                 spriteItem = new ItemStack(ACItemRegistry.CAVE_MAP_FILLED_SPRITE.get());
@@ -117,14 +136,6 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
                 }
                 poseStack.popPose();
             } else if(heldIn3d && AlexsCaves.CLIENT_CONFIG.caveMapsVisibleInThirdPerson.get() && done){
-                // One-shot diagnostic: the cave map is reported invisible in third person, but every gate on
-                // this branch verifies as true and the path traces as reachable. If this line never appears in
-                // the log, the branch is not running and the bug is upstream of here; if it DOES appear, the
-                // geometry is being emitted and the problem is orientation/culling instead. Remove once known.
-                if (ALEXSCAVES$LOGGED_THIRD_PERSON_MAP.compareAndSet(false, true)) {
-                    AlexsCaves.LOGGER.info("[alexscaves] cave map third-person branch reached: ctx={} light={}",
-                            transformType, combinedLightIn);
-                }
                 poseStack.translate(left ? 0.15F : -0.15F, 0.25F, 0.05F);
                 poseStack.scale(1.5F, 1.5F, 1.5F);
                 CaveMapRenderHelper.renderCaveMap(poseStack, bufferIn, combinedLightIn, itemStackIn, true);
@@ -186,6 +197,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.PRIMITIVE_CLUB_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 poseStack.mulPose(Axis.XP.rotationDegrees(-180));
@@ -206,6 +218,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.LIMESTONE_SPEAR_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 // TRIDENT use animation (= the original's 1.21.1 UseAnim.SPEAR, which 26.1 renamed to TRIDENT).
@@ -251,6 +264,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.EXTINCTION_SPEAR_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 // TRIDENT use animation (= the original's 1.21.1 UseAnim.SPEAR, which 26.1 renamed to TRIDENT).
@@ -332,6 +346,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.SEA_STAFF_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 poseStack.mulPose(Axis.XP.rotationDegrees(-180));
@@ -351,6 +366,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.ORTHOLANCE_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 if (isWindingUp(itemStackIn) && transformType.firstPerson()) {
@@ -411,6 +427,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(pullAmount >= 0.8F ? ACItemRegistry.DREADBOW_PULLING_2_SPRITE.get() : pullAmount >= 0.5F ? ACItemRegistry.DREADBOW_PULLING_1_SPRITE.get() : pullAmount > 0.0F ? ACItemRegistry.DREADBOW_PULLING_0_SPRITE.get() : ACItemRegistry.DREADBOW_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 if (transformType.firstPerson()) {
@@ -471,6 +488,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.SUGAR_STAFF_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 poseStack.mulPose(Axis.XP.rotationDegrees(-180));
@@ -492,6 +510,7 @@ public class ACItemstackRenderer extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0.5F, 0.5F, 0.5F);
             ItemStack spriteItem = new ItemStack(ACItemRegistry.FROSTMINT_SPEAR_SPRITE.get());
             spriteItem.applyComponents(itemStackIn.getComponents());
+            alexscaves$restoreSpriteModel(spriteItem);
             if (heldIn3d) {
                 poseStack.pushPose();
                 // During windup the item model swaps to item/frostmint_spear_throwing.json in the original; the

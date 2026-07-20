@@ -41,6 +41,18 @@ public class CaveMapRenderHelper {
         vertexconsumer.addVertex(matrix4f, 135.0F, 135.0F, 0.0F).setColor(255, 255, 255, 255).setUv(1.0F, 1.0F).setLight(light);
         vertexconsumer.addVertex(matrix4f, 135.0F, -7.0F, 0.0F).setColor(255, 255, 255, 255).setUv(1.0F, 0.0F).setLight(light);
         vertexconsumer.addVertex(matrix4f, -7.0F, -7.0F, 0.0F).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setLight(light);
+        if (showBackground) {
+            // Upstream selected NO_CULL for this case via the showBackground flag; the port's
+            // ACRenderTypes.getCaveMapBackground silently drops that argument and 26.1's text pipeline culls
+            // (RenderPipeline.Builder.build() defaults cull to true). showBackground is passed true from
+            // exactly one call site - the third-person branch - which is the one reported invisible. Emitting
+            // the reversed winding makes the parchment double-sided, restoring upstream's behaviour without
+            // needing an access-widened no-cull clone of the text pipeline.
+            vertexconsumer.addVertex(matrix4f, -7.0F, -7.0F, 0.0F).setColor(255, 255, 255, 255).setUv(0.0F, 0.0F).setLight(light);
+            vertexconsumer.addVertex(matrix4f, 135.0F, -7.0F, 0.0F).setColor(255, 255, 255, 255).setUv(1.0F, 0.0F).setLight(light);
+            vertexconsumer.addVertex(matrix4f, 135.0F, 135.0F, 0.0F).setColor(255, 255, 255, 255).setUv(1.0F, 1.0F).setLight(light);
+            vertexconsumer.addVertex(matrix4f, -7.0F, 135.0F, 0.0F).setColor(255, 255, 255, 255).setUv(0.0F, 1.0F).setLight(light);
+        }
         CaveMapRenderer.getMapFor(caveMapItem, true).render(poseStack, multiBufferSource, caveMapItem, false, light);
     }
 
