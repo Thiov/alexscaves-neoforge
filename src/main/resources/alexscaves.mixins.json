@@ -29,6 +29,8 @@
     "LevelChunkSectionAccessor",
     "LivingEntityEquipSoundMixin",
     "LivingEntityMixin",
+    "LivingEntityFluidMixin",
+    "EntityFluidTrackingMixin",
     "LivingEntityTemptRangeMixin",
     "MonsterMixin",
     "MobMixin",

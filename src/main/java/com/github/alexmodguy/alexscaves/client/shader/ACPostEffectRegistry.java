@@ -121,6 +121,33 @@ public class ACPostEffectRegistry {
         return irradiatedGlowTarget;
     }
 
+    /**
+     * Called at the START of entity submission, BEFORE anything can draw into the glow target.
+     *
+     * <p>This MUST run unconditionally. The off-screen target is created with {@code useDepth=true}, but
+     * {@code RenderTarget.createBuffers} never clears it and the glow pipelines test
+     * {@code LESS_THAN_OR_EQUAL} - so against an uninitialised depth buffer every fragment is rejected and the
+     * target stays empty. That is exactly why routing the shell off-screen previously rendered NOTHING at all,
+     * and why the old colour-only clear was not enough. Vanilla's own main pass does the same thing: clear
+     * colour to 0 and depth to 1.0, then submit entities.
+     *
+     * <p>Deliberately NOT gated on {@link #irradiatedOnScreen}: that flag is set from inside the entity submit,
+     * i.e. AFTER this runs, so gating it would leave the first frame an entity becomes irradiated - and every
+     * frame after a window resize - drawing into an uninitialised buffer.
+     */
+    public static void beginFrame() {
+        RenderTarget target = glowTarget();
+        if (target == null || target.getColorTexture() == null) {
+            return;
+        }
+        var encoder = RenderSystem.getDevice().createCommandEncoder();
+        if (target.getDepthTexture() != null) {
+            encoder.clearColorAndDepthTextures(target.getColorTexture(), 0, target.getDepthTexture(), 1.0);
+        } else {
+            encoder.clearColorTexture(target.getColorTexture(), 0);
+        }
+    }
+
     /** Called from the effect layer whenever an irradiated glow pass is actually submitted this frame. */
     public static void markIrradiatedOnScreen() {
         irradiatedOnScreen = true;
